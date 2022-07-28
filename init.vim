@@ -171,6 +171,7 @@ noremap <Right> <Nop>
 noremap <c-d> 8j
 noremap <c-u> 8k
 set spell
+<<<<<<< HEAD
 
 let g:lightline = {
       \ 'component_function': {
@@ -186,3 +187,6 @@ function! LightlineFilename()
   endif
   return expand('%')
 endfunction
+=======
+#testing git
+>>>>>>> 78a5f1596d1f8eecf374f50cd5bee02072a26fd3
