@@ -171,3 +171,4 @@ noremap <Right> <Nop>
 noremap <c-d> 8j
 noremap <c-u> 8k
 set spell
+#testing git
