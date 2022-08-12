@@ -7,6 +7,9 @@ call vundle#begin()
 " alternatively, pass a path where Vundle should install plugins
 "call vundle#begin('~/some/path/here')
 
+Plugin 'sgl/badwolf'
+Plugin 'jacoborus/tender.vim'
+Plugin 'joshdick/onedark.vim'
 Plugin 'tpope/vim-repeat'
 Plugin 'wellle/targets.vim'
 Plugin 'justinmk/vim-sneak'
@@ -148,6 +151,7 @@ let g:surround_108 = "\\begin{\1environment: \1}\r\\end{\1\1}"
 set cursorline
 set cursorcolumn
 let g:surround_99 = "\\\1command: \1{\r}"
+let g:surround_96 = "`\r'"
 
 nmap <c-s> :w<CR>:G add -A<CR>
 nmap π :G push origin master<CR> 
@@ -171,4 +175,3 @@ noremap <Right> <Nop>
 noremap <c-d> 8j
 noremap <c-u> 8k
 set spell
-#testing git
