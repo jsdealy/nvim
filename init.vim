@@ -222,30 +222,6 @@ let g:snips_author = "Justin Dealy"
 let g:vimtex_indent_enabled = 0
 let g:vimtex_compiler_latexmk = {'build_dir': {-> join(["/home/justin/Documents/", expand("%:t:r")], "")}} 
 
-<<<<<<< HEAD
-noremap <Up> <Nop>
-noremap <Down> <Nop>
-noremap <Left> <Nop>
-noremap <Right> <Nop>
-noremap <c-d> 8j
-noremap <c-u> 8k
-set spell
-
-let g:lightline = {
-      \ 'component_function': {
-      \   'filename': 'LightlineFilename',
-      \ }
-      \ }
-
-function! LightlineFilename()
-  let root = fnamemodify(get(b:, 'git_dir'), ':h')
-  let path = expand('%:p')
-  if path[:len(root)-1] ==# root
-    return path[len(root)+1:]
-  endif
-  return expand('%')
-endfunction
-=======
 let g:vimspector_base_dir='/home/justin/.vim/bundle/vimspector'
 vmap ( <esc>o)<esc>kO(<esc>jI<tab><tab><esc>A
 vmap { <esc>o}<esc>kO{<esc>jI<tab><tab><esc>A
@@ -269,4 +245,3 @@ hi MoreMsg ctermfg=red
 set guicursor=i:block-Cursor
 let g:highlightedyank_highlight_duration = 50
 match todo /FUNCTION/
->>>>>>> thinkpad
