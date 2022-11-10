@@ -7,6 +7,11 @@ call vundle#begin()
 " alternatively, pass a path where Vundle should install plugins
 "call vundle#begin('~/some/path/here')
 " Plugin 'mzlogin/vim-markdown-toc'
+Plugin 'christoomey/vim-titlecase'
+Plugin 'triglav/vim-visual-increment'
+Plugin 'ThePrimeagen/vim-be-good'
+Plugin 'nvim-lua/plenary.nvim'
+Plugin 'ThePrimeagen/harpoon'
 Plugin 'mfussenegger/nvim-dap'	
 Plugin 'neoclide/coc.nvim'
 Plugin 'machakann/vim-highlightedyank'
@@ -66,21 +71,29 @@ let g:vimtex_quickfix_enabled = 0
 " Trigger configuration. You need to change this to something other than <tab> if you use one of the following:
 " - https://github.com/Valloric/YouCompleteMe
 " - https://github.com/nvim-lua/completion-nvim
-"
-let g:vim_markdown_auto_insert_bullets = 0 
+
+
+
 " UltiSnips triggering
 let g:UltiSnipsExpandTrigger = '<c-c>'
 let g:UltiSnipsJumpForwardTrigger = '<c-f>'
 let g:UltiSnipsJumpBackwardTrigger = '<c-m-f>'
 
-imap <HOME> <Esc>Ea
-inoremap <c-e> <Esc>Ea
-imap <c-a> <Esc>A
-
+inoremap <c-e> <esc>ea
+imap <c-f> <esc>la
+imap <c-c> <esc>la
+imap <leader><leader><leader> <esc>A
+imap <c-y> <c-o>diw
+nmap <c-m> A
+nmap <leader><tab> gg"+yG:silent !xdotool key ctrl+alt+k ; xdotool key shift+ctrl+v ; xdotool key ctrl+alt+j ; xdotool key shift+alt+q ; xdotool key y<cr>
+imap <leader><tab> <esc>gg"+yG:silent !xdotool key ctrl+alt+k ; xdotool key shift+ctrl+v; xdotool key ctrl+alt+j ; xdotool key shift+alt+q ; xdotool key y<cr>
+nmap <leader><leader><tab> gg"*yG:q!<cr>
+imap <leader><leader><tab> <esc>gg"*yG:q!<cr>
+nmap <s-tab> @
 
 set shiftwidth=4
 
-source $HOME/.config/nvim/plug-config/coc.vim
+source /home/justin/.config/nvim/plug-config/coc.vim
 
 set incsearch
 set nohlsearch
@@ -92,7 +105,7 @@ let g:UltiSnipsEditSplit="vertical"
 "
 "
 " Vimtex setup
-let g:vimtex_view_method = 'zathura' " Choose which program to use to view PDF file 
+let g:vimtex_view_method = 'general' " Choose which program to use to view PDF file 
 " let g:vimtex_view_okular_sync = 1 " Value 1 allows forward search after every successful compilation
 " let g:vimtex_view_okular_activate = 1 " Value 1 allows change focus to skim after command `:VimtexView`
 let g:vimtex_toc_todo_labels = {'TODO' : 'TODO: '}
@@ -112,7 +125,7 @@ syntax enable
 " let g:vimtex_view_method = 'zathura'
 
 " Or with a generic interface:
-let g:vimtex_view_general_viewer = 'zathura'
+let g:vimtex_view_general_viewer = 'okular'
 " let g:vimtex_view_general_options = '--unique file:@pdf\#src:@line@tex'
 
 " VimTeX uses latexmk as the default compiler backend. If you use it, which is
@@ -148,7 +161,6 @@ let maplocalleader = "\\"
 set nu
 inoremap <c-l> <Esc>
 autocmd FileType tex let b:surround_45 = "\\[ \r \\]"
-hi Conceal NONE
 set relativenumber
 
 nnoremap <PageUp> <s-m><c-u>
@@ -163,55 +175,58 @@ nmap <c-j> o<Esc>k
 nmap <c-k> O<Esc>j
 nmap <c-l> <c-j><c-k>
 nmap  i<cr>
-nmap <leader><cr> }<c-j>k/^\s*$<cr>i<cr>- 
-nmap <leader><leader><cr> }<c-j>k/^\s*$<cr>i<c-space>> 
+autocmd FileType markdown nmap <leader><cr> }<c-j>k/^\s*$<cr>i<cr>- 
+autocmd FileType markdown nmap <leader><leader><cr> }<c-j>k/^\s*$<cr>i<c-space>> 
+autocmd FileType tex nmap <leader><cr> oitm
+autocmd FileType tex nmap <leader><leader><cr> o<tab>sitm
+autocmd FileType tex nmap <leader><leader>s o<tab>ssitm
 imap <leader><cr> <esc><leader><cr>
 imap <leader><leader><cr> <esc><leader><leader><cr>
 imap <c-space> <space><space>
 nmap <c-h> %
 imap <c-h> %
 vmap <c-h> %
+nmap <c-F> $
+nmap <c-B> 0
+vmap <c-F> $
+vmap <c-B> 0
 
-nmap <F2> :vimgrep /#\{1,}\s/ %<cr>:cope<cr>
-nmap <F3> :cclo<cr>
+
+" nmap <F2> :vimgrep /#\{1,}\s/ %<cr>:cope<cr>
+" nmap <F3> :cclo<cr>
+nmap <F2> /^# <cr>
+nmap <F3> /^## <cr>
 nmap <F4> :MarkdownPreview<cr>
 nmap <F5> :CocDisable<cr>
 nmap <F6> :CocEnable<cr>
 nnoremap <F7> :set hlsearch!<cr>
+
+
+
 nnoremap <F10> :echo "hi<" . synIDattr(synID(line("."),col("."),1),"name") . '> trans<'
 \ . synIDattr(synID(line("."),col("."),0),"name") . "> lo<"
 \ . synIDattr(synIDtrans(synID(line("."),col("."),1)),"name") . ">"<CR>
-nmap <F11> :bp<cr>
-nmap <F12> :bn<cr>
 imap <F11> <esc>:bp<cr>
 imap <F12> <esc>:bn<cr>
+nmap <F11> :bp<cr>
+nmap <F12> :bn<cr>
 
 set ignorecase
 set smartcase
 let g:surround_108 = "\\begin{\1environment: \1}\r\\end{\1\1}"
 set cursorline
-set cursorcolumn
+" set cursorcolumn
 let g:surround_99 = "\\\1command: \1{\r}"
 " let g:surround_96 = "`\r'"
 
 
 
 nmap <c-s> :w<CR>
-nmap <c-n><c-n><c-n> :G add -A<CR>
-nmap <c-n><c-n> :G push origin master<CR> 
-nmap <c-n> :!now=$(date) ; git commit -m ${now}<CR>
-nmap <c-x> :VimtexCountWords<CR>
+" nmap <c-n><c-n><c-n> :G add -A<CR>
+" nmap <c-n><c-n> :G push origin master<CR> 
+" nmap <c-n> :!now=$(date) ; git commit -m ${now}<CR>
+" nmap <c-x> :VimtexCountWords<CR>
 
-let g:gruvbox_italic=1
-colorscheme tender
-highlight Comment ctermfg=green
-set fillchars+=vert:*
-hi VertSplit ctermbg=darkgrey
-hi VertSplit ctermfg=black
-highlight markdownItalic cterm=italic
-highlight Comment cterm=bolditalic
-highlight markdownH1 cterm=bolditalic
-highlight htmlH1 cterm=bolditalic
 let g:auto_save=1
 set updatetime=3000
 
@@ -223,11 +238,19 @@ let g:vimtex_indent_enabled = 0
 let g:vimtex_compiler_latexmk = {'build_dir': {-> join(["/home/justin/Documents/", expand("%:t:r")], "")}} 
 
 let g:vimspector_base_dir='/home/justin/.vim/bundle/vimspector'
-vmap ( <esc>o)<esc>kO(<esc>jI<tab><tab><esc>A
-vmap { <esc>o}<esc>kO{<esc>jI<tab><tab><esc>A
-" noremap <c-e> 3j
-" noremap <c-y> 3k
-" set spell
+" vmap ( <esc>o)<esc>kO(<esc>jI<tab><tab><esc>A
+" vmap { <esc>o}<esc>kO{<esc>jI<tab><tab><esc>A
+
+let g:gruvbox_italic=1
+colorscheme tender
+highlight Comment ctermfg=green
+set fillchars+=vert:*
+hi VertSplit ctermbg=darkgrey
+hi VertSplit ctermfg=black
+highlight markdownItalic cterm=italic
+highlight Comment cterm=bolditalic
+highlight markdownH1 cterm=bolditalic
+highlight htmlH1 cterm=bolditalic
 
 set statusline=%F%r%h%w%=\ %y\ %04l,%04v\ %p%%\ %L
 hi StatusLine ctermbg=darkblue
@@ -243,5 +266,73 @@ hi ModeMsg ctermfg=red
 hi MoreMsg ctermbg=yellow
 hi MoreMsg ctermfg=red
 set guicursor=i:block-Cursor
-let g:highlightedyank_highlight_duration = 50
 match todo /FUNCTION/
+hi Conceal NONE
+
+
+let g:highlightedyank_highlight_duration = 50
+
+" harpoon keybinds
+nmap <leader>a :lua require("harpoon.mark").add_file()<cr>
+nmap <leader><leader>a :lua require("harpoon.ui").toggle_quick_menu()<cr>
+
+
+"nvim-dap
+" lua <<EOF
+" local dap = require('dap')
+
+" dap.adapters.cppdbg = {
+"   id = 'cppdbg',
+"   type = 'executable',
+"   command = '/home/justin/.vscode/extensions/ms-vscode.cpptools-1.12.4-linux-x64/debugAdapters/bin/OpenDebugAD7',
+" }
+
+" dap.configurations.cpp = {
+"   {
+"     name = "Launch file",
+"     type = "cppdbg",
+"     request = "launch",
+"     program = function()
+"       return vim.fn.input('Path to executable: ', vim.fn.getcwd() .. '/', 'file')
+"     end,
+"     cwd = '${workspaceFolder}',
+"     stopAtEntry = true,
+"   },
+"   {
+"     name = 'Attach to gdbserver :1234',
+"     type = 'cppdbg',
+"     request = 'launch',
+"     MIMode = 'gdb',
+"     miDebuggerServerAddress = 'localhost:1234',
+"     miDebuggerPath = '/usr/bin/gdb',
+"     cwd = '${workspaceFolder}',
+"     program = function()
+"       return vim.fn.input('Path to executable: ', vim.fn.getcwd() .. '/', 'file')
+"     end,
+"   },
+" }
+"   local dap_breakpoint = {
+"     error = {
+"       text = "🟥",
+"       texthl = "LspDiagnosticsSignError",
+"       linehl = "",
+"       numhl = "",
+"     },
+"     rejected = {
+"       text = "",
+"       texthl = "LspDiagnosticsSignHint",
+"       linehl = "",
+"       numhl = "",
+"     },
+"     stopped = {
+"       text = "⭐️",
+"       texthl = "LspDiagnosticsSignInformation",
+"       linehl = "DiagnosticUnderlineInfo",
+"       numhl = "LspDiagnosticsSignInformation",
+"     },
+"   }
+
+"   vim.fn.sign_define("DapBreakpoint", dap_breakpoint.error)
+"   vim.fn.sign_define("DapStopped", dap_breakpoint.stopped)
+"   vim.fn.sign_define("DapBreakpointRejected", dap_breakpoint.rejected)
+" EOF
