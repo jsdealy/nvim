@@ -7,6 +7,8 @@ call vundle#begin()
 " alternatively, pass a path where Vundle should install plugins
 "call vundle#begin('~/some/path/here')
 " Plugin 'mzlogin/vim-markdown-toc'
+
+Plugin 'Scuilion/markdown-drawer'
 Plugin 'christoomey/vim-titlecase'
 Plugin 'triglav/vim-visual-increment'
 Plugin 'ThePrimeagen/vim-be-good'
@@ -28,7 +30,7 @@ Plugin 'ctrlpvim/ctrlp.vim'
 Plugin 'tpope/vim-fugitive'
 Plugin 'tpope/vim-commentary'
 Plugin 'gruvbox-community/gruvbox'
-Plugin 'junegunn/fzf' 
+Plugin 'junegunn/goyo.vim'
 Plugin 'junegunn/fzf.vim'
 Plugin 'SirVer/ultisnips'  
 Plugin 'lervag/vimtex'
@@ -82,16 +84,14 @@ let g:UltiSnipsJumpBackwardTrigger = '<c-m-f>'
 inoremap <c-e> <esc>ea
 imap <c-f> <esc>la
 imap <c-c> <esc>la
-imap <leader><leader><leader> <esc>A
 imap <c-y> <c-o>diw
 nmap <c-m> A
-nmap <leader><tab> gg"+yG:silent !xdotool key ctrl+alt+k ; xdotool key shift+ctrl+v ; xdotool key ctrl+alt+j ; xdotool key shift+alt+q ; xdotool key y<cr>
-imap <leader><tab> <esc>gg"+yG:silent !xdotool key ctrl+alt+k ; xdotool key shift+ctrl+v; xdotool key ctrl+alt+j ; xdotool key shift+alt+q ; xdotool key y<cr>
-nmap <leader><leader><tab> gg"*yG:q!<cr>
-imap <leader><leader><tab> <esc>gg"*yG:q!<cr>
+nmap <leader><tab> gg"*yG
+imap <leader><tab> <esc>gg"*yG
 nmap <s-tab> @
 
 set shiftwidth=4
+
 
 source /home/justin/.config/nvim/plug-config/coc.vim
 
@@ -180,6 +180,7 @@ autocmd FileType markdown nmap <leader><leader><cr> }<c-j>k/^\s*$<cr>i<c-space>>
 autocmd FileType tex nmap <leader><cr> oitm
 autocmd FileType tex nmap <leader><leader><cr> o<tab>sitm
 autocmd FileType tex nmap <leader><leader>s o<tab>ssitm
+nmap <leader>e :e!<cr>
 imap <leader><cr> <esc><leader><cr>
 imap <leader><leader><cr> <esc><leader><leader><cr>
 imap <c-space> <space><space>
@@ -194,7 +195,7 @@ vmap <c-B> 0
 
 " nmap <F2> :vimgrep /#\{1,}\s/ %<cr>:cope<cr>
 " nmap <F3> :cclo<cr>
-nmap <F2> /^# <cr>
+nmap <F2> :MarkDrawer<cr>:vert res 50<cr>
 nmap <F3> /^## <cr>
 nmap <F4> :MarkdownPreview<cr>
 nmap <F5> :CocDisable<cr>
