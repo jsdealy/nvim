@@ -21,14 +21,14 @@ imap <expr> <CR> pumvisible() ? "<C-R>=UltiSnips#ExpandSnippetOrJump()<CR>" : "<
 """"""""""""""""""
 "  vimtex setup  "
 """"""""""""""""""
+let g:vimtex_syntax_conceal_disable = 1
 let g:vimtex_quickfix_enabled = 0
 " let g:tex_flavor='latex' " Default tex file format
 " let g:vimtex_view_method = 'general' " Choose which program to use to view PDF file 
 " let g:vimtex_view_okular_sync = 1 " Value 1 allows forward search after every successful compilation
 " let g:vimtex_view_okular_activate = 1 " Value 1 allows change focus to skim after command `:VimtexView`
 let g:vimtex_toc_todo_labels = {'TODO' : 'TODO'}
-set conceallevel=2
-let g:tex_conceal='abdmg'
+" let g:tex_conceal='abdmg'
 " Viewer options: One may configure the viewer either by specifying a built-in
 " viewer method:
 let g:vimtex_view_method = 'zathura'
@@ -91,16 +91,20 @@ nmap ga <Plug>(EasyAlign)
 set virtualedit=onemore
 
 let $papers = '/home/justin/Insync/dealyjustins@gmail.com/Google Drive/papers/'
+" autocmd FileType c colorscheme torte
 set signcolumn=yes
 set incsearch
 set nohlsearch
 set nu
 set relativenumber
-" autocmd FileType tex let b:surround_45 = "\\[ \r \\]"
+" autocmd FileType markdown colorscheme kanagawa-wave
+" autocmd FileType c highlight Comment gui=bolditalic
+" autocmd FileType tex set tw=47
+" autocmd FileType markdown set tw=47
 set ignorecase
 set smartcase
 set cursorline
-set cursorcolumn
+" set cursorcolumn
 let g:surround_99 = "\\\1command: \1{\r}"
 " let g:surround_96 = "`\r'"
 let g:surround_108 = "\\begin{\1environment: \1}\r\\end{\1\1}"
@@ -110,12 +114,12 @@ let g:surround_108 = "\\begin{\1environment: \1}\r\\end{\1\1}"
 " nmap <c-x> :VimtexCountWords<CR>
 let g:auto_save=1
 set updatetime=3000
-let $FZF_DEFAULT_COMMAND = 'rg --hidden --ignore -l "" /home/justin/'
+let $FZF_DEFAULT_COMMAND = 'ag --hidden --ignore .git -g "" /home/justin/'
 set nrformats+=alpha
 set noswapfile
 let g:snips_author = "Justin Dealy"
 let g:vimtex_indent_enabled = 0
-let g:vimtex_compiler_latexmk = {'build_dir': {-> join(["/home/justin/Documents/", expand("%:t:r")], "")}} 
+" let g:vimtex_compiler_latexmk = {'build_dir': {-> join(["/home/justin/Documents/", expand("%:t:r")], "")}} 
 let g:vimspector_base_dir='/home/justin/.vim/bundle/vimspector'
 " vmap ( <esc>o)<esc>kO(<esc>jI<tab><tab><esc>A
 " vmap { <esc>o}<esc>kO{<esc>jI<tab><tab><esc>A
@@ -126,29 +130,26 @@ colorscheme torte
 " highlight Comment ctermfg=209
 " set fillchars+=vert:*
 set fillchars=stlnc:―
-hi VertSplit guibg=#000000 guifg=#EE6C05
+hi VertSplit guibg=#000000
 hi Function ctermfg=209
-hi markdownBold gui=bold
-hi markdownItalic gui=italic
-hi markdownH1 gui=bolditalic
+highlight markdownBold gui=bold
+highlight markdownItalic gui=italic
+highlight markdownH1 gui=bolditalic
 hi Function gui=bold
-hi htmlH1 gui=bolditalic
+highlight htmlH1 gui=bolditalic
 set statusline=%F%r%h%w%=\ %y\ %04l\ %04v\ %p%%\ %L
 
-"" hi Comment gui=italic 
-hi NormalFloat guibg=#000000
+" hi Comment gui=italic 
 hi Visual guibg=#008565
 hi StatusLine ctermbg=236
-
+hi StatusLine ctermfg=218
 hi StatusLine gui=italic
 hi StatusLineNC ctermbg=darkgrey
 hi StatusLineNC ctermfg=173
 hi StatusLineNC gui=italic
 hi Normal ctermbg=234
 hi CursorLine guibg=#111111
-hi CursorColumn guibg=#0A0A0A
 hi CursorLineNR guibg=#111111
-hi CursorColumnNR guibg=#0A0A0A
 hi ModeMsg ctermbg=yellow
 hi ModeMsg ctermfg=red
 hi MoreMsg ctermbg=yellow
@@ -159,10 +160,8 @@ hi Conceal NONE
 """""""""""""""""""
 "  Main Mappings  "
 """""""""""""""""""
-
+nmap <leader><leader>q @
 autocmd User targets#mappings#user call targets#mappings#extend({'?': {'pair': [{'o': '?', 'c': '?'}]}})
-" nmap <leader>s <c-w>
-" imap <leader>s <esc><c-w>
 nmap <leader><leader>= :res +10<cr>
 nmap <leader><leader>- :res -10<cr>
 inoremap <c-e> <esc>Ea
@@ -196,16 +195,17 @@ nmap <c-m-j> 3j
 nmap <c-m-k> 3k
 
 " TROUBLE
-nnoremap <leader><leader>t <cmd>Trouble diagnostics toggle focus=true<cr>
-nnoremap <leader><leader>T <cmd>Trouble diagnostics toggle filter.buf=0<cr>
-nnoremap <leader>rq <cmd>Trouble qflist toggle<cr>
-nnoremap gR <cmd>Trouble lsp toggle focus=false win.position=right<cr>
-
+nnoremap <leader>tt <cmd>TroubleToggle<cr>
+nnoremap <leader><leader>t <cmd>TroubleToggle<cr>
+nnoremap <leader>xw <cmd>TroubleToggle workspace_diagnostics<cr>
+nnoremap <leader>xd <cmd>TroubleToggle document_diagnostics<cr>
+nnoremap <leader>rq <cmd>TroubleToggle quickfix<cr>
+nnoremap <leader>xl <cmd>TroubleToggle loclist<cr>
+nnoremap gR <cmd>TroubleToggle lsp_references<cr>
 nmap <leader><leader>z zz
 nmap <leader><tab> zz
-nnoremap <c-d> 3<c-d>
-nnoremap <c-u> 3<c-u>
-nnoremap <c-u> 3<c-u>
+nnoremap <c-d> 5<c-d>
+nnoremap <c-u> 5<c-u>
 vnoremap <c-d> 2<c-d>
 vnoremap <c-u> 2<c-u>
 nmap <space> 5<c-e>
@@ -215,8 +215,8 @@ nmap <c-k> O<Esc>j
 nmap <c-l> <c-j><c-k>
 " nmap  i<cr>
 nmap <leader>e :e!<cr>
-" imap <leader><cr> <esc><leader><cr>
-" imap <leader><leader><cr> <esc><leader><leader><cr>
+imap <leader><cr> <esc><leader><cr>
+imap <leader><leader><cr> <esc><leader><leader><cr>
 imap <c-h> %
 nmap <c-h> %
 vmap <c-h> %
@@ -228,15 +228,11 @@ inoremap <c-space> <space><space>
 nmap <c-s> :w<cr>
 nnoremap <c-o> <c-o>zz
 nnoremap <c-i> <c-i>zz
-nmap g<Space> :cnext<cr>
-nmap g<BS> :cprev<cr>
 nmap <PageDown> :cnext<cr>zz
 nmap <PageUp> :cprev<cr>zz
 nnoremap n nzz
 nnoremap N Nzz
 nmap <leader><leader>s :browse old<cr>
-nmap <c-y> :HopWord<cr>
-nmap <c-g> :HopLine<cr>
 nmap <c-'> i<space><Esc>la<space><Esc>h
 nmap <c-,> A,<esc>
 imap <c-,> <esc><c-,>
@@ -247,25 +243,26 @@ imap <C-S-Space> <c-o>x
 nnoremap S ciw
 nnoremap X diw
 nmap <leader>td Otodo <esc>:call UltiSnips#ListSnippets()<cr>1<cr>
-" imap <leader>td <esc><leader>td
+imap <leader>td <esc><leader>td
 nmap <leader><leader>c Onewcomment <esc>:call UltiSnips#ListSnippets()<cr>1<cr>
-" imap <leader><leader>c <esc><leader><leader>c
+imap <leader><leader>c <esc><leader><leader>c
 autocmd FileType text nnoremap <leader><leader>c Onewtextcomment <esc>:call UltiSnips#ListSnippets()<cr>1<cr>
 autocmd FileType text imap <leader><leader>c <esc><leader><leader>c
 autocmd FileType markdown lua require('pandocomatic')
-lua require('lightmode')
-lua require('darkmode')
 autocmd FileType markdown imap <leader><leader>p :lua Pandocomatic()<cr>
 autocmd FileType markdown nmap <leader><leader>p :lua Pandocomatic()<cr>
-autocmd FileType markdown nmap <leader><leader><leader>p :lua Pandocomatic{forcesioyek=true}<cr>
+autocmd FileType markdown nmap <leader><leader><leader>p :lua Pandocomatic{justopensioyek=true}<cr>
 autocmd FileType markdown imap <leader><leader>P :lua Pandocomatic{push=true}<cr>
 autocmd FileType markdown nmap <leader><leader>P :lua Pandocomatic{push=true}<cr>
 autocmd FileType tex lua require('pandocomatic')
 autocmd FileType tex imap <leader><leader>p :lua Pandocomatic{latex=true}<cr>
 autocmd FileType tex nmap <leader><leader>p :lua Pandocomatic{latex=true}<cr>
-autocmd FileType tex nmap <leader><leader><leader>p :lua Pandocomatic{latex=true, forcesioyek=true}<cr>
-autocmd FileType tex imap <leader><leader>P :lua Pandocomatic{latex=true, push=true}<cr>
-autocmd FileType tex nmap <leader><leader>P :lua Pandocomatic{latex=true, push=true}<cr>
+autocmd FileType tex nmap <leader><leader><leader>p :lua Pandocomatic{latex=true, justopensioyek=true}<cr>
+autocmd FileType tex let b:surround_45 = "\\[ \r \\]"
+lua require('lightmode')
+lua require('darkmode')
+command LightMode lua Lightmode()
+command DarkMode lua Darkmode()
 
 
 
@@ -290,7 +287,6 @@ autocmd FileType cpp nmap <c-;> <c-n>;<esc>
 autocmd FileType php nmap <c-;> <c-n>;<esc>
 autocmd FileType cpp imap <c-;> <esc><c-;>
 autocmd FileType cpp imap <C-S-;> ::
-autocmd FileType cpp imap <C-S-:> ::
 
 autocmd FileType cpp nmap <C-0> :!geeks.py "<cword> c++ cpp"<cr><cr>
 autocmd FileType cpp nmap <C-9> :!FL.py "<cword> site:cppreference.com"<cr><cr>
@@ -321,7 +317,7 @@ autocmd FileType markdown nmap <leader><leader><cr> }<c-j>k/^\s*$<cr>i<c-space>>
 " autocmd FileType tex nmap <leader><cr> oitm
 " autocmd FileType tex nmap <leader><leader><cr> o<tab>sitm
 " autocmd FileType tex nmap <leader>s o<tab>ssitm
-" autocmd FileType tex vmap <leader>gc c%<c-r>"<cr><esc>
+autocmd FileType tex vmap <leader>gc c%<c-r>"<cr><esc>
 autocmd FileType tex nmap <leader><leader><leader>d :!openInDictionary.sh "<cword>"<cr><cr>
 autocmd FileType tex nmap <leader><leader><leader>s :!openInSEP.sh "<cword>"<cr><cr>
 autocmd FileType tex nmap <leader><leader><leader>t :!openInThesaurus.sh "<cword>"<cr><cr>
@@ -333,6 +329,7 @@ autocmd FileType c nmap <leader>cp :cprev<cr>zz
 autocmd FileType markdown nmap <F3> /^## <cr>
 autocmd FileType markdown nmap <F4> :MarkdownPreview<cr>
 " autocmd FileType tex nmap <F4> :VimtexTocToggle<cr>
+autocmd FileType c nmap <F2> :Goyo<cr>:hi CursorLine ctermbg=235<cr>:hi CursorLineNR ctermbg=235<cr>:hi Normal ctermbg=234<cr>
 autocmd FileType markdown nmap <F5> :!pandoc -f markdown -t pdf -i % -o %.pdf<cr>
 
 
@@ -341,9 +338,6 @@ function! PMarkdown()
 	!pandoc -f markdown -t pdf -i "%" -o "%.pdf"
     endif 
 endfunction
-
-command Lightmode lua Lightmode()
-command Darkmode lua Darkmode()
 
 
 """""""""""""""""""""""""""""
@@ -397,42 +391,42 @@ nmap <leader>7 :lua require("harpoon.ui").nav_file(7)<cr>
 " imap <leader>6 <esc>:lua require("harpoon.ui").nav_file(6)<cr>
 " imap <leader>7 <esc>:lua require("harpoon.ui").nav_file(7)<cr>
 
-
-""""""""""""""""""""
-"  Marks Mappings  "
-""""""""""""""""""""
-
-nmap <leader><leader>1 <Plug>(Marks-next-bookmark1)zz
-nmap <leader><leader>2 <Plug>(Marks-next-bookmark2)zz
-nmap <leader><leader>3 <Plug>(Marks-next-bookmark3)zz
-nmap <leader><leader>4 <Plug>(Marks-next-bookmark4)zz
-nmap <leader><leader>5 <Plug>(Marks-next-bookmark5)zz
-nmap <leader><leader>6 <Plug>(Marks-next-bookmark6)zz
-nmap <leader><leader>7 <Plug>(Marks-next-bookmark7)zz
-nmap <leader><leader>8 <Plug>(Marks-next-bookmark8)zz
-nmap <leader><leader>9 <Plug>(Marks-next-bookmark9)zz
-nmap <leader><leader>0 <Plug>(Marks-next-bookmark0)zz
-
-nmap <leader>]1 <Plug>(Marks-prev-bookmark1)zz
-nmap <leader>]2 <Plug>(Marks-prev-bookmark2)zz
-nmap <leader>]3 <Plug>(Marks-prev-bookmark3)zz
-nmap <leader>]4 <Plug>(Marks-prev-bookmark4)zz
-nmap <leader>]5 <Plug>(Marks-prev-bookmark5)zz
-nmap <leader>]6 <Plug>(Marks-prev-bookmark6)zz
-nmap <leader>]7 <Plug>(Marks-prev-bookmark7)zz
-nmap <leader>]8 <Plug>(Marks-prev-bookmark8)zz
-nmap <leader>]9 <Plug>(Marks-prev-bookmark9)zz
-nmap <leader>]0 <Plug>(Marks-prev-bookmark0)zz
-
-nmap <leader><leader>e <Plug>(Marks-next)zz
-nmap <leader><leader>w <Plug>(Marks-prev)zz
-
-nmap ml <Plug>(Marks-setnext)
-nmap mm :MarksQFListBuf<cr>
-nmap <s-m> :ccl<cr>
-nmap <c-s-m> :cope<cr>
-nmap dmm <Plug>(Marks-deleteline):wshada!<cr>
-nmap dm- <Plug>(Marks-deletebuf):wshada!<cr>
+" 
+" """"""""""""""""""""
+" "  Marks Mappings  "
+" """"""""""""""""""""
+" 
+" nmap <leader><leader>1 <Plug>(Marks-next-bookmark1)zz
+" nmap <leader><leader>2 <Plug>(Marks-next-bookmark2)zz
+" nmap <leader><leader>3 <Plug>(Marks-next-bookmark3)zz
+" nmap <leader><leader>4 <Plug>(Marks-next-bookmark4)zz
+" nmap <leader><leader>5 <Plug>(Marks-next-bookmark5)zz
+" nmap <leader><leader>6 <Plug>(Marks-next-bookmark6)zz
+" nmap <leader><leader>7 <Plug>(Marks-next-bookmark7)zz
+" nmap <leader><leader>8 <Plug>(Marks-next-bookmark8)zz
+" nmap <leader><leader>9 <Plug>(Marks-next-bookmark9)zz
+" nmap <leader><leader>0 <Plug>(Marks-next-bookmark0)zz
+" 
+" nmap <leader>]1 <Plug>(Marks-prev-bookmark1)zz
+" nmap <leader>]2 <Plug>(Marks-prev-bookmark2)zz
+" nmap <leader>]3 <Plug>(Marks-prev-bookmark3)zz
+" nmap <leader>]4 <Plug>(Marks-prev-bookmark4)zz
+" nmap <leader>]5 <Plug>(Marks-prev-bookmark5)zz
+" nmap <leader>]6 <Plug>(Marks-prev-bookmark6)zz
+" nmap <leader>]7 <Plug>(Marks-prev-bookmark7)zz
+" nmap <leader>]8 <Plug>(Marks-prev-bookmark8)zz
+" nmap <leader>]9 <Plug>(Marks-prev-bookmark9)zz
+" nmap <leader>]0 <Plug>(Marks-prev-bookmark0)zz
+" 
+" nmap <leader><leader>e <Plug>(Marks-next)zz
+" nmap <leader><leader>w <Plug>(Marks-prev)zz
+" 
+" nmap ml <Plug>(Marks-setnext)
+" nmap mm :MarksQFListBuf<cr>
+" nmap <s-m> :ccl<cr>
+" nmap <c-s-m> :cope<cr>
+" nmap dmm <Plug>(Marks-deleteline):wshada!<cr>
+" nmap dm- <Plug>(Marks-deletebuf):wshada!<cr>
 
 au TextYankPost * silent! lua vim.highlight.on_yank { timeout=50 }
 set formatoptions-=cro
@@ -452,6 +446,7 @@ let g:rnvimr_action = {
 "                                    LUA                                     "
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
+set runtimepath^=/home/justin/.config/nvim/nvim-treesitter-parsers
 
 lua <<EOF
 
@@ -472,67 +467,97 @@ vim.opt.rtp:prepend(lazypath)
 -- vim.g.mapleader = " " -- Make sure to set `mapleader` before lazy so your mappings are correct
 
 require("lazy").setup({
-    {"iamcco/markdown-preview.nvim",
-	cmd = { "MarkdownPreviewToggle", "MarkdownPreview", "MarkdownPreviewStop" },
-	build = "cd app && yarn install",
-	init = function()
-	vim.g.mkdp_filetypes = { "markdown" }
-	end,
-	ft = { "markdown" }, },
-    {"hrsh7th/cmp-nvim-lsp-signature-help"},
-    {"latex-lsp/texlab"},
-    { "folke/neodev.nvim", opts = {} },
-    {'nvim-treesitter/playground'},
-    {"hedyhli/outline.nvim",
-	    lazy = true,
-	    cmd = { "Outline", "OutlineOpen" },
-	    keys = { -- Example mapping to toggle outline
-	    { "<leader>o", "<cmd>Outline<CR>", desc = "Toggle outline" },
-	    },
-	    opts = {
-		-- Your setup opts here
-	    },
-	    }, 
-	-- { "nvim-treesitter/nvim-treesitter-textobjects" },
+{ "folke/zen-mode.nvim",
+    opts = {
+	window = {
+	    backdrop = 0, -- shade the backdrop of the Zen window. Set to 1 to keep the same as Normal
+	    -- height and width can be:
+	    -- * an absolute number of cells when > 1
+	    -- * a percentage of the width / height of the editor when <= 1
+	    -- * a function that returns the width or the height
+	    width = 150, -- width of the Zen window
+	    height = 0.9,
+	    -- your configuration comes here
+	    -- or leave it empty to use the default settings
+	    -- refer to the configuration section below
+	    },},
+	},
+	{"hrsh7th/cmp-nvim-lsp-signature-help"},
+	{"latex-lsp/texlab"},
+	{
+	  "hedyhli/outline.nvim",
+	  config = function()
+	    -- Example mapping to toggle outline
+	    vim.keymap.set("n", "<leader>y", "<cmd>Outline<CR>",
+	      { desc = "Toggle Outline" })
+
+	    require("outline").setup {
+	      -- Your setup opts here (leave empty to use defaults)
+	    }
+	  end,
+	},
+	{ "folke/neodev.nvim", opts = {} },
+	{'junegunn/fzf'},
+	-- {"glepnir/lspsaga.nvim",
+	    -- event = "LspAttach",
+	    -- config = function()
+	    -- require("lspsaga").setup({})
+	    -- end,
+	    -- dependencies = {
+		-- {"nvim-tree/nvim-web-devicons"},
+		-- --Please make sure you install markdown and markdown_inline parser
+		-- {"nvim-treesitter/nvim-treesitter"}
+	    -- }
+	    -- },
+	{ "folke/which-key.nvim" },
 	{ "folke/neoconf.nvim", cmd = "Neoconf" },
 	{'kevinhwang91/rnvimr'},
 	{'jc-doyle/cmp-pandoc-references'},
 	{'hrsh7th/cmp-nvim-lsp'},
+	{'hrsh7th/cmp-buffer'},
+	{'hrsh7th/cmp-omni'},
 	{'hrsh7th/cmp-path'},
 	{'hrsh7th/cmp-cmdline'},
 	{'hrsh7th/nvim-cmp'},
+	{'hrsh7th/cmp-calc'},
+	{'hrsh7th/cmp-nvim-lua'},
 	{'windwp/nvim-autopairs'},
-	{'quangnguyen30192/cmp-nvim-ultisnips'},
-	-- {'tom-anders/telescope-vim-bookmarks.nvim'},
-	-- {'AndrewRadev/splitjoin.vim'},
+	{'tom-anders/telescope-vim-bookmarks.nvim'},
+	{'AndrewRadev/splitjoin.vim'},
 	{'nvim-lualine/lualine.nvim'},
 	{'nvim-telescope/telescope.nvim'},
 	-- {'qpkorr/vim-renamer'},
-	{'folke/trouble.nvim', opts = {}, cmd = "Trouble"},
 	{'nvim-tree/nvim-web-devicons'},
+	{'folke/trouble.nvim'},
 	{'junegunn/vim-easy-align'},
-	{'junegunn/fzf', build = ":call fzf#install()"},
 	{'mbbill/undotree'},
+	{'sainnhe/everforest'},
+	{'sainnhe/edge'},
+	{'rebelot/kanagawa.nvim'},
+	{'EdenEast/nightfox.nvim'},
+	{'catppuccin/nvim'},
 	-- {'chentoast/marks.nvim'},
-	-- {'phaazon/hop.nvim'},
-	-- {'bluz71/vim-moonfly-colors'}, 
-	{'nvim-treesitter/nvim-treesitter', build = ":TSUpdate"},
-	-- {'nvim-treesitter/nvim-treesitter-context'},
-	-- {'tpope/vim-markdown'},
-	-- {'rose-pine/neovim'},
-	-- {'christoomey/vim-titlecase'},
-	-- {'triglav/vim-visual-increment'},
+	{'bluz71/vim-moonfly-colors'},
+	'nvim-treesitter/nvim-treesitter', build = ":TSUpdate",
+	{'nvim-treesitter/nvim-treesitter-context'},
+	{'tpope/vim-markdown'},
+	{'rose-pine/neovim'},
+	-- to use titlecase, highlight and hit gz <= 02/17/24 14:22:34 " 
+	{'christoomey/vim-titlecase'},
+	{'triglav/vim-visual-increment'},
 	{'nvim-lua/plenary.nvim'},
 	{'ThePrimeagen/harpoon'},
-	-- {'ajorgensen/vim-markdown-toc'},
-	{'907th/vim-auto-save'  },
-	-- {'jacoborus/tender.vim'},
+	{'ajorgensen/vim-markdown-toc'},
+	{'907th/vim-auto-save'},
+	{'jacoborus/tender.vim'},
+	{'iamcco/markdown-preview.nvim'},
 	{'tpope/vim-repeat'},
 	{'wellle/targets.vim'},
 	{'ctrlpvim/ctrlp.vim'},
 	{'tpope/vim-fugitive'},
 	{'tpope/vim-commentary'},
-	-- {'junegunn/goyo.vim'},
+	{'gruvbox-community/gruvbox'},
+	{'junegunn/goyo.vim'},
 	{'SirVer/ultisnips'},
 	{'lervag/vimtex'},
 	{'honza/vim-snippets'},
@@ -545,230 +570,148 @@ require("lazy").setup({
 vim.g.mapleader = '\\'
 
 require'nvim-treesitter.configs'.setup {
-    playground = {
-	enable = true,
-	disable = {},
-	updatetime = 25, -- Debounced time for highlighting nodes in the playground from source code
-	persist_queries = false, -- Whether the query persists across vim sessions
-	keybindings = {
-	    toggle_query_editor = 'o',
-	    toggle_hl_groups = 'i',
-	    toggle_injected_languages = 't',
-	    toggle_anonymous_nodes = 'a',
-	    toggle_language_display = 'I',
-	    focus_language = 'f',
-	    unfocus_language = 'F',
-	    update = 'R',
-	    goto_node = '<cr>',
-	    show_help = '?',
-	    },
-    },
-    -- textobjects = {
-	-- select = {
-	    -- enable = true,
--- 
-	    -- -- Automatically jump forward to textobj, similar to targets.vim
-	    -- lookahead = true,
--- 
-	    -- keymaps = {
-		-- -- You can use the capture groups defined in textobjects.scm
-		-- ["af"] = "@function.outer",
-		-- ["if"] = "@function.inner",
-		-- ["ac"] = "@class.outer",
-		-- -- You can optionally set descriptions to the mappings (used in the desc parameter of
-		-- -- nvim_buf_set_keymap) which plugins like which-key display
-		-- ["ic"] = { query = "@class.inner", desc = "Select inner part of a class region" },
-		-- -- You can also use captures from other query groups like `locals.scm`
-		-- ["as"] = { query = "@scope", query_group = "locals", desc = "Select language scope" },
-		-- },
-		-- -- You can choose the select mode (default is charwise 'v')
-		-- --
-		-- -- Can also be a function which gets passed a table with the keys
-		-- -- * query_string: eg '@function.inner'
-		-- -- * method: eg 'v' or 'o'
-		-- -- and should return the mode ('v', 'V', or '<c-v>') or a table
-		-- -- mapping query_strings to modes.
-		-- selection_modes = {
-		    -- ['@parameter.outer'] = 'v', -- charwise
-		    -- ['@function.outer'] = 'V', -- linewise
-		    -- ['@class.outer'] = '<c-v>', -- blockwise
-		    -- },
-		    -- -- If you set this to `true` (default is `false`) then any textobject is
-		    -- -- extended to include preceding or succeeding whitespace. Succeeding
-		    -- -- whitespace has priority in order to act similarly to eg the built-in
-		    -- -- `ap`.
-		    -- --
-		    -- -- Can also be a function which gets passed a table with the keys
-		    -- -- * query_string: eg '@function.inner'
-		    -- -- * selection_mode: eg 'v'
-		    -- -- and should return true of false
-		    -- include_surrounding_whitespace = true,
-		    -- },
-	-- },
-	-- A list of parser names, or "allg
-	ensure_installed = { "php", "http", "python", "c", "cpp", "markdown", "markdown_inline", "vim", "lua", "css", "html", "rust", "javascript", "java" },
-	vim.treesitter.language.register('html', 'hb'),
-
-
-
-	-- Install parsers synchronously (only applied to `ensure_installed`)
-	sync_install = false,
-
-	-- Automatically install missing parsers when entering buffer
-	-- Recommendation: set to false if you don't have `tree-sitter` CLI installed locally
-	auto_install = true,
-
-	-- List of parsers to ignore installing (for "all")
-	-- ignore_install = { "javascript" },
-
-	---- If you need to change the installation directory of the parsers (see -> Advanced Setup)
-	-- parser_install_dir = "/some/path/to/store/parsers", -- Remember to run vim.opt.runtimepath:append("/some/path/to/store/parsers")!
-	indent = {
-	    enable = true,
-	    },
-
-	    highlight = {
-		-- `false` will disable the whole extension
-		enable = true,
-
-		-- NOTE: these are the names of the parsers and not the filetype. (for example if you want to
-		-- disable highlighting for the `tex` filetype, you need to include `latex` in this list as this is
-		-- the name of the parser)
-		-- list of language that will be disabled
-		-- disable = { "c", "rust" },
-		-- Or use a function for more flexibility, e.g. to disable slow treesitter highlight for large files
-		-- disable = function(lang, buf)
-		-- local max_filesize = 100 * 1024 -- 100 KB
-		-- local ok, stats = pcall(vim.loop.fs_stat, vim.api.nvim_buf_get_name(buf))
-		-- if ok and stats and stats.size > max_filesize then
-		--   return true
-		-- end
-		-- end,
-
-		-- Setting this to true will run `:h syntax` and tree-sitter at the same time.
-		-- Set this to `true` if you depend on 'syntax' being enabled (like for indentation).
-		-- Using this option may slow down your editor, and you may see some duplicate highlights.
-		-- Instead of true it can also be a list of languages
-		additional_vim_regex_highlighting = false,
-		},
+  vim.opt.runtimepath:append("/home/justin/.config/nvim/nvim-treesitter-parsers"),
+  parser_install_dir = "/home/justin/.config/nvim/nvim-treesitter-parsers", -- Remember to run vim.opt.runtimepath:append("/some/path/to/store/parsers")!
+  -- A list of parser names, or "allg
+  ensure_installed = { "php", "http", "python", "c", "cpp", "vimdoc", "markdown", "markdown_inline", "vim", "lua", "css", "html", "rust", "javascript", "java" },
+  vim.treesitter.language.register('html', 'hb'),
+  -- Install parsers synchronously (only applied to `ensure_installed`)
+  sync_install = true,
+  -- Automatically install missing parsers when entering buffer
+  -- Recommendation: set to false if you don't have `tree-sitter` CLI installed locally
+  auto_install = false,
+  -- List of parsers to ignore installing (for "all")
+  -- ignore_install = { "javascript" },
+  ---- If you need to change the installation directory of the parsers (see -> Advanced Setup)
+  indent = {
+      enable = true,
+  },
+  highlight = {
+    -- `false` will disable the whole extension
+    enable = true,
+    -- NOTE: these are the names of the parsers and not the filetype. (for example if you want to
+    -- disable highlighting for the `tex` filetype, you need to include `latex` in this list as this is
+    -- the name of the parser)
+    -- list of language that will be disabled
+    disable = { "latex", "tex" },
+    -- Or use a function for more flexibility, e.g. to disable slow treesitter highlight for large files
+    -- disable = function(lang, buf)
+        -- local max_filesize = 100 * 1024 -- 100 KB
+        -- local ok, stats = pcall(vim.loop.fs_stat, vim.api.nvim_buf_get_name(buf))
+        -- if ok and stats and stats.size > max_filesize then
+          --   return true
+        -- end
+    -- end,
+    -- Setting this to true will run `:h syntax` and tree-sitter at the same time.
+    -- Set this to `true` if you depend on 'syntax' being enabled (like for indentation).
+    -- Using this option may slow down your editor, and you may see some duplicate highlights.
+    -- Instead of true it can also be a list of languages
+    additional_vim_regex_highlighting = false,
+  },
 }
-
+ 
 -- require'marks'.setup {
-   -- -- whether to map keybinds or not. default true
-   -- default_mappings = true,
-   -- -- which builtin marks to show. default {}
-   -- builtin_marks = { ".", "<", ">", "^" },
-   -- -- whether movements cycle back to the beginning/end of buffer. default true
+--    -- whether to map keybinds or not. default true
+--    default_mappings = true,
+--    -- which builtin marks to show. default {}
+--    builtin_marks = { ".", "<", ">", "^" },
+--    -- whether movements cycle back to the beginning/end of buffer. default true
 -- 
-   -- cyclic = true,
-   -- -- whether the shada file is updated after modifying uppercase marks. default false
-   -- force_write_shada = false,
-   -- -- how often (in ms) to redraw signs/recompute mark positions. 
-   -- -- higher values will have better performance but may cause visual lag, 
-   -- -- while lower values may cause performance penalties. default 150.
-   -- refresh_interval = 250,
-   -- -- sign priorities for each type of mark - builtin marks, uppercase marks, lowercase
-   -- -- marks, and bookmarks.
-   -- -- can be either a table with all/none of the keys, or a single number, in which case
-   -- -- the priority applies to all marks.
-   -- -- default 10.
-   -- sign_priority = { lower=10, upper=15, builtin=8, bookmark=20 },
-   -- -- disables mark tracking for specific filetypes. default {}
-   -- excluded_filetypes = {},
-   -- -- marks.nvim allows you to configure up to 10 bookmark groups, each with its own
-   -- -- sign/virttext. Bookmarks can be used to group together positions and quickly move
-   -- -- across multiple buffers. default sign is '!@#$%^&*()' (from 0 to 9), and
-   -- -- default virt_text is "".
-   -- bookmark_0 = {
-     -- -- sign = "⚑",
-     -- -- virt_text = "TODO",
-     -- -- explicitly prompt for a virtual line annotation when setting a bookmark from this group.
-     -- -- defaults to false.
-     -- annotate = true,
-   -- },
-   -- bookmark_1 = {
-       -- sign = "⚑",
-       -- virt_text = "TODO",
-       -- -- explicitly prompt for a virtual line annotation when setting a bookmark from this group.
-       -- -- defaults to false.
-       -- annotate = false,
-   -- },
-   -- bookmark_2 = {
-     -- -- sign = "⚑",
-     -- -- virt_text = "TODO",
-     -- -- explicitly prompt for a virtual line annotation when setting a bookmark from this group.
-     -- -- defaults to false.
-     -- annotate = true,
-   -- },
-   -- bookmark_3 = {
-     -- -- sign = "⚑",
-     -- -- virt_text = "TODO",
-     -- -- explicitly prompt for a virtual line annotation when setting a bookmark from this group.
-     -- -- defaults to false.
-     -- annotate = true,
-     -- },
-   -- bookmark_4 = {
-     -- -- sign = "⚑",
-     -- -- virt_text = "TODO",
-     -- -- explicitly prompt for a virtual line annotation when setting a bookmark from this group.
-     -- -- defaults to false.
-     -- annotate = true,
-   -- },
-   -- bookmark_5 = {
-     -- -- sign = "⚑",
-     -- -- virt_text = "TODO",
-     -- -- explicitly prompt for a virtual line annotation when setting a bookmark from this group.
-     -- -- defaults to false.
-     -- annotate = true,
-   -- },
-   -- bookmark_6 = {
-     -- -- sign = "⚑",
-     -- -- virt_text = "TODO",
-     -- -- explicitly prompt for a virtual line annotation when setting a bookmark from this group.
-     -- -- defaults to false.
-     -- annotate = true,
-   -- },
-   -- bookmark_7 = {
-     -- -- sign = "⚑",
-     -- -- virt_text = "TODO",
-     -- -- explicitly prompt for a virtual line annotation when setting a bookmark from this group.
-     -- -- defaults to false.
-     -- annotate = true,
-   -- },
-   -- bookmark_8 = {
-     -- -- sign = "⚑",
-     -- -- virt_text = "TODO",
-     -- -- explicitly prompt for a virtual line annotation when setting a bookmark from this group.
-     -- -- defaults to false.
-     -- annotate = true,
-   -- },
-   -- bookmark_9 = {
-     -- -- sign = "⚑",
-     -- -- virt_text = "TODO",
-     -- -- explicitly prompt for a virtual line annotation when setting a bookmark from this group.
-     -- -- defaults to false.
-     -- annotate = true,
-   -- },
-   -- mappings = {
-       -- annotate = "\\z",
-       -- delete_line = false,
-       -- delete_buf = false
-   -- }
- -- }
--- 
-vim.cmd [[autocmd! ColorScheme * highlight NormalFloat guibg=#1f2335]]
-vim.cmd [[autocmd! ColorScheme * highlight FloatBorder guifg=white guibg=#1f2335]]
-
-local border = {
-      {"🭽", "FloatBorder"},
-      {"▔", "FloatBorder"},
-      {"🭾", "FloatBorder"},
-      {"▕", "FloatBorder"},
-      {"🭿", "FloatBorder"},
-      {"▁", "FloatBorder"},
-      {"🭼", "FloatBorder"},
-      {"▏", "FloatBorder"},
-}
+--    cyclic = true,
+--    -- whether the shada file is updated after modifying uppercase marks. default false
+--    force_write_shada = false,
+--    -- how often (in ms) to redraw signs/recompute mark positions. 
+--    -- higher values will have better performance but may cause visual lag, 
+--    -- while lower values may cause performance penalties. default 150.
+--    refresh_interval = 250,
+--    -- sign priorities for each type of mark - builtin marks, uppercase marks, lowercase
+--    -- marks, and bookmarks.
+--    -- can be either a table with all/none of the keys, or a single number, in which case
+--    -- the priority applies to all marks.
+--    -- default 10.
+--    sign_priority = { lower=10, upper=15, builtin=8, bookmark=20 },
+--    -- disables mark tracking for specific filetypes. default {}
+--    excluded_filetypes = {},
+--    -- marks.nvim allows you to configure up to 10 bookmark groups, each with its own
+--    -- sign/virttext. Bookmarks can be used to group together positions and quickly move
+--    -- across multiple buffers. default sign is '!@#$%^&*()' (from 0 to 9), and
+--    -- default virt_text is "".
+--    bookmark_0 = {
+--      -- sign = "⚑",
+--      -- virt_text = "TODO",
+--      -- explicitly prompt for a virtual line annotation when setting a bookmark from this group.
+--      -- defaults to false.
+--      annotate = true,
+--    },
+--    bookmark_1 = {
+--        sign = "⚑",
+--        virt_text = "TODO",
+--        -- explicitly prompt for a virtual line annotation when setting a bookmark from this group.
+--        -- defaults to false.
+--        annotate = false,
+--    },
+--    bookmark_2 = {
+--      -- sign = "⚑",
+--      -- virt_text = "TODO",
+--      -- explicitly prompt for a virtual line annotation when setting a bookmark from this group.
+--      -- defaults to false.
+--      annotate = true,
+--    },
+--    bookmark_3 = {
+--      -- sign = "⚑",
+--      -- virt_text = "TODO",
+--      -- explicitly prompt for a virtual line annotation when setting a bookmark from this group.
+--      -- defaults to false.
+--      annotate = true,
+--      },
+--    bookmark_4 = {
+--      -- sign = "⚑",
+--      -- virt_text = "TODO",
+--      -- explicitly prompt for a virtual line annotation when setting a bookmark from this group.
+--      -- defaults to false.
+--      annotate = true,
+--    },
+--    bookmark_5 = {
+--      -- sign = "⚑",
+--      -- virt_text = "TODO",
+--      -- explicitly prompt for a virtual line annotation when setting a bookmark from this group.
+--      -- defaults to false.
+--      annotate = true,
+--    },
+--    bookmark_6 = {
+--      -- sign = "⚑",
+--      -- virt_text = "TODO",
+--      -- explicitly prompt for a virtual line annotation when setting a bookmark from this group.
+--      -- defaults to false.
+--      annotate = true,
+--    },
+--    bookmark_7 = {
+--      -- sign = "⚑",
+--      -- virt_text = "TODO",
+--      -- explicitly prompt for a virtual line annotation when setting a bookmark from this group.
+--      -- defaults to false.
+--      annotate = true,
+--    },
+--    bookmark_8 = {
+--      -- sign = "⚑",
+--      -- virt_text = "TODO",
+--      -- explicitly prompt for a virtual line annotation when setting a bookmark from this group.
+--      -- defaults to false.
+--      annotate = true,
+--    },
+--    bookmark_9 = {
+--      -- sign = "⚑",
+--      -- virt_text = "TODO",
+--      -- explicitly prompt for a virtual line annotation when setting a bookmark from this group.
+--      -- defaults to false.
+--      annotate = true,
+--    },
+--    mappings = {
+--        annotate = "\\z",
+--        delete_line = false,
+--        delete_buf = false
+--    }
+--  }
 
 -- Mappings.
 -- See `:help vim.diagnostic.*` for documentation on any of the below functions
@@ -777,7 +720,7 @@ vim.keymap.set('n', '<leader>e', vim.diagnostic.open_float, opts)
 vim.keymap.set('n', '[d', vim.diagnostic.goto_prev, opts)
 vim.keymap.set('n', ']d', vim.diagnostic.goto_next, opts)
 vim.keymap.set('n', '<leader>d', vim.diagnostic.setloclist, opts)
-vim.keymap.set('n', '<leader><space>', function() vim.lsp.buf.hover(); vim.lsp.buf.hover(); end, opts)
+vim.keymap.set('n', '<leader>k', function() vim.lsp.buf.hover(); vim.lsp.buf.hover(); end, opts)
 
 -- Use an on_attach function to only map the following keys
 -- after the language server attaches to the current buffer
@@ -811,15 +754,10 @@ local lsp_flags = {
   debounce_text_changes = 150,
 }
 require'lspconfig'.pyright.setup{}
-local handlers =  {
-  ["textDocument/hover"] =  vim.lsp.with(vim.lsp.handlers.hover, {border = border}),
-  ["textDocument/signatureHelp"] =  vim.lsp.with(vim.lsp.handlers.signature_help, {border = border }),
-}
 require('lspconfig')['clangd'].setup{
     on_attach = on_attach,
     flags = lsp_flags,
     capabilities = capabilities, 
-    handlers = handlers,
     cmd = { "clangd", '--background-index', '--clang-tidy' }
 }
 
@@ -854,7 +792,7 @@ require'lspconfig'.html.setup {
     on_attach = on_attach,
     flags = lsp_flags,
     capabilities = capabilities, 
-    cmd = { "vscode-html-languageserver", '--stdio' },
+    cmd = { "html-languageserver", '--stdio' },
     filetypes = { 'html', 'php', 'hb' },
 }
 
@@ -893,217 +831,58 @@ require'lspconfig'.bashls.setup{
     filetypes = { 'bash', 'zsh', 'sh' },
 }
 
-vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, {
-  border = "rounded",
-})
 
--- require'hop'.setup()
+require("trouble").setup {
+    position = "bottom", -- position of the list can be: bottom, top, left, right
+    height = 10, -- height of the trouble list when position is top or bottom
+    width = 50, -- width of the list when position is left or right
+    icons = true, -- use devicons for filenames
+    mode = "workspace_diagnostics", -- "workspace_diagnostics", "document_diagnostics", "quickfix", "lsp_references", "loclist"
+    fold_open = ">>", -- icon used for open folds
+    fold_closed = "--", -- icon used for closed folds
+    group = true, -- group results by file
+    padding = true, -- add an extra new line on top of the list
+    action_keys = { -- key mappings for actions in the trouble list
+    -- map to {} to remove a mapping, for example:
+    -- close = {},
+    close = "q", -- close the list
+    cancel = "<esc>", -- cancel the preview and get back to your last window / buffer / cursor
+    refresh = "r", -- manually refresh
+    jump = {"<cr>", "<tab>"}, -- jump to the diagnostic or open / close folds
+    open_split = { "<c-x>" }, -- open buffer in new split
+    open_vsplit = { "<c-v>" }, -- open buffer in new vsplit
+    open_tab = { "<c-t>" }, -- open buffer in new tab
+    jump_close = {"o"}, -- jump to the diagnostic and close the list
+    toggle_mode = "m", -- toggle between "workspace" and "document" diagnostics mode
+    toggle_preview = "P", -- toggle auto_preview
+    hover = "K", -- opens a small popup with the full multiline message
+    preview = "p", -- preview the diagnostic location
+    close_folds = {"zM", "zm"}, -- close all folds
+    open_folds = {"zR", "zr"}, -- open all folds
+    toggle_fold = {"zA", "za"}, -- toggle fold of current file
+    previous = "k", -- previous item
+    next = "j" -- next item
+    },
+    indent_lines = true, -- add an indent guide below the fold icons
+    auto_open = false, -- automatically open the list when you have diagnostics
+    auto_close = false, -- automatically close the list when you have no diagnostics
+    auto_preview = true, -- automatically preview the location of the diagnostic. <esc> to close preview and go back to last window
+    auto_fold = false, -- automatically fold a file trouble list at creation
+    auto_jump = {"lsp_definitions"}, -- for the given modes, automatically jump if there is only a single result
+    signs = {
+	-- icons / text used for a diagnostic
+	error = "‼️",
+	warning = "❗",
+	hint = "😇",
+	information = "💫",
+	other = "🎯"
+    },
+    use_diagnostic_signs = false -- enabling this will use the signs defined in your lsp client
+    -- your configuration comes here
+    -- or leave it empty to use the default settings
+    -- refer to the configuration section below
+}
 
-
-     ---@class trouble.Mode: trouble.Config,trouble.Section.spec
-     ---@field desc? string
-     ---@field sections? string[]
- 
-     ---@class trouble.Config
-     ---@field mode? string
-     ---@field config? fun(opts:trouble.Config)
-     ---@field formatters? table<string,trouble.Formatter> custom formatters
-     ---@field filters? table<string, trouble.FilterFn> custom filters
-     ---@field sorters? table<string, trouble.SorterFn> custom sorters
-     local defaults = {
-	 auto_close = false, -- auto close when there are no items
-	 auto_open = false, -- auto open when there are items
-	 auto_preview = true, -- automatically open preview when on an item
-	 auto_refresh = true, -- auto refresh when open
-	 auto_jump = false, -- auto jump to the item when there's only one
-	 focus = false, -- Focus the window when opened
-	 restore = true, -- restores the last location in the list when opening
-	 follow = true, -- Follow the current item
-	 indent_guides = true, -- show indent guides
-	 max_items = 200, -- limit number of items that can be displayed per section
-	 multiline = true, -- render multi-line messages
-	 pinned = false, -- When pinned, the opened trouble window will be bound to the current buffer
-	 warn_no_results = true, -- show a warning when there are no results
-	 open_no_results = false, -- open the trouble window when there are no results
-	 ---@type trouble.Window.opts
-	 win = {}, -- window options for the results window. Can be a split or a floating window.
-	 -- Window options for the preview window. Can be a split, floating window,
-	 -- or `main` to show the preview in the main editor window.
-	 ---@type trouble.Window.opts
-	 preview = {
-	     type = "main",
-	     -- when a buffer is not yet loaded, the preview window will be created
-	     -- in a scratch buffer with only syntax highlighting enabled.
-	     -- Set to false, if you want the preview to always be a real loaded buffer.
-	     scratch = true,
-	     },
-	     -- Throttle/Debounce settings. Should usually not be changed.
-	     ---@type table<string, number|{ms:number, debounce?:boolean}>
-		 throttle = {
-		     refresh = 20, -- fetches new data when needed
-		     update = 10, -- updates the window
-		     render = 10, -- renders the window
-		     follow = 100, -- follows the current item
-		     preview = { ms = 100, debounce = true }, -- shows the preview for the current item
-		     },
-		     -- Key mappings can be set to the name of a builtin action,
-		     -- or you can define your own custom action.
-		     ---@type table<string, trouble.Action.spec>
-		     keys = {
-			 ["?"] = "help",
-			 r = "refresh",
-			 R = "toggle_refresh",
-			 q = "close",
-			 o = "jump_close",
-			 ["<esc>"] = "cancel",
-			 ["<cr>"] = "jump",
-			 ["<2-leftmouse>"] = "jump",
-			 ["<c-s>"] = "jump_split",
-			 ["<c-v>"] = "jump_vsplit",
-			 -- go down to next item (accepts count)
-			 -- j = "next",
-			 ["}"] = "next",
-			 ["]]"] = "next",
-			 -- go up to prev item (accepts count)
-			 -- k = "prev",
-			 ["{"] = "prev",
-			 ["[["] = "prev",
-			 dd = "delete",
-			 d = { action = "delete", mode = "v" },
-			 i = "inspect",
-			 p = "preview",
-			 P = "toggle_preview",
-			 zo = "fold_open",
-			 zO = "fold_open_recursive",
-			 zc = "fold_close",
-			 zC = "fold_close_recursive",
-			 za = "fold_toggle",
-			 zA = "fold_toggle_recursive",
-			 zm = "fold_more",
-			 zM = "fold_close_all",
-			 zr = "fold_reduce",
-			 zR = "fold_open_all",
-			 zx = "fold_update",
-			 zX = "fold_update_all",
-			 zn = "fold_disable",
-			 zN = "fold_enable",
-			 zi = "fold_toggle_enable",
-			 gb = { -- example of a custom action that toggles the active view filter
-			 action = function(view)
-			 view:filter({ buf = 0 }, { toggle = true })
-			 end,
-			 desc = "Toggle Current Buffer Filter",
-			 },
-			 s = { -- example of a custom action that toggles the severity
-			 action = function(view)
-			 local f = view:get_filter("severity")
-			 local severity = ((f and f.filter.severity or 0) + 1) % 5
-			 view:filter({ severity = severity }, {
-			     id = "severity",
-			     template = "{hl:Title}Filter:{hl} {severity}",
-			     del = severity == 0,
-			 })
-			 end,
-			 desc = "Toggle Severity Filter",
-			 },
-			 },
-			 ---@type table<string, trouble.Mode>
-			 modes = {
-			     -- sources define their own modes, which you can use directly,
-			     -- or override like in the example below
-			     lsp_references = {
-				 -- some modes are configurable, see the source code for more details
-				 params = {
-				     include_declaration = true,
-				     },
-				 },
-			     -- The LSP base mode for:
-			     -- * lsp_definitions, lsp_references, lsp_implementations
-			     -- * lsp_type_definitions, lsp_declarations, lsp_command
-			     lsp_base = {
-				 params = {
-				     -- don't include the current location in the results
-				     include_current = false,
-				     },
-				 },
-			     -- more advanced example that extends the lsp_document_symbols
-			     symbols = {
-				 desc = "document symbols",
-				 mode = "lsp_document_symbols",
-				 focus = false,
-				 win = { position = "right" },
-				 filter = {
-				     -- remove Package since luals uses it for control flow structures
-				     ["not"] = { ft = "lua", kind = "Package" },
-				     any = {
-					 -- all symbol kinds for help / markdown files
-					 ft = { "help", "markdown" },
-					 -- default set of symbol kinds
-					 kind = {
-					     "Class",
-					     "Constructor",
-					     "Enum",
-					     "Field",
-					     "Function",
-					     "Interface",
-					     "Method",
-					     "Module",
-					     "Namespace",
-					     "Package",
-					     "Property",
-					     "Struct",
-					     "Trait",
-					     },
-					 },
-				     },
-				 },
-			     },
-			 -- stylua: ignore
-			 icons = {
-			     ---@type trouble.Indent.symbols
-			     indent = {
-				 top           = "│ ",
-				 middle        = "├╴",
-				 last          = "└╴",
-				 -- last          = "-╴",
-				 -- last       = "╰╴", -- rounded
-				 fold_open     = " ",
-				 fold_closed   = " ",
-				 ws            = "  ",
-				 },
-			     folder_closed   = " ",
-			     folder_open     = " ",
-			     kinds = {
-				 Array         = " ",
-				 Boolean       = "󰨙 ",
-				 Class         = " ",
-				 Constant      = "󰏿 ",
-				 Constructor   = " ",
-				 Enum          = " ",
-				 EnumMember    = " ",
-				 Event         = " ",
-				 Field         = " ",
-				 File          = " ",
-				 Function      = "󰊕 ",
-				 Interface     = " ",
-				 Key           = " ",
-				 Method        = "󰊕 ",
-				 Module        = " ",
-				 Namespace     = "󰦮 ",
-				 Null          = " ",
-				 Number        = "󰎠 ",
-				 Object        = " ",
-				 Operator      = " ",
-				 Package       = " ",
-				 Property      = " ",
-				 String        = " ",
-				 Struct        = "󰆼 ",
-				 TypeParameter = " ",
-				 Variable      = "󰀫 ",
-				 },
-			     },
-			 }
- 
 
 require('lualine').setup {
   options = {
@@ -1172,58 +951,57 @@ require('lualine').setup {
   extensions = {}
 }
 
--- local builtin = require('telescope.builtin')
--- require('telescope').setup{
--- defaults = {
-    -- border = true,
-    -- layout_strategy = "vertical",
-    -- layout_config = { preview_height = 30, height = 50 },
-    -- mappings = {
-	-- i = { ["<C-l>"] = { "<esc>", type="command" }, }
-    -- }
-    -- },
--- --    extensions = {
--- --	file_browser = {
--- --	    theme = "ivy",
--- --	    -- disables netrw and use telescope-file-browser in its place
--- --	    hijack_netrw = true,
--- --	    initial_mode = "normal",
--- --	    mappings = {
--- --		["i"] = {
--- --		    -- your custom insert mode mappings
--- --		    },
--- --		    ["n"] = {
--- --			-- your custom normal mode mappings
--- --			},
--- --		    },
--- --	    },
--- --	},
-    -- pickers ={
-	-- jumplist = {
-	    -- initial_mode = "normal"
-	-- }
-	-- },
--- }
+local builtin = require('telescope.builtin')
+require('telescope').setup{
+defaults = {
+    border = true,
+    layout_strategy = "vertical",
+    layout_config = { preview_height = 30, height = 50 },
+    mappings = {
+	i = { ["<C-l>"] = { "<esc>", type="command" }, }
+    }
+    },
+--    extensions = {
+--	file_browser = {
+--	    theme = "ivy",
+--	    -- disables netrw and use telescope-file-browser in its place
+--	    hijack_netrw = true,
+--	    initial_mode = "normal",
+--	    mappings = {
+--		["i"] = {
+--		    -- your custom insert mode mappings
+--		    },
+--		    ["n"] = {
+--			-- your custom normal mode mappings
+--			},
+--		    },
+--	    },
+--	},
+    pickers ={
+	jumplist = {
+	    initial_mode = "normal"
+	}
+	},
+}
+local colors = require("catppuccin.palettes").get_palette()
+local TelescopeColor = {
+	TelescopeMatching = { fg = colors.flamingo },
+	TelescopeSelection = { fg = colors.text, bg = colors.surface0, bold = true },
 
--- local colors = require("catppuccin.palettes").get_palette()
--- local TelescopeColor = {
-	-- TelescopeMatching = { fg = colors.flamingo },
-	-- TelescopeSelection = { fg = colors.text, bg = colors.surface0, bold = true },
--- 
-	-- TelescopePromptPrefix = { bg = colors.surface0 },
-	-- TelescopePromptNormal = { bg = colors.surface0 },
-	-- TelescopeResultsNormal = { bg = colors.mantle },
-	-- TelescopePreviewNormal = { bg = colors.mantle },
-	-- TelescopePromptBorder = { bg = colors.surface0, fg = colors.surface0 },
-	-- TelescopeResultsBorder = { bg = colors.mantle, fg = colors.mantle },
-	-- TelescopePreviewBorder = { bg = colors.mantle, fg = colors.mantle },
-	-- TelescopePromptTitle = { bg = colors.pink, fg = colors.mantle },
-	-- TelescopeResultsTitle = { fg = colors.mantle },
-	-- TelescopePreviewTitle = { bg = colors.green, fg = colors.mantle },
--- }
--- for hl, col in pairs(TelescopeColor) do
-	-- vim.api.nvim_set_hl(0, hl, col)
--- end
+	TelescopePromptPrefix = { bg = colors.surface0 },
+	TelescopePromptNormal = { bg = colors.surface0 },
+	TelescopeResultsNormal = { bg = colors.mantle },
+	TelescopePreviewNormal = { bg = colors.mantle },
+	TelescopePromptBorder = { bg = colors.surface0, fg = colors.surface0 },
+	TelescopeResultsBorder = { bg = colors.mantle, fg = colors.mantle },
+	TelescopePreviewBorder = { bg = colors.mantle, fg = colors.mantle },
+	TelescopePromptTitle = { bg = colors.pink, fg = colors.mantle },
+	TelescopeResultsTitle = { fg = colors.mantle },
+	TelescopePreviewTitle = { bg = colors.green, fg = colors.mantle },
+}
+for hl, col in pairs(TelescopeColor) do
+	vim.api.nvim_set_hl(0, hl, col)
+end
 
 -- disable netrw at the very start of your init.lua
 -- vim.g.loaded_netrw = 1
@@ -1237,43 +1015,42 @@ vim.opt.termguicolors = true
 -- you need to call load_extension, somewhere after setup function:
 -- require("telescope").load_extension "file_browser"
 
--- TELESCOPE MAPPINGS
--- vim.keymap.set('n', '<leader><leader>T', builtin.find_files, {})
--- vim.keymap.set('n', '<leader><leader>g', builtin.live_grep, {})
--- vim.keymap.set('n', '<leader><leader>G', ':lua require("telescope.builtin").live_grep({search_dirs={vim.fn.expand("%:p")}})<cr>')
--- vim.keymap.set('n', '<leader><leader>f', ':lua require("telescope.builtin").current_buffer_fuzzy_find({})<cr>')
--- vim.keymap.set('n', '<leader><leader>j', ':lua require("telescope.builtin").jumplist({})<cr>')
--- vim.keymap.set('n', '<leader><leader>S', ':lua require("telescope.builtin").tags({})<cr>')
--- -- vim.keymap.set('n', '<leader><leader>B', ':Telescope file_browser path=/home/justin/Insync/dealyjustins@gmail.com/Google\\ Drive/prog<cr>')
--- -- vim.keymap.set('n', '<leader><leader>b', ':Telescope file_browser path=%:p:h select_buffer=true<cr>')
+vim.keymap.set('n', '<leader><leader>T', builtin.find_files, {})
+vim.keymap.set('n', '<leader><leader>g', builtin.live_grep, {})
+vim.keymap.set('n', '<leader><leader>G', ':lua require("telescope.builtin").live_grep({search_dirs={vim.fn.expand("%:p")}})<cr>')
+vim.keymap.set('n', '<leader><leader>f', ':lua require("telescope.builtin").current_buffer_fuzzy_find({})<cr>')
+vim.keymap.set('n', '<leader><leader>j', ':lua require("telescope.builtin").jumplist({})<cr>')
+vim.keymap.set('n', '<leader><leader>S', ':lua require("telescope.builtin").tags({})<cr>')
+-- vim.keymap.set('n', '<leader><leader>B', ':Telescope file_browser path=/home/justin/Insync/dealyjustins@gmail.com/Google\\ Drive/prog<cr>')
+-- vim.keymap.set('n', '<leader><leader>b', ':Telescope file_browser path=%:p:h select_buffer=true<cr>')
 vim.keymap.set('n', '<leader><leader>b', ':RnvimrToggle<cr>')
--- -- vim.keymap.set('n', '<leader><leader>b', ':Telescope file_browser path=%:p:h select_buffer=true<cr>')
--- vim.keymap.set('n', '<leader><leader>h', builtin.help_tags, {})
--- vim.keymap.set('n', '<leader><leader>H', ':lua if origfiletype == nil then origfiletype = vim.bo.filetype end; if vim.bo.filetype ~= "html" then vim.bo.filetype = "html"; else vim.bo.filetype = origfiletype; end<cr>')
--- vim.keymap.set('n', '<leader><leader>v', ':lua require("telescope.builtin").live_grep({search_dirs={"/home/justin/Insync/dealyjustins@gmail.com/Google Drive/prog/learning/notes"}})<cr>')
--- vim.keymap.set('n', '<leader><leader>V', ':lua require("telescope.builtin").live_grep({search_dirs={"/home/justin/Insync/dealyjustins@gmail.com/Google Drive/prog"}})<cr>')
- vim.keymap.set('n', '<C-Left>', ':res +1<cr>')
- vim.keymap.set('n', '<C-Right>', ':res -1<cr>')
- vim.keymap.set('n', '<C-Down>', ':vert res +1<cr>')
- vim.keymap.set('n', '<C-Up>', ':vert res -1<cr>')
- vim.keymap.set('n', '<C-PageDown>', ':res +15<cr>')
- vim.keymap.set('n', '<C-PageUp>', ':res -15<cr>')
- vim.keymap.set('n', '<C-S-Down>', ':vert res +15<cr>')
- vim.keymap.set('n', '<C-S-Up>', ':vert res -15<cr>')
- vim.keymap.set('n', '<leader>v', 'gv')
- vim.keymap.set('v', '<c-l>', '<esc>')
- --vim.keymap.set('n', '<S-Down>', '<esc>')
- --vim.keymap.set('n', '<S-Up>',   '<esc>')
- --vim.keymap.set('i', '<S-Down>', '.<bs>')
- --vim.keymap.set('i', '<S-Up>',   '.<bs>')
- --vim.keymap.set('n', '<C-Down>', '<esc>')
- --vim.keymap.set('n', '<C-Up>',   '<esc>')
- --vim.keymap.set('i', '<C-Down>', '.<bs>')
- --vim.keymap.set('i', '<C-Up>',   '.<bs>')
- vim.keymap.set('i', '<c-s>', '$')
- vim.keymap.set('n', '<leader><leader>i', ':lua vim.lsp.buf.hover() vim.lsp.buf.hover()<cr>')
--- 
--- local keymap = vim.keymap.set
+-- vim.keymap.set('n', '<leader><leader>b', ':Telescope file_browser path=%:p:h select_buffer=true<cr>')
+vim.keymap.set('n', '<leader><leader>h', builtin.help_tags, {})
+vim.keymap.set('n', '<leader><leader>H', ':lua if origfiletype == nil then origfiletype = vim.bo.filetype end; if vim.bo.filetype ~= "html" then vim.bo.filetype = "html"; else vim.bo.filetype = origfiletype; end<cr>')
+vim.keymap.set('n', '<leader><leader>v', ':lua require("telescope.builtin").live_grep({search_dirs={"/home/justin/Insync/dealyjustins@gmail.com/Google Drive/prog/learning/notes"}})<cr>')
+vim.keymap.set('n', '<leader><leader>V', ':lua require("telescope.builtin").live_grep({search_dirs={"/home/justin/Insync/dealyjustins@gmail.com/Google Drive/prog"}})<cr>')
+vim.keymap.set('n', '<C-Left>', ':res +1<cr>')
+vim.keymap.set('n', '<C-Right>', ':res -1<cr>')
+vim.keymap.set('n', '<C-Down>', ':vert res +1<cr>')
+vim.keymap.set('n', '<C-Up>', ':vert res -1<cr>')
+vim.keymap.set('n', '<C-PageDown>', ':res +15<cr>')
+vim.keymap.set('n', '<C-PageUp>', ':res -15<cr>')
+vim.keymap.set('n', '<C-S-Down>', ':vert res +15<cr>')
+vim.keymap.set('n', '<C-S-Up>', ':vert res -15<cr>')
+vim.keymap.set('n', '<leader>v', 'gv')
+vim.keymap.set('v', '<c-l>', '<esc>')
+--vim.keymap.set('n', '<S-Down>', '<esc>')
+--vim.keymap.set('n', '<S-Up>',   '<esc>')
+--vim.keymap.set('i', '<S-Down>', '.<bs>')
+--vim.keymap.set('i', '<S-Up>',   '.<bs>')
+--vim.keymap.set('n', '<C-Down>', '<esc>')
+--vim.keymap.set('n', '<C-Up>',   '<esc>')
+--vim.keymap.set('i', '<C-Down>', '.<bs>')
+--vim.keymap.set('i', '<C-Up>',   '.<bs>')
+--vim.keymap.set('i', '<c-s>', '$')
+vim.keymap.set('n', '<leader><leader>i', ':lua vim.lsp.buf.hover() vim.lsp.buf.hover()<cr>')
+
+local keymap = vim.keymap.set
 
 -- LSP finder - Find the symbol's definition
 -- If there is no definition, it will instead be hidden
@@ -1296,40 +1073,40 @@ vim.keymap.set('n', '<leader><leader>b', ':RnvimrToggle<cr>')
 -- It also supports tagstack
 -- Use <C-t> to jump back
 -- keymap("n", "gp", "<cmd>Lspsaga peek_definition<CR>")
-
--- Go to definition
+-- 
+-- -- Go to definition
 -- keymap("n","gd", "<cmd>Lspsaga goto_definition<CR>")
-
--- Peek type definition
--- You can edit the file containing the type definition in the floating window
--- It also supports open/vsplit/etc operations, do refer to "definition_action_keys"
--- It also supports tagstack
--- Use <C-t> to jump back
+-- 
+-- -- Peek type definition
+-- -- You can edit the file containing the type definition in the floating window
+-- -- It also supports open/vsplit/etc operations, do refer to "definition_action_keys"
+-- -- It also supports tagstack
+-- -- Use <C-t> to jump back
 -- keymap("n", "gt", "<cmd>Lspsaga peek_type_definition<CR>")
-
--- Go to type definition
+-- 
+-- -- Go to type definition
 -- keymap("n","gt", "<cmd>Lspsaga goto_type_definition<CR>")
-
-
--- Show line diagnostics
--- You can pass argument ++unfocus to
--- unfocus the show_line_diagnostics floating window
+-- 
+-- 
+-- -- Show line diagnostics
+-- -- You can pass argument ++unfocus to
+-- -- unfocus the show_line_diagnostics floating window
 -- keymap("n", "<leader><leader>sl", "<cmd>Lspsaga show_line_diagnostics<CR>")
-
--- Show buffer diagnostics
+-- 
+-- -- Show buffer diagnostics
 -- keymap("n", "<leader><leader>sb", "<cmd>Lspsaga show_buf_diagnostics<CR>")
-
--- Show workspace diagnostics
+-- 
+-- -- Show workspace diagnostics
 -- keymap("n", "<leader><leader>sw", "<cmd>Lspsaga show_workspace_diagnostics<CR>")
-
--- Show cursor diagnostics
+-- 
+-- -- Show cursor diagnostics
 -- keymap("n", "<leader><leader>sc", "<cmd>Lspsaga show_cursor_diagnostics<CR>")
-
--- Diagnostic jump
--- You can use <C-o> to jump back to your previous location
+-- 
+-- -- Diagnostic jump
+-- -- You can use <C-o> to jump back to your previous location
 -- keymap("n", "[e", "<cmd>Lspsaga diagnostic_jump_prev<CR>")
 -- keymap("n", "]e", "<cmd>Lspsaga diagnostic_jump_next<CR>")
-
+-- 
 -- Diagnostic jump with filters such as only jumping to an error
 -- keymap("n", "[E", function()
   -- require("lspsaga.diagnostic"):goto_prev({ severity = vim.diagnostic.severity.ERROR })
@@ -1362,7 +1139,7 @@ vim.keymap.set('n', '<leader><leader>b', ':RnvimrToggle<cr>')
 
 -- Floating terminal
 -- keymap({"n", "t"}, "<A-d>", "<cmd>Lspsaga term_toggle<CR>")
--- keymap("n","<leader>kc", "inewkeyclaim <esc>:call UltiSnips#ListSnippets()<cr>1<cr>")
+keymap("n","<leader>kc", "inewkeyclaim <esc>:call UltiSnips#ListSnippets()<cr>1<cr>")
 
 require('nvim-autopairs').setup({
     enable_check_bracket_line = true,                   -- Don't add pairs if it already have a close pairs in same line
@@ -1374,12 +1151,9 @@ require('nvim-autopairs').setup({
 local orig_util_open_floating_preview = vim.lsp.util.open_floating_preview
 function vim.lsp.util.open_floating_preview(contents, syntax, opts, ...)
   opts = opts or {}
-  opts.border = 'rounded'
-  opts.anchor = 'SW'
-  opts.max_width= 700
-  opts.width = 120
-  opts.wrap = false
-  opts.height = 15
+  opts.border = 'single'
+  opts.max_width= opts.max_width or 200
+  opts.height = 10
   return orig_util_open_floating_preview(contents, syntax, opts, ...)
 end
 
@@ -1416,11 +1190,13 @@ mapping = cmp.mapping.preset.insert({
 }),
 sources = cmp.config.sources({
 { name = 'nvim_lsp' },
+{ name = 'nvim_lua' },
+{ name = 'calc' },
 -- { name = 'ultisnips' }, -- For ultisnips users.
--- { name = 'buffer' },
 { name = 'nvim_lsp_signature_help' },
--- { name = 'pandoc_references' },
--- { name = 'path' },
+{ name = 'pandoc_references' },
+{ name = 'path' },
+{ name = 'omni' },
 })
 })
 
@@ -1450,17 +1226,6 @@ sources = cmp.config.sources({
   { name = 'cmdline' }
 })
 })
-
--- require('cmp').setup {
-  -- sources = {
-    -- { name = 'pandoc_references' },
-    -- -- { name = 'buffer' },
-    -- { name = 'nvim_lsp' },
-    -- { name = 'path' },
-    -- { name = 'ultisnips' },
-  -- },
--- }
-
 
 local Rule = require('nvim-autopairs.rule')
 local npairs = require('nvim-autopairs')
@@ -1505,10 +1270,10 @@ npairs.add_rules {
 cmp.event:on('confirm_done', cmp_autopairs.on_confirm_done())
 
 
+
 -- Associating TS emphasis groups with markdown groups 
 vim.api.nvim_set_hl(0, "@text.strong", { link = "markdownBold" })
 vim.api.nvim_set_hl(0, "@text.emphasis", { link = "markdownItalic" })
-vim.api.nvim_set_keymap('i', '<S-{>', '{', {noremap = false})
 
 EOF
 hi lualine_c_inactive guibg=#000000 guifg=#EE6C05 gui=italic
