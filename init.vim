@@ -162,6 +162,7 @@ hi Conceal NONE
 """""""""""""""""""
 nmap <s-m> :ccl<cr>
 nmap <c-s-m> :cope<cr>
+nmap <leader>m :cfile errors.txt<cr>
 nmap <leader><leader>q @
 autocmd User targets#mappings#user call targets#mappings#extend({'?': {'pair': [{'o': '?', 'c': '?'}]}})
 nmap <leader><leader>= :res +10<cr>
@@ -467,28 +468,13 @@ vim.opt.rtp:prepend(lazypath)
 -- vim.g.mapleader = " " -- Make sure to set `mapleader` before lazy so your mappings are correct
 
 require("lazy").setup({
-{ "folke/zen-mode.nvim",
-    opts = {
-	window = {
-	    backdrop = 0, -- shade the backdrop of the Zen window. Set to 1 to keep the same as Normal
-	    -- height and width can be:
-	    -- * an absolute number of cells when > 1
-	    -- * a percentage of the width / height of the editor when <= 1
-	    -- * a function that returns the width or the height
-	    width = 150, -- width of the Zen window
-	    height = 0.9,
-	    -- your configuration comes here
-	    -- or leave it empty to use the default settings
-	    -- refer to the configuration section below
-	    },},
-	},
 	{"hrsh7th/cmp-nvim-lsp-signature-help"},
 	{"latex-lsp/texlab"},
 	{
 	  "hedyhli/outline.nvim",
 	  config = function()
 	    -- Example mapping to toggle outline
-	    vim.keymap.set("n", "<leader>o", "<cmd>Outline<CR>",
+	    vim.keymap.set("n", "<leader>y", "<cmd>Outline<CR>",
 	      { desc = "Toggle Outline" })
 
 	    require("outline").setup {
@@ -509,11 +495,12 @@ require("lazy").setup({
 		-- {"nvim-treesitter/nvim-treesitter"}
 	    -- }
 	    -- },
-	{ "folke/which-key.nvim" },
-	{ "folke/neoconf.nvim", cmd = "Neoconf" },
+	-- { "folke/which-key.nvim" },
+	-- {"folke/neoconf.nvim", cmd = "Neoconf" },
 	{'kevinhwang91/rnvimr'},
 	{'jc-doyle/cmp-pandoc-references'},
 	{'hrsh7th/cmp-nvim-lsp'},
+	{'pocco81/true-zen.nvim'},
 	{'hrsh7th/cmp-buffer'},
 	{'hrsh7th/cmp-omni'},
 	{'hrsh7th/cmp-path'},
@@ -595,7 +582,7 @@ require'nvim-treesitter.configs'.setup {
     -- disable highlighting for the `tex` filetype, you need to include `latex` in this list as this is
     -- the name of the parser)
     -- list of language that will be disabled
-    disable = { "latex", "tex" },
+    disable = { "markdown", "markdown_inline", "latex", "tex", "cpp" },
     -- Or use a function for more flexibility, e.g. to disable slow treesitter highlight for large files
     -- disable = function(lang, buf)
         -- local max_filesize = 100 * 1024 -- 100 KB
@@ -773,7 +760,7 @@ require('lspconfig')['intelephense'].setup{
 
 require'lspconfig'.texlab.setup{}
 
-require('lspconfig')['tsserver'].setup{
+require('lspconfig')['ts_ls'].setup{
     on_attach = on_attach,
     flags = lsp_flags,
 }
@@ -1295,6 +1282,7 @@ local keymap = vim.keymap.set
 keymap("n","<leader>kc", "inewkeyclaim <esc>:call UltiSnips#ListSnippets()<cr>1<cr>")
 
 require('nvim-autopairs').setup({
+    map_cr = true, 
     enable_check_bracket_line = true,                   -- Don't add pairs if it already have a close pairs in same line
     disable_filetype = { "TelescopePrompt" , "vim" },   --
     enable_afterquote = false,                           -- add bracket pairs after quote
@@ -1382,15 +1370,15 @@ sources = cmp.config.sources({
 
 local Rule = require('nvim-autopairs.rule')
 local npairs = require('nvim-autopairs')
+local cond = require('nvim-autopairs.conds')
 -- add option map_cr
-npairs.setup({ map_cr = true })
-npairs.add_rules {
--- before   insert  after
---  (|)     ( |)	( | )
+npairs.add_rules { 
+  Rule('\\{', '\\}', {"tex", "latex"}),
   Rule(' ', ' ')
     :with_pair(function (opts)
       local pair = opts.line:sub(opts.col - 1, opts.col)
-      return vim.tbl_contains({ '()', '[]', '{}' }, pair)
+      local quad = opts.line:sub(opts.col - 2, opts.col + 1)
+      return vim.tbl_contains({ '()', '[]', '{}' }, pair) or vim.tbl_contains({ '\\{\\}' }, quad)
     end),
   Rule('( ', ' )')
       :with_pair(function() return false end)
@@ -1429,4 +1417,13 @@ vim.api.nvim_set_hl(0, "@text.strong", { link = "markdownBold" })
 vim.api.nvim_set_hl(0, "@text.emphasis", { link = "markdownItalic" })
 
 EOF
+" Customize the initial layout
+let g:rnvimr_layout = {
+            \ 'relative': 'editor',
+            \ 'width': float2nr(round(0.8 * &columns)),
+            \ 'height': float2nr(round(0.8 * &lines)),
+            \ 'col': float2nr(round(0.15 * &columns)),
+            \ 'row': float2nr(round(0.15 * &lines)),
+            \ 'style': 'minimal'
+            \ }
 hi lualine_c_inactive guibg=#000000 guifg=#EE6C05 gui=italic

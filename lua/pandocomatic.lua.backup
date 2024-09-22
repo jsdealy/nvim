@@ -30,19 +30,8 @@ end
 
 function sioyekOpen(filename, forcesioyek, usezathura)
     if forcesioyek or string.find(Capture_command_output("ps -e | grep sioyek"), "sioyek") == nil then
-	local subsmade = 0
-	local pdffilename = ""
-	print("filename: <", filename, ">\n")
-	if filename:find('tex[\"\']*$') then
-	    pdffilename, subsmade = filename:gsub('tex[\"\']*$', "pdf")
-	elseif filename:find("md[\"\']*$") then
-	    pdffilename = "output.pdf"
-	    subsmade = 1
-	end
-
-	if subsmade == 1 then
-	    os.execute("sioyek '" .. pdffilename:gsub("'", ""):gsub('"', "") .. "' &> /dev/null &")
-	else print("didn't find .pdf corresponding to: ", pdffilename) end
+	local pdffilename, subsmade = filename:gsub("tex", "pdf")
+	os.execute("sioyek '" .. pdffilename:gsub("'", ""):gsub('"', "") .. "' &> /dev/null &")
     end
 end
 
