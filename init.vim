@@ -160,6 +160,9 @@ hi Conceal NONE
 """""""""""""""""""
 "  Main Mappings  "
 """""""""""""""""""
+nmap <s-m> :ccl<cr>
+nmap <c-s-m> :cope<cr>
+nmap <leader>m :cfile errors.txt<cr>
 nmap <leader><leader>q @
 autocmd User targets#mappings#user call targets#mappings#extend({'?': {'pair': [{'o': '?', 'c': '?'}]}})
 nmap <leader><leader>= :res +10<cr>
@@ -195,13 +198,9 @@ nmap <c-m-j> 3j
 nmap <c-m-k> 3k
 
 " TROUBLE
-nnoremap <leader>tt <cmd>TroubleToggle<cr>
-nnoremap <leader><leader>t <cmd>TroubleToggle<cr>
-nnoremap <leader>xw <cmd>TroubleToggle workspace_diagnostics<cr>
-nnoremap <leader>xd <cmd>TroubleToggle document_diagnostics<cr>
-nnoremap <leader>rq <cmd>TroubleToggle quickfix<cr>
-nnoremap <leader>xl <cmd>TroubleToggle loclist<cr>
-nnoremap gR <cmd>TroubleToggle lsp_references<cr>
+nnoremap <leader><leader>t <cmd>Trouble diagnostics toggle focus=true<cr>
+nnoremap <leader>xw <cmd>Trouble diagnostics toggle filter.buf=0 focus=true<cr>
+nnoremap gR <cmd>Trouble lsp toggle focus=true<cr>
 nmap <leader><leader>z zz
 nmap <leader><tab> zz
 nnoremap <c-d> 5<c-d>
@@ -321,6 +320,10 @@ autocmd FileType tex vmap <leader>gc c%<c-r>"<cr><esc>
 autocmd FileType tex nmap <leader><leader><leader>d :!openInDictionary.sh "<cword>"<cr><cr>
 autocmd FileType tex nmap <leader><leader><leader>s :!openInSEP.sh "<cword>"<cr><cr>
 autocmd FileType tex nmap <leader><leader><leader>t :!openInThesaurus.sh "<cword>"<cr><cr>
+autocmd FileType tex nmap <c-.> <c-n>.<esc>
+autocmd FileType tex imap <c-.> <esc><c-.>
+autocmd FileType tex nmap <c-,> <c-n>,<esc>
+autocmd FileType tex imap <c-,> <esc><c-,>
 " autocmd FileType tex vmap <leader>c di<cr>% <esc>pa<cr><esc>k
 autocmd FileType c nmap <leader>co :copen<cr>zz
 autocmd FileType c nmap <leader>cc :cclose<cr>zz
@@ -423,8 +426,6 @@ nmap <leader>7 :lua require("harpoon.ui").nav_file(7)<cr>
 " 
 " nmap ml <Plug>(Marks-setnext)
 " nmap mm :MarksQFListBuf<cr>
-" nmap <s-m> :ccl<cr>
-" nmap <c-s-m> :cope<cr>
 " nmap dmm <Plug>(Marks-deleteline):wshada!<cr>
 " nmap dm- <Plug>(Marks-deletebuf):wshada!<cr>
 
@@ -467,21 +468,6 @@ vim.opt.rtp:prepend(lazypath)
 -- vim.g.mapleader = " " -- Make sure to set `mapleader` before lazy so your mappings are correct
 
 require("lazy").setup({
-{ "folke/zen-mode.nvim",
-    opts = {
-	window = {
-	    backdrop = 0, -- shade the backdrop of the Zen window. Set to 1 to keep the same as Normal
-	    -- height and width can be:
-	    -- * an absolute number of cells when > 1
-	    -- * a percentage of the width / height of the editor when <= 1
-	    -- * a function that returns the width or the height
-	    width = 150, -- width of the Zen window
-	    height = 0.9,
-	    -- your configuration comes here
-	    -- or leave it empty to use the default settings
-	    -- refer to the configuration section below
-	    },},
-	},
 	{"hrsh7th/cmp-nvim-lsp-signature-help"},
 	{"latex-lsp/texlab"},
 	{
@@ -498,22 +484,10 @@ require("lazy").setup({
 	},
 	{ "folke/neodev.nvim", opts = {} },
 	{'junegunn/fzf'},
-	-- {"glepnir/lspsaga.nvim",
-	    -- event = "LspAttach",
-	    -- config = function()
-	    -- require("lspsaga").setup({})
-	    -- end,
-	    -- dependencies = {
-		-- {"nvim-tree/nvim-web-devicons"},
-		-- --Please make sure you install markdown and markdown_inline parser
-		-- {"nvim-treesitter/nvim-treesitter"}
-	    -- }
-	    -- },
-	{ "folke/which-key.nvim" },
-	{ "folke/neoconf.nvim", cmd = "Neoconf" },
 	{'kevinhwang91/rnvimr'},
 	{'jc-doyle/cmp-pandoc-references'},
 	{'hrsh7th/cmp-nvim-lsp'},
+	{'pocco81/true-zen.nvim'},
 	{'hrsh7th/cmp-buffer'},
 	{'hrsh7th/cmp-omni'},
 	{'hrsh7th/cmp-path'},
@@ -526,10 +500,11 @@ require("lazy").setup({
 	{'AndrewRadev/splitjoin.vim'},
 	{'nvim-lualine/lualine.nvim'},
 	{'nvim-telescope/telescope.nvim'},
-	{'pocco81/true-zen.nvim'},
 	-- {'qpkorr/vim-renamer'},
 	{'nvim-tree/nvim-web-devicons'},
-	{'folke/trouble.nvim'},
+	{'folke/trouble.nvim',   
+	    opts = {}, -- for default options, refer to the configuration section for custom setup.
+	    cmd = "Trouble", },
 	{'junegunn/vim-easy-align'},
 	{'mbbill/undotree'},
 	{'sainnhe/everforest'},
@@ -539,8 +514,8 @@ require("lazy").setup({
 	{'catppuccin/nvim'},
 	-- {'chentoast/marks.nvim'},
 	{'bluz71/vim-moonfly-colors'},
-	'nvim-treesitter/nvim-treesitter', build = ":TSUpdate",
-	{'nvim-treesitter/nvim-treesitter-context'},
+	-- {'nvim-treesitter/nvim-treesitter', build = ":TSUpdate"},
+	-- {'nvim-treesitter/nvim-treesitter-context'},
 	{'tpope/vim-markdown'},
 	{'rose-pine/neovim'},
 	-- to use titlecase, highlight and hit gz <= 02/17/24 14:22:34 " 
@@ -570,46 +545,46 @@ require("lazy").setup({
 
 vim.g.mapleader = '\\'
 
-require'nvim-treesitter.configs'.setup {
-  vim.opt.runtimepath:append("/home/justin/.config/nvim/nvim-treesitter-parsers"),
-  parser_install_dir = "/home/justin/.config/nvim/nvim-treesitter-parsers", -- Remember to run vim.opt.runtimepath:append("/some/path/to/store/parsers")!
-  -- A list of parser names, or "allg
-  ensure_installed = { "php", "http", "python", "c", "cpp", "vimdoc", "markdown", "markdown_inline", "vim", "lua", "css", "html", "rust", "javascript", "java" },
-  vim.treesitter.language.register('html', 'hb'),
-  -- Install parsers synchronously (only applied to `ensure_installed`)
-  sync_install = true,
-  -- Automatically install missing parsers when entering buffer
-  -- Recommendation: set to false if you don't have `tree-sitter` CLI installed locally
-  auto_install = false,
-  -- List of parsers to ignore installing (for "all")
-  -- ignore_install = { "javascript" },
-  ---- If you need to change the installation directory of the parsers (see -> Advanced Setup)
-  indent = {
-      enable = true,
-  },
-  highlight = {
-    -- `false` will disable the whole extension
-    enable = true,
-    -- NOTE: these are the names of the parsers and not the filetype. (for example if you want to
-    -- disable highlighting for the `tex` filetype, you need to include `latex` in this list as this is
-    -- the name of the parser)
-    -- list of language that will be disabled
-    disable = { "latex", "tex" },
-    -- Or use a function for more flexibility, e.g. to disable slow treesitter highlight for large files
-    -- disable = function(lang, buf)
-        -- local max_filesize = 100 * 1024 -- 100 KB
-        -- local ok, stats = pcall(vim.loop.fs_stat, vim.api.nvim_buf_get_name(buf))
-        -- if ok and stats and stats.size > max_filesize then
-          --   return true
-        -- end
-    -- end,
-    -- Setting this to true will run `:h syntax` and tree-sitter at the same time.
-    -- Set this to `true` if you depend on 'syntax' being enabled (like for indentation).
-    -- Using this option may slow down your editor, and you may see some duplicate highlights.
-    -- Instead of true it can also be a list of languages
-    additional_vim_regex_highlighting = false,
-  },
-}
+-- require'nvim-treesitter.configs'.setup {
+--   -- vim.opt.runtimepath:append("/home/justin/.config/nvim/nvim-treesitter-parsers"),
+--   -- parser_install_dir = "/home/justin/.config/nvim/nvim-treesitter-parsers", -- Remember to run vim.opt.runtimepath:append("/some/path/to/store/parsers")!
+--   -- A list of parser names, or "allg
+--   ensure_installed = { "php", "http", "python", "c", "cpp", "markdown", "markdown_inline", "vim", "lua", "css", "html", "rust", "javascript", "java" },
+--   -- vim.treesitter.language.register('html', 'hb'),
+--   -- Install parsers synchronously (only applied to `ensure_installed`)
+--   sync_install = true,
+--   -- Automatically install missing parsers when entering buffer
+--   -- Recommendation: set to false if you don't have `tree-sitter` CLI installed locally
+--   auto_install = false,
+--   -- List of parsers to ignore installing (for "all")
+--   -- ignore_install = { "javascript" },
+--   ---- If you need to change the installation directory of the parsers (see -> Advanced Setup)
+-- --   indent = {
+-- --       enable = true,
+-- --   },
+--   highlight = {
+--     -- `false` will disable the whole extension
+--     enable = true,
+--     -- NOTE: these are the names of the parsers and not the filetype. (for example if you want to
+--     -- disable highlighting for the `tex` filetype, you need to include `latex` in this list as this is
+--     -- the name of the parser)
+--     -- list of language that will be disabled
+--     disable = { "markdown", "markdown_inline", "latex", "text", "vimdoc", "tex", "cpp" },
+--     -- Or use a function for more flexibility, e.g. to disable slow treesitter highlight for large files
+--     -- disable = function(lang, buf)
+--         -- local max_filesize = 100 * 1024 -- 100 KB
+--         -- local ok, stats = pcall(vim.loop.fs_stat, vim.api.nvim_buf_get_name(buf))
+--         -- if ok and stats and stats.size > max_filesize then
+--           --   return true
+--         -- end
+--     -- end,
+--     -- Setting this to true will run `:h syntax` and tree-sitter at the same time.
+--     -- Set this to `true` if you depend on 'syntax' being enabled (like for indentation).
+--     -- Using this option may slow down your editor, and you may see some duplicate highlights.
+--     -- Instead of true it can also be a list of languages
+--     additional_vim_regex_highlighting = false,
+--   },
+-- }
  
 -- require'marks'.setup {
 --    -- whether to map keybinds or not. default true
@@ -832,58 +807,209 @@ require'lspconfig'.bashls.setup{
     filetypes = { 'bash', 'zsh', 'sh' },
 }
 
+---@class trouble.Mode: trouble.Config,trouble.Section.spec
+---@field desc? string
+---@field sections? string[]
 
-require("trouble").setup {
-    position = "bottom", -- position of the list can be: bottom, top, left, right
-    height = 10, -- height of the trouble list when position is top or bottom
-    width = 50, -- width of the list when position is left or right
-    icons = true, -- use devicons for filenames
-    mode = "workspace_diagnostics", -- "workspace_diagnostics", "document_diagnostics", "quickfix", "lsp_references", "loclist"
-    fold_open = ">>", -- icon used for open folds
-    fold_closed = "--", -- icon used for closed folds
-    group = true, -- group results by file
-    padding = true, -- add an extra new line on top of the list
-    action_keys = { -- key mappings for actions in the trouble list
-    -- map to {} to remove a mapping, for example:
-    -- close = {},
-    close = "q", -- close the list
-    cancel = "<esc>", -- cancel the preview and get back to your last window / buffer / cursor
-    refresh = "r", -- manually refresh
-    jump = {"<cr>", "<tab>"}, -- jump to the diagnostic or open / close folds
-    open_split = { "<c-x>" }, -- open buffer in new split
-    open_vsplit = { "<c-v>" }, -- open buffer in new vsplit
-    open_tab = { "<c-t>" }, -- open buffer in new tab
-    jump_close = {"o"}, -- jump to the diagnostic and close the list
-    toggle_mode = "m", -- toggle between "workspace" and "document" diagnostics mode
-    toggle_preview = "P", -- toggle auto_preview
-    hover = "K", -- opens a small popup with the full multiline message
-    preview = "p", -- preview the diagnostic location
-    close_folds = {"zM", "zm"}, -- close all folds
-    open_folds = {"zR", "zr"}, -- open all folds
-    toggle_fold = {"zA", "za"}, -- toggle fold of current file
-    previous = "k", -- previous item
-    next = "j" -- next item
+---@class trouble.Config
+---@field mode? string
+---@field config? fun(opts:trouble.Config)
+---@field formatters? table<string,trouble.Formatter> custom formatters
+---@field filters? table<string, trouble.FilterFn> custom filters
+---@field sorters? table<string, trouble.SorterFn> custom sorters
+local defaults = {
+  auto_close = false, -- auto close when there are no items
+  auto_open = false, -- auto open when there are items
+  auto_preview = true, -- automatically open preview when on an item
+  auto_refresh = true, -- auto refresh when open
+  auto_jump = false, -- auto jump to the item when there's only one
+  focus = false, -- Focus the window when opened
+  restore = true, -- restores the last location in the list when opening
+  follow = true, -- Follow the current item
+  indent_guides = true, -- show indent guides
+  max_items = 200, -- limit number of items that can be displayed per section
+  multiline = true, -- render multi-line messages
+  pinned = false, -- When pinned, the opened trouble window will be bound to the current buffer
+  warn_no_results = true, -- show a warning when there are no results
+  open_no_results = false, -- open the trouble window when there are no results
+  ---@type trouble.Window.opts
+  win = {}, -- window options for the results window. Can be a split or a floating window.
+  -- Window options for the preview window. Can be a split, floating window,
+  -- or `main` to show the preview in the main editor window.
+  ---@type trouble.Window.opts
+  preview = {
+    type = "main",
+    -- when a buffer is not yet loaded, the preview window will be created
+    -- in a scratch buffer with only syntax highlighting enabled.
+    -- Set to false, if you want the preview to always be a real loaded buffer.
+    scratch = true,
+  },
+  -- Throttle/Debounce settings. Should usually not be changed.
+  ---@type table<string, number|{ms:number, debounce?:boolean}>
+  throttle = {
+    refresh = 20, -- fetches new data when needed
+    update = 10, -- updates the window
+    render = 10, -- renders the window
+    follow = 100, -- follows the current item
+    preview = { ms = 100, debounce = true }, -- shows the preview for the current item
+  },
+  -- Key mappings can be set to the name of a builtin action,
+  -- or you can define your own custom action.
+  ---@type table<string, trouble.Action.spec>
+  keys = {
+    ["?"] = "help",
+    r = "refresh",
+    R = "toggle_refresh",
+    q = "close",
+    o = "jump_close",
+    ["<esc>"] = "cancel",
+    ["<cr>"] = "jump",
+    ["<2-leftmouse>"] = "jump",
+    ["<c-s>"] = "jump_split",
+    ["<c-v>"] = "jump_vsplit",
+    -- go down to next item (accepts count)
+    -- j = "next",
+    ["}"] = "next",
+    ["]]"] = "next",
+    -- go up to prev item (accepts count)
+    -- k = "prev",
+    ["{"] = "prev",
+    ["[["] = "prev",
+    dd = "delete",
+    d = { action = "delete", mode = "v" },
+    i = "inspect",
+    p = "preview",
+    P = "toggle_preview",
+    zo = "fold_open",
+    zO = "fold_open_recursive",
+    zc = "fold_close",
+    zC = "fold_close_recursive",
+    za = "fold_toggle",
+    zA = "fold_toggle_recursive",
+    zm = "fold_more",
+    zM = "fold_close_all",
+    zr = "fold_reduce",
+    zR = "fold_open_all",
+    zx = "fold_update",
+    zX = "fold_update_all",
+    zn = "fold_disable",
+    zN = "fold_enable",
+    zi = "fold_toggle_enable",
+    gb = { -- example of a custom action that toggles the active view filter
+      action = function(view)
+        view:filter({ buf = 0 }, { toggle = true })
+      end,
+      desc = "Toggle Current Buffer Filter",
     },
-    indent_lines = true, -- add an indent guide below the fold icons
-    auto_open = false, -- automatically open the list when you have diagnostics
-    auto_close = false, -- automatically close the list when you have no diagnostics
-    auto_preview = true, -- automatically preview the location of the diagnostic. <esc> to close preview and go back to last window
-    auto_fold = false, -- automatically fold a file trouble list at creation
-    auto_jump = {"lsp_definitions"}, -- for the given modes, automatically jump if there is only a single result
-    signs = {
-	-- icons / text used for a diagnostic
-	error = "‼️",
-	warning = "❗",
-	hint = "😇",
-	information = "💫",
-	other = "🎯"
+    s = { -- example of a custom action that toggles the severity
+      action = function(view)
+        local f = view:get_filter("severity")
+        local severity = ((f and f.filter.severity or 0) + 1) % 5
+        view:filter({ severity = severity }, {
+          id = "severity",
+          template = "{hl:Title}Filter:{hl} {severity}",
+          del = severity == 0,
+        })
+      end,
+      desc = "Toggle Severity Filter",
     },
-    use_diagnostic_signs = false -- enabling this will use the signs defined in your lsp client
-    -- your configuration comes here
-    -- or leave it empty to use the default settings
-    -- refer to the configuration section below
+  },
+  ---@type table<string, trouble.Mode>
+  modes = {
+    -- sources define their own modes, which you can use directly,
+    -- or override like in the example below
+    lsp_references = {
+      -- some modes are configurable, see the source code for more details
+      params = {
+        include_declaration = true,
+      },
+    },
+    -- The LSP base mode for:
+    -- * lsp_definitions, lsp_references, lsp_implementations
+    -- * lsp_type_definitions, lsp_declarations, lsp_command
+    lsp_base = {
+      params = {
+        -- don't include the current location in the results
+        include_current = false,
+      },
+    },
+    -- more advanced example that extends the lsp_document_symbols
+    symbols = {
+      desc = "document symbols",
+      mode = "lsp_document_symbols",
+      focus = false,
+      win = { position = "right" },
+      filter = {
+        -- remove Package since luals uses it for control flow structures
+        ["not"] = { ft = "lua", kind = "Package" },
+        any = {
+          -- all symbol kinds for help / markdown files
+          ft = { "help", "markdown" },
+          -- default set of symbol kinds
+          kind = {
+            "Class",
+            "Constructor",
+            "Enum",
+            "Field",
+            "Function",
+            "Interface",
+            "Method",
+            "Module",
+            "Namespace",
+            "Package",
+            "Property",
+            "Struct",
+            "Trait",
+          },
+        },
+      },
+    },
+  },
+  -- stylua: ignore
+  icons = {
+    ---@type trouble.Indent.symbols
+    indent = {
+      top           = "│ ",
+      middle        = "├╴",
+      last          = "└╴",
+      -- last          = "-╴",
+      -- last       = "╰╴", -- rounded
+      fold_open     = " ",
+      fold_closed   = " ",
+      ws            = "  ",
+    },
+    folder_closed   = " ",
+    folder_open     = " ",
+    kinds = {
+      Array         = " ",
+      Boolean       = "󰨙 ",
+      Class         = " ",
+      Constant      = "󰏿 ",
+      Constructor   = " ",
+      Enum          = " ",
+      EnumMember    = " ",
+      Event         = " ",
+      Field         = " ",
+      File          = " ",
+      Function      = "󰊕 ",
+      Interface     = " ",
+      Key           = " ",
+      Method        = "󰊕 ",
+      Module        = " ",
+      Namespace     = "󰦮 ",
+      Null          = " ",
+      Number        = "󰎠 ",
+      Object        = " ",
+      Operator      = " ",
+      Package       = " ",
+      Property      = " ",
+      String        = " ",
+      Struct        = "󰆼 ",
+      TypeParameter = " ",
+      Variable      = "󰀫 ",
+    },
+  },
 }
-
 
 require('lualine').setup {
   options = {
@@ -1143,6 +1269,7 @@ local keymap = vim.keymap.set
 keymap("n","<leader>kc", "inewkeyclaim <esc>:call UltiSnips#ListSnippets()<cr>1<cr>")
 
 require('nvim-autopairs').setup({
+    map_cr = true, 
     enable_check_bracket_line = true,                   -- Don't add pairs if it already have a close pairs in same line
     disable_filetype = { "TelescopePrompt" , "vim" },   --
     enable_afterquote = false,                           -- add bracket pairs after quote
@@ -1230,15 +1357,15 @@ sources = cmp.config.sources({
 
 local Rule = require('nvim-autopairs.rule')
 local npairs = require('nvim-autopairs')
+local cond = require('nvim-autopairs.conds')
 -- add option map_cr
-npairs.setup({ map_cr = true })
-npairs.add_rules {
--- before   insert  after
---  (|)     ( |)	( | )
+npairs.add_rules { 
+  Rule('\\{', '\\}', {"tex", "latex"}),
   Rule(' ', ' ')
     :with_pair(function (opts)
       local pair = opts.line:sub(opts.col - 1, opts.col)
-      return vim.tbl_contains({ '()', '[]', '{}' }, pair)
+      local quad = opts.line:sub(opts.col - 2, opts.col + 1)
+      return vim.tbl_contains({ '()', '[]', '{}' }, pair) or vim.tbl_contains({ '\\{\\}' }, quad)
     end),
   Rule('( ', ' )')
       :with_pair(function() return false end)

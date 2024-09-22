@@ -38,7 +38,11 @@
         "/home/justin/.local/share/nvim/lazy/everforest/lua",
         "/home/justin/.local/share/nvim/lazy/cmp-path/lua",
         "/home/justin/.config/nvim/lua",
+<<<<<<< HEAD
         "${3rd}/luv/library",
         "${3rd}/luassert/library"
+=======
+        "${3rd}/luv/library"
+>>>>>>> origin/master
     ]
 }
