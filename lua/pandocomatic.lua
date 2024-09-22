@@ -1,0 +1,150 @@
+local M = {}
+
+function Capture_command_output(command)
+    local file = io.popen(command)  -- Run command and capture output
+    if file == nil then return "error" end
+    local output = file:read("*all") -- Read all of the file's content
+    file:close()
+    return output
+end
+
+function ReadDotEnvFile(filePath)
+    local env = {}
+    local file = io.open(filePath, "r") -- Open the file for reading
+
+    if file then
+        for line in file:lines() do
+            -- Matches lines with the pattern KEY=value
+            local key, value = line:match("^(.+)=(.+)$")
+            if key and value then
+                env[key] = value
+            end
+        end
+        file:close()
+    else
+        print("No .env file, or else unable to open it...")
+    end
+
+    return env
+end
+
+function sioyekOpen(filename, forcesioyek, usezathura)
+    if forcesioyek or string.find(Capture_command_output("ps -e | grep sioyek"), "sioyek") == nil then
+	local subsmade = 0
+	local pdffilename = ""
+	if filename:find("tex$") then
+	    pdffilename, subsmade = filename:gsub("tex$", "pdf")
+	elseif filename:find("md$") then
+	    pdffilename = "output.pdf"
+	    subsmade = 1
+	end
+	if subsmade == 1 then
+	    os.execute("sioyek '" .. pdffilename:gsub("'", ""):gsub('"', "") .. "' &> /dev/null &")
+	else print("sioyek is already running...") end
+    end
+end
+
+function Pandocomatic(args)
+    -- getting .env variables and storing them in a "table" dict thing <= 01/09/24 18:28:24 -- 
+    local this_buffer_path = (string.gsub(vim.api.nvim_buf_get_name(0), "/[^/]+$", ""))
+    local env_variables = ReadDotEnvFile(this_buffer_path .. "/.env")
+
+    -- function can take two args, 'push' and 'latex' which should be booleans
+    -- there's no point using them unless you assign true to them; false is the default <= 12/24/23 14:33:40 -- 
+    local justopensioyek = false
+    local forcesioyek = false
+    local push = false
+    local latex = false
+    if args ~= nil then
+	justopensioyek = args.justopensioyek or false
+	forcesioyek = args.forcesioyek or false
+	push = args.push or false
+	latex = args.latex or false
+    end
+
+
+    local filename = ""
+    local outdir = ""
+    if latex and env_variables ~= nil then
+	-- storing .env variables in variables 
+	-- these should be KEY=value pairs in .env 
+	-- values in .env files should be absolute paths <= 01/09/24 18:29:48 -- 
+	filename = (env_variables["FILE_FOR_LATEXMK"]) or vim.api.nvim_buf_get_name(0)
+	outdir = (env_variables["OUTDIR_FOR_LATEXMK"]) or this_buffer_path
+	if env_variables["PUSH"] ~= nil and string.lower(env_variables["PUSH"]):find("^true") ~= nil then push = true else push = false end
+    else filename = vim.api.nvim_buf_get_name(0) end
+
+    if justopensioyek == true then
+        sioyekOpen(filename, true)
+	return 0
+    end
+
+    -- getting user description of the update <= 12/30/23 14:03:28 -- 
+    local commit_description = vim.fn.input("describe this update: ")
+    -- clearing the nvim command line <= 12/30/23 14:04:36 -- 
+    print("\n")
+
+
+    -- using the unix command mktemp to create two temporary files <= 12/24/23 14:34:52 -- 
+    local temp = Capture_command_output("mktemp")
+    local temp2 = Capture_command_output("mktemp")
+
+    -- Execute the shell command
+
+    -- Defining the main command <= 12/30/23 13:47:17 -- 
+    local command = ""
+    if latex then command = "latexmk -pdf -f -outdir='" .. outdir:gsub('"', "") .. "' '" .. filename:gsub('"', "") .. "' &> " .. temp
+    else command = "touch output.md && chmod +w output.md && mdcomment '" .. filename:gsub('"', "") .. "' > output.md && chmod -w output.md && pandocomatic output.md &> " .. temp end
+
+    print("filename: " .. filename)
+    print("command: " .. command)
+
+    -- executing the main command <= 10/07/23 16:05:30 -- 
+    local exitCode2 = os.execute(command)
+
+    -- backup stuff 
+    local exitCode1 = 0
+    local gitstatus = Capture_command_output("git status")
+    local branch = Capture_command_output("git branch --show-current"):gsub("\n", "")
+    local backingup = false
+    local bbcommand = ""
+    if gitstatus:find("nothing to commit") == nil then
+	backingup = true
+	vim.api.nvim_command("Git add -A")
+	vim.api.nvim_command("Git commit -m '" .. commit_description .. "'")
+	print("current branch: " .. branch)
+	-- pushing to github if 'push' was set to true <= 12/30/23 13:48:29 -- 
+	if push then vim.api.nvim_command("Git push origin " .. branch) end
+	bbcommand = "bbcxx -v -i '" .. this_buffer_path .. "' -o '" .. this_buffer_path .. "' &>" .. temp2
+	---@diagnostic disable-next-line: cast-local-type
+	exitCode1 = os.execute(bbcommand)
+    end
+
+    -- Check the exit code to determine if the command was successful
+    if ((backingup and exitCode1 == 0) or not backingup) and exitCode2 == 0 then
+	print("Commands executed successfully")
+	-- opening sioyek if it isn't already open <= 10/07/23 12:13:49 -- 
+	sioyekOpen(filename, forcesioyek)
+    elseif exitCode1 ~= 0 then
+	if backingup then
+	    print("bb failed with exit code:", exitCode1)
+	    print("bbcommand: " .. bbcommand)
+	    vim.api.nvim_command("edit" .. temp2)
+	end
+    elseif exitCode2 ~= 0 then
+	if latex then print("latexmk exited with code:", exitCode2)
+	else print("mdcomment or pandocomatic failed with exit code:", exitCode2) end
+	if latex then
+	    local grepsuccess = Capture_command_output("grep 'Output written on' " .. filename:gsub("tex", "log")):find("Output written on")
+	    if grepsuccess == nil then vim.api.nvim_command("edit " .. filename:gsub("tex", "log"))
+	    else
+		print("latexmk had warnings, but produced a pdf...")
+		sioyekOpen(filename)
+	    end
+	    vim.api.nvim_command("edit " .. temp)
+	else vim.api.nvim_command("edit " .. temp)
+	end
+    end
+end
+
+return M
