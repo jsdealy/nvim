@@ -260,8 +260,10 @@ autocmd FileType tex nmap <leader><leader><leader>p :lua Pandocomatic{latex=true
 autocmd FileType tex let b:surround_45 = "\\[ \r \\]"
 lua require('lightmode')
 lua require('darkmode')
+lua require('fixOutlineTrigger')
 command LightMode lua Lightmode()
 command DarkMode lua Darkmode()
+command ToggleOutlineHotkey lua ToggleOutlineHotkey()
 
 
 
@@ -474,8 +476,7 @@ require("lazy").setup({
 	  "hedyhli/outline.nvim",
 	  config = function()
 	    -- Example mapping to toggle outline
-	    vim.keymap.set("n", "<leader>y", "<cmd>Outline<CR>",
-	      { desc = "Toggle Outline" })
+	    outline_keyword = "y",
 
 	    require("outline").setup {
 	      -- Your setup opts here (leave empty to use defaults)
