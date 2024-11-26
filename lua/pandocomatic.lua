@@ -29,7 +29,7 @@ function ReadDotEnvFile(filePath)
 end
 
 function sioyekOpen(filename, forcesioyek, usezathura)
-    if forcesioyek or string.find(Capture_command_output("ps -e | grep sioyek"), "sioyek") == nil then
+    if forcesioyek or string.find(Capture_command_output("ps -e | grep zath"), "zath") == nil then
 	local subsmade = 0
 	local pdffilename = ""
 	print("filename: <", filename, ">\n")
@@ -41,12 +41,13 @@ function sioyekOpen(filename, forcesioyek, usezathura)
 	end
 
 	if subsmade == 1 then
-	    os.execute("sioyek '" .. pdffilename:gsub("'", ""):gsub('"', "") .. "' &> /dev/null &")
+	    os.execute("zathura '" .. pdffilename:gsub("'", ""):gsub('"', "") .. "' &> /dev/null &")
 	else print("didn't find .pdf corresponding to: ", pdffilename) end
     end
 end
 
 function Pandocomatic(args)
+    local message = ""
     -- getting .env variables and storing them in a "table" dict thing <= 01/09/24 18:28:24 -- 
     local this_buffer_path = (string.gsub(vim.api.nvim_buf_get_name(0), "/[^/]+$", ""))
     local env_variables = ReadDotEnvFile(this_buffer_path .. "/.env")
@@ -57,11 +58,13 @@ function Pandocomatic(args)
     local forcesioyek = false
     local push = false
     local latex = false
+    local verbose = false
     if args ~= nil then
 	justopensioyek = args.justopensioyek or false
 	forcesioyek = args.forcesioyek or false
 	push = args.push or false
 	latex = args.latex or false
+	verbose = args.verbose or false
     end
 
 
@@ -96,10 +99,11 @@ function Pandocomatic(args)
     -- Defining the main command <= 12/30/23 13:47:17 -- 
     local command = ""
     if latex then command = "latexmk -pdf -f -outdir='" .. outdir:gsub('"', "") .. "' '" .. filename:gsub('"', "") .. "' &> " .. temp
-    else command = "touch output.md && chmod +w output.md && mdcomment '" .. filename:gsub('"', "") .. "' > output.md && chmod -w output.md && pandocomatic output.md &> " .. temp end
+    else command = "touch output.md && chmod +w output.md && mdcomment '" .. filename:gsub('"', "") .. "' > output.md && chmod -w output.md && pandocomatic output.md &> " .. temp 
+    end
 
-    print("filename: " .. filename)
-    print("command: " .. command)
+    if verbose then message = message .. '\nfilename is <' .. filename .. '>\ncommand is <' .. command .. '>\n' 
+    end
 
     -- executing the main command <= 10/07/23 16:05:30 -- 
     local exitCode2 = os.execute(command)
@@ -114,7 +118,6 @@ function Pandocomatic(args)
 	backingup = true
 	vim.api.nvim_command("Git add -A")
 	vim.api.nvim_command("Git commit -m '" .. commit_description .. "'")
-	print("current branch: " .. branch)
 	-- pushing to github if 'push' was set to true <= 12/30/23 13:48:29 -- 
 	if push then vim.api.nvim_command("Git push origin " .. branch) end
 	bbcommand = "bbcxx -v -i '" .. this_buffer_path .. "' -o '" .. this_buffer_path .. "' &>" .. temp2
@@ -124,23 +127,24 @@ function Pandocomatic(args)
 
     -- Check the exit code to determine if the command was successful
     if ((backingup and exitCode1 == 0) or not backingup) and exitCode2 == 0 then
-	print("Commands executed successfully")
+	message = message .. "Commands executed successfully :)"
+	print(message)
 	-- opening sioyek if it isn't already open <= 10/07/23 12:13:49 -- 
 	sioyekOpen(filename, forcesioyek)
     elseif exitCode1 ~= 0 then
 	if backingup then
-	    print("bb failed with exit code:", exitCode1)
-	    print("bbcommand: " .. bbcommand)
+	    print(message .. "\nbb failed with exit code:", exitCode1)
+	    print("\nbbcommand: " .. bbcommand)
 	    vim.api.nvim_command("edit" .. temp2)
 	end
     elseif exitCode2 ~= 0 then
-	if latex then print("latexmk exited with code:", exitCode2)
-	else print("mdcomment or pandocomatic failed with exit code:", exitCode2) end
+	if latex then print(message .. "\nlatexmk exited with code:", exitCode2)
+	else print(message .. "\nmdcomment or pandocomatic failed with exit code:", exitCode2) end
 	if latex then
 	    local grepsuccess = Capture_command_output("grep 'Output written on' " .. filename:gsub("tex", "log")):find("Output written on")
 	    if grepsuccess == nil then vim.api.nvim_command("edit " .. filename:gsub("tex", "log"))
 	    else
-		print("latexmk had warnings, but produced a pdf...")
+		print(message .. "\nlatexmk had warnings, but produced a pdf...")
 		sioyekOpen(filename)
 	    end
 	    vim.api.nvim_command("edit " .. temp)

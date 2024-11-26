@@ -163,7 +163,6 @@ hi Conceal NONE
 nmap <s-m> :ccl<cr>
 nmap <c-s-m> :cope<cr>
 nmap <leader>m :cfile errors.txt<cr>
-nmap <leader><leader>q @
 autocmd User targets#mappings#user call targets#mappings#extend({'?': {'pair': [{'o': '?', 'c': '?'}]}})
 nmap <leader><leader>= :res +10<cr>
 nmap <leader><leader>- :res -10<cr>
@@ -237,12 +236,9 @@ nmap <c-,> A,<esc>
 imap <c-,> <esc><c-,>
 vnoremap <c-j> :m '>+1<CR>gv=gv
 vnoremap <c-k> :m '<-2<CR>gv=gv
-nmap <leader><leader>r :source $MYVIMRC<cr>
 imap <C-S-Space> <c-o>x
 nnoremap S ciw
 nnoremap X diw
-nmap <leader>td Otodo <esc>:call UltiSnips#ListSnippets()<cr>1<cr>
-imap <leader>td <esc><leader>td
 nmap <leader><leader>c Onewcomment <esc>:call UltiSnips#ListSnippets()<cr>1<cr>
 imap <leader><leader>c <esc><leader><leader>c
 autocmd FileType text nnoremap <leader><leader>c Onewtextcomment <esc>:call UltiSnips#ListSnippets()<cr>1<cr>
@@ -258,6 +254,7 @@ autocmd FileType tex imap <leader><leader>p :lua Pandocomatic{latex=true}<cr>
 autocmd FileType tex nmap <leader><leader>p :lua Pandocomatic{latex=true}<cr>
 autocmd FileType tex nmap <leader><leader><leader>p :lua Pandocomatic{latex=true, justopensioyek=true}<cr>
 autocmd FileType tex let b:surround_45 = "\\[ \r \\]"
+lua require('quickgit')
 lua require('lightmode')
 lua require('darkmode')
 lua require('fixOutlineTrigger')
@@ -477,8 +474,12 @@ require("lazy").setup({
 	  config = function()
 	    -- Example mapping to toggle outline
 	    outline_keyword = "y",
-
+	    vim.keymap.set("n", "<leader>y", "<cmd>Outline<CR>",
+	      { desc = "Toggle Outline" }),
 	    require("outline").setup {
+		outline_window = {
+		    width = 50,
+		}
 	      -- Your setup opts here (leave empty to use defaults)
 	    }
 	  end,
@@ -496,7 +497,7 @@ require("lazy").setup({
 		-- {"nvim-treesitter/nvim-treesitter"}
 	    -- }
 	    -- },
-	-- { "folke/which-key.nvim" },
+	{ "folke/which-key.nvim" },
 	-- {"folke/neoconf.nvim", cmd = "Neoconf" },
 	{'kevinhwang91/rnvimr'},
 	{'jc-doyle/cmp-pandoc-references'},
@@ -529,7 +530,7 @@ require("lazy").setup({
 	-- {'chentoast/marks.nvim'},
 	{'bluz71/vim-moonfly-colors'},
 	'nvim-treesitter/nvim-treesitter', build = ":TSUpdate",
-	{'nvim-treesitter/nvim-treesitter-context'},
+	-- {'nvim-treesitter/nvim-treesitter-context'},
 	{'tpope/vim-markdown'},
 	{'rose-pine/neovim'},
 	-- to use titlecase, highlight and hit gz <= 02/17/24 14:22:34 " 
@@ -582,8 +583,8 @@ require'nvim-treesitter.configs'.setup {
     -- NOTE: these are the names of the parsers and not the filetype. (for example if you want to
     -- disable highlighting for the `tex` filetype, you need to include `latex` in this list as this is
     -- the name of the parser)
-    -- list of language that will be disabled
-    disable = { "markdown", "markdown_inline", "latex", "tex", "cpp" },
+    -- list of language that will be  in grand world situations are probabilitieedisabled
+    disable = { "markdown", "vimdoc", "markdown-inline", "latex", "tex", "cpp" },
     -- Or use a function for more flexibility, e.g. to disable slow treesitter highlight for large files
     -- disable = function(lang, buf)
         -- local max_filesize = 100 * 1024 -- 100 KB
@@ -706,11 +707,13 @@ require'nvim-treesitter.configs'.setup {
 -- Mappings.
 -- See `:help vim.diagnostic.*` for documentation on any of the below functions
 local opts = { noremap=true, silent=true }
-vim.keymap.set('n', '<leader>e', vim.diagnostic.open_float, opts)
-vim.keymap.set('n', '[d', vim.diagnostic.goto_prev, opts)
-vim.keymap.set('n', ']d', vim.diagnostic.goto_next, opts)
-vim.keymap.set('n', '<leader>d', vim.diagnostic.setloclist, opts)
-vim.keymap.set('n', '<leader>k', function() vim.lsp.buf.hover(); vim.lsp.buf.hover(); end, opts)
+function compose (tab1, key, val) temp = tab1; temp[key] = val; return temp end
+vim.keymap.set('n', '<leader>e', vim.diagnostic.open_float, compose(opts, "desc", "lsp diagnostic open float"))
+vim.keymap.set('n', '[d', vim.diagnostic.goto_prev, compose(opts, "desc", "lsp diagnostic go to prev"))
+vim.keymap.set('n', ']d', vim.diagnostic.goto_next, compose(opts, "desc", "lsp diagnostic go to next"))
+vim.keymap.set('n', '<leader>d', vim.diagnostic.setloclist, compose(opts, "desc", "set loc list"))
+vim.keymap.set('n', '<C-S-I>', function() vim.lsp.buf.hover(); vim.lsp.buf.hover(); end, compose(opts, "desc", "lsp hover"))
+vim.keymap.set("n", "<C-S-;>", "<cmd>Outline<CR>")
 
 -- Use an on_attach function to only map the following keys
 -- after the language server attaches to the current buffer
@@ -1028,7 +1031,7 @@ local defaults = {
 require('lualine').setup {
   options = {
     icons_enabled = true,
-    theme = 'molokai',
+    theme = 'iceberg_dark',
     component_separators = { left = '', right = ''},
     section_separators = { left = '', right = ''},
     disabled_filetypes = {
@@ -1092,12 +1095,13 @@ require('lualine').setup {
   extensions = {}
 }
 
-local builtin = require('telescope.builtin')
+local telesc = require('telescope.builtin')
+local pando = require('pandocomatic')
 require('telescope').setup{
 defaults = {
     border = true,
-    layout_strategy = "vertical",
-    layout_config = { preview_height = 30, height = 50 },
+    -- layout_strategy = "vertical",
+    layout_config = { width = 130, preview_width = 80 },
     mappings = {
 	i = { ["<C-l>"] = { "<esc>", type="command" }, }
     }
@@ -1156,17 +1160,23 @@ vim.opt.termguicolors = true
 -- you need to call load_extension, somewhere after setup function:
 -- require("telescope").load_extension "file_browser"
 
-vim.keymap.set('n', '<leader><leader>T', builtin.find_files, {})
-vim.keymap.set('n', '<leader><leader>g', builtin.live_grep, {})
-vim.keymap.set('n', '<leader><leader>G', ':lua require("telescope.builtin").live_grep({search_dirs={vim.fn.expand("%:p")}})<cr>')
-vim.keymap.set('n', '<leader><leader>f', ':lua require("telescope.builtin").current_buffer_fuzzy_find({})<cr>')
-vim.keymap.set('n', '<leader><leader>j', ':lua require("telescope.builtin").jumplist({})<cr>')
-vim.keymap.set('n', '<leader><leader>S', ':lua require("telescope.builtin").tags({})<cr>')
+vim.keymap.set('n', '<leader><leader>T', telesc.find_files, {desc = "telescope file finder"})
+vim.keymap.set('n', '<leader><leader>g', telesc.live_grep, {desc = "telescope live grep the current directory"})
+vim.keymap.set('n', '<leader>td', 'Otodo <esc>:call UltiSnips#ListSnippets()<cr>1<cr>', {desc = "create new todo with ultisnips"})
+vim.keymap.set('n', '<leader><leader>G', 
+    ':lua require("telescope.builtin").live_grep({search_dirs={vim.fn.expand("%:p")}})<cr>', 
+    {desc = "telescope grep the current file"})
+vim.keymap.set('n', '<leader><leader>f', ':FZF<cr>', {desc = "FZF"})
+vim.keymap.set('n', '<C-S-j>', ':lua require("telescope.builtin").jumplist({})<cr>', {desc = "telescope jumplist"})
+vim.keymap.set('n', '<leader><leader>S', ':lua require("telescope.builtin").tags({})<cr>', {desc = "telescope tags"})
 -- vim.keymap.set('n', '<leader><leader>B', ':Telescope file_browser path=/home/justin/Insync/dealyjustins@gmail.com/Google\\ Drive/prog<cr>')
 -- vim.keymap.set('n', '<leader><leader>b', ':Telescope file_browser path=%:p:h select_buffer=true<cr>')
 vim.keymap.set('n', '<leader><leader>b', ':RnvimrToggle<cr>')
 -- vim.keymap.set('n', '<leader><leader>b', ':Telescope file_browser path=%:p:h select_buffer=true<cr>')
-vim.keymap.set('n', '<leader><leader>h', builtin.help_tags, {})
+vim.keymap.set('n', '<leader><leader>k', telesc.keymaps, {desc = "search vim help"})
+vim.keymap.set('n', '<C-S-k>', ':lua Pandocomatic{latex=true}<cr>', {desc = "run pandocomatic"})
+vim.keymap.set('n', '<C-0>', telesc.live_grep, {desc = "telescope live grep the current directory"})
+vim.keymap.set('n', '<leader><leader>h', telesc.help_tags, {desc = "search vim help"})
 vim.keymap.set('n', '<leader><leader>H', ':lua if origfiletype == nil then origfiletype = vim.bo.filetype end; if vim.bo.filetype ~= "html" then vim.bo.filetype = "html"; else vim.bo.filetype = origfiletype; end<cr>')
 vim.keymap.set('n', '<leader><leader>v', ':lua require("telescope.builtin").live_grep({search_dirs={"/home/justin/Insync/dealyjustins@gmail.com/Google Drive/prog/learning/notes"}})<cr>')
 vim.keymap.set('n', '<leader><leader>V', ':lua require("telescope.builtin").live_grep({search_dirs={"/home/justin/Insync/dealyjustins@gmail.com/Google Drive/prog"}})<cr>')
@@ -1180,6 +1190,7 @@ vim.keymap.set('n', '<C-S-Down>', ':vert res +15<cr>')
 vim.keymap.set('n', '<C-S-Up>', ':vert res -15<cr>')
 vim.keymap.set('n', '<leader>v', 'gv')
 vim.keymap.set('v', '<c-l>', '<esc>')
+vim.keymap.set('n', '<S-BS>', ':lua Quickgit{push=true}<cr>')
 --vim.keymap.set('n', '<S-Down>', '<esc>')
 --vim.keymap.set('n', '<S-Up>',   '<esc>')
 --vim.keymap.set('i', '<S-Down>', '.<bs>')
