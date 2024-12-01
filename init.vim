@@ -11,7 +11,7 @@ filetype off                  " required
 """""""""""""""""""""
 let g:UltiSnipsExpandTrigger = "<C-CR>"
 let g:UltiSnipsJumpForwardTrigger = '<C-S-Space>'
-let g:UltiSnipsJumpBackwardTrigger = '<C-BS>'
+" let g:UltiSnipsJumpBackwardTrigger = '<C-BS>'
 " If you want :UltiSnipsEdit to split your window.
 let g:UltiSnipsEditSplit="vertical"
 imap <expr> <CR> pumvisible() ? "<C-R>=UltiSnips#ExpandSnippetOrJump()<CR>" : "<CR>"
@@ -131,7 +131,6 @@ colorscheme torte
 " set fillchars+=vert:*
 set fillchars=stlnc:―
 hi VertSplit guibg=#000000
-hi Function ctermfg=209
 highlight markdownBold gui=bold
 highlight markdownItalic gui=italic
 highlight markdownH1 gui=bolditalic
@@ -147,7 +146,7 @@ hi StatusLine gui=italic
 hi StatusLineNC ctermbg=darkgrey
 hi StatusLineNC ctermfg=173
 hi StatusLineNC gui=italic
-hi Normal ctermbg=234
+" hi Normal ctermbg=234
 hi CursorLine guibg=#111111
 hi CursorLineNR guibg=#111111
 hi ModeMsg ctermbg=yellow
@@ -250,10 +249,11 @@ autocmd FileType markdown nmap <leader><leader><leader>p :lua Pandocomatic{justo
 autocmd FileType markdown imap <leader><leader>P :lua Pandocomatic{push=true}<cr>
 autocmd FileType markdown nmap <leader><leader>P :lua Pandocomatic{push=true}<cr>
 autocmd FileType tex lua require('pandocomatic')
-autocmd FileType tex imap <leader><leader>p :lua Pandocomatic{latex=true}<cr>
-autocmd FileType tex nmap <leader><leader>p :lua Pandocomatic{latex=true}<cr>
+autocmd FileType tex imap <C-S-k> <esc>:lua Pandocomatic{latex=true}<cr>
+autocmd FileType tex nmap <C-S-k> :lua Pandocomatic{latex=true}<cr>
 autocmd FileType tex nmap <leader><leader><leader>p :lua Pandocomatic{latex=true, justopensioyek=true}<cr>
 autocmd FileType tex let b:surround_45 = "\\[ \r \\]"
+autocmd FileType cpp nmap <C-S-k> :!make<cr>
 lua require('quickgit')
 lua require('lightmode')
 lua require('darkmode')
@@ -1096,7 +1096,7 @@ require('lualine').setup {
 }
 
 local telesc = require('telescope.builtin')
-local pando = require('pandocomatic')
+-- local pando = require('pandocomatic')
 require('telescope').setup{
 defaults = {
     border = true,
@@ -1174,7 +1174,7 @@ vim.keymap.set('n', '<leader><leader>S', ':lua require("telescope.builtin").tags
 vim.keymap.set('n', '<leader><leader>b', ':RnvimrToggle<cr>')
 -- vim.keymap.set('n', '<leader><leader>b', ':Telescope file_browser path=%:p:h select_buffer=true<cr>')
 vim.keymap.set('n', '<leader><leader>k', telesc.keymaps, {desc = "search vim help"})
-vim.keymap.set('n', '<C-S-k>', ':lua Pandocomatic{latex=true}<cr>', {desc = "run pandocomatic"})
+-- vim.keymap.set('n', '<C-S-k>', ':lua Pandocomatic{latex=true}<cr>', {desc = "run pandocomatic"})
 vim.keymap.set('n', '<C-0>', telesc.live_grep, {desc = "telescope live grep the current directory"})
 vim.keymap.set('n', '<leader><leader>h', telesc.help_tags, {desc = "search vim help"})
 vim.keymap.set('n', '<leader><leader>H', ':lua if origfiletype == nil then origfiletype = vim.bo.filetype end; if vim.bo.filetype ~= "html" then vim.bo.filetype = "html"; else vim.bo.filetype = origfiletype; end<cr>')
@@ -1190,7 +1190,7 @@ vim.keymap.set('n', '<C-S-Down>', ':vert res +15<cr>')
 vim.keymap.set('n', '<C-S-Up>', ':vert res -15<cr>')
 vim.keymap.set('n', '<leader>v', 'gv')
 vim.keymap.set('v', '<c-l>', '<esc>')
-vim.keymap.set('n', '<S-BS>', ':lua Quickgit{push=true}<cr>')
+vim.keymap.set('n', '<C-BS>', ':lua Quickgit{push=true}<cr>')
 --vim.keymap.set('n', '<S-Down>', '<esc>')
 --vim.keymap.set('n', '<S-Up>',   '<esc>')
 --vim.keymap.set('i', '<S-Down>', '.<bs>')
@@ -1427,6 +1427,12 @@ cmp.event:on('confirm_done', cmp_autopairs.on_confirm_done())
 -- Associating TS emphasis groups with markdown groups 
 vim.api.nvim_set_hl(0, "@text.strong", { link = "markdownBold" })
 vim.api.nvim_set_hl(0, "@text.emphasis", { link = "markdownItalic" })
+
+vim.api.nvim_command("hi Function guifg=#FFAAFF")
+vim.api.nvim_command("hi Type guifg=#CCFFAA")
+vim.api.nvim_command("hi Normal guifg=#A0F0FF")
+vim.api.nvim_command("hi DiagnosticError guifg=red")
+
 
 EOF
 " Customize the initial layout
