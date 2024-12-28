@@ -1,454 +1,201 @@
-set nocompatible              " be iMproved, required
-filetype off                  " required
+require('pandocomatic')
+require('darkmode')
+require('fixOutlineTrigger')
+require('lightmode')
+require('quickgit')
+vim.api.nvim_create_user_command('DarkMode', function() Darkmode() end, {})
+vim.api.nvim_create_user_command('LightMode', function() Lightmode() end, {})
+vim.api.nvim_create_user_command('ToggleOutlineHotkey', function() ToggleOutlineHotkey() end, {})
 
-" " Trigger configuration. You need to change this to something other than <tab> if you use one of the following:
-" " - https://github.com/Valloric/YouCompleteMe
-" " - https://github.com/nvim-lua/completion-nvim
-" let g:deoplete#enable_at_startup = 1
-
-"""""""""""""""""""""
-"  Ultisnips Setup  "
-"""""""""""""""""""""
-let g:UltiSnipsExpandTrigger = "<C-CR>"
-let g:UltiSnipsJumpForwardTrigger = '<C-S-Space>'
-" let g:UltiSnipsJumpBackwardTrigger = '<C-BS>'
-" If you want :UltiSnipsEdit to split your window.
-let g:UltiSnipsEditSplit="vertical"
-imap <expr> <CR> pumvisible() ? "<C-R>=UltiSnips#ExpandSnippetOrJump()<CR>" : "<CR>"
-
-
-
-""""""""""""""""""
-"  vimtex setup  "
-""""""""""""""""""
-let g:vimtex_syntax_conceal_disable = 1
-let g:vimtex_quickfix_enabled = 0
-" let g:tex_flavor='latex' " Default tex file format
-" let g:vimtex_view_method = 'general' " Choose which program to use to view PDF file 
-" let g:vimtex_view_okular_sync = 1 " Value 1 allows forward search after every successful compilation
-" let g:vimtex_view_okular_activate = 1 " Value 1 allows change focus to skim after command `:VimtexView`
-let g:vimtex_toc_todo_labels = {'TODO' : 'TODO'}
-" let g:tex_conceal='abdmg'
-" Viewer options: One may configure the viewer either by specifying a built-in
-" viewer method:
-let g:vimtex_view_method = 'zathura'
-" Or with a generic interface:
-let g:vimtex_view_general_viewer = 'zathura'
-" let g:vimtex_view_general_options = '--unique file:@pdf\#src:@line@tex'
-" This is necessary for VimTeX to load properly. The "indent" is optional.
-" Note that most plugin managers will do this automatically.
-filetype plugin indent on
-" Most VimTeX mappings rely on localleader and this can be changed with the
-" following line. The default is usually fine and is the symbol "\".
-let maplocalleader = "\\" 
-" This enables Vim's and neovim's syntax-related features. Without this, some
-" VimTeX features will not work (see ":help vimtex-requirements" for more
-" info).
-" syntax enable
-" VimTeX uses latexmk as the default compiler backend. If you use it, which is
-" strongly recommended, you probably don't need to configure anything. If you
-" want another compiler backend, you can change it as follows. The list of
-" supported backends and further explanation is provided in the documentation,
-" see ":help vimtex-compiler".
-" let g:vimtex_compiler_method = 'latexrun'
-" On-demand loading
-" Plug 'scrooloose/nerdtree', { 'on':  'NERDTreeToggle' }
-" Plug 'tpope/vim-fireplace', { 'for': 'clojure' }
-" Using a non-default branch
-" Plug 'rdnetto/YCM-Generator', { 'branch': 'stable' }
-" Using a tagged release; wildcard allowed (requires git 1.9.2 or above)
-" Plug 'fatih/vim-go', { 'tag': '*' }
-" " Plugin options
-" Plug 'nsf/gocode', { 'tag': 'v.20150303', 'rtp': 'vim' }
-" " Plugin outside ~/.vim/plugged with post-update hook
-" Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
-" Unmanaged plugin (manually installed and updated)
-" " Plug '~/my-prototype-plugin'
-
-
-
-
-""""""""""""""
-"  Settings  "
-""""""""""""""
-let g:ctrlp_cmd = 'CtrlPBuffer'
-
-let g:rnvimr_layout = {
-            \ 'relative': 'editor',
-            \ 'width': float2nr(round(0.6 * &columns)),
-            \ 'height': float2nr(round(0.6 * &lines)),
-            \ 'col': float2nr(round(0.15 * &columns)),
-            \ 'row': float2nr(round(0.15 * &lines)),
-            \ }
-" Start interactive EasyAlign in visual mode (e.g. vipga)
-xmap ga <Plug>(EasyAlign)
-
-" Start interactive EasyAlign for a motion/text object (e.g. gaip)
-nmap ga <Plug>(EasyAlign)
-
-" This is necessary for luaSeek() and luaRevSeek() handling of brackets on
-" line endings
-set virtualedit=onemore
-
-let $papers = '/home/justin/Insync/dealyjustins@gmail.com/Google Drive/papers/'
-" autocmd FileType c colorscheme torte
-set signcolumn=yes
-set incsearch
-set nohlsearch
-set nu
-set relativenumber
-" autocmd FileType markdown colorscheme kanagawa-wave
-" autocmd FileType c highlight Comment gui=bolditalic
-" autocmd FileType tex set tw=47
-" autocmd FileType markdown set tw=47
-set ignorecase
-set smartcase
-set cursorline
-" set cursorcolumn
-let g:surround_99 = "\\\1command: \1{\r}"
-" let g:surround_96 = "`\r'"
-let g:surround_108 = "\\begin{\1environment: \1}\r\\end{\1\1}"
-" nmap <c-n><c-n><c-n> :G add -A<CR>
-" nmap <c-n><c-n> :G push origin master<CR> 
-" nmap <c-n> :!now=$(date) ; git commit -m ${now}<CR>
-" nmap <c-x> :VimtexCountWords<CR>
-let g:auto_save=1
-set updatetime=3000
-let $FZF_DEFAULT_COMMAND = 'ag --hidden --ignore .git -g "" /home/justin/'
-set nrformats+=alpha
-set noswapfile
-let g:snips_author = "Justin Dealy"
-let g:vimtex_indent_enabled = 0
-" let g:vimtex_compiler_latexmk = {'build_dir': {-> join(["/home/justin/Documents/", expand("%:t:r")], "")}} 
-let g:vimspector_base_dir='/home/justin/.vim/bundle/vimspector'
-" vmap ( <esc>o)<esc>kO(<esc>jI<tab><tab><esc>A
-" vmap { <esc>o}<esc>kO{<esc>jI<tab><tab><esc>A
-" let g:gruvbox_italic=1
-" colorscheme tender
-colorscheme torte
-" colorscheme elflord
-" highlight Comment ctermfg=209
-" set fillchars+=vert:*
-set fillchars=stlnc:―
-hi VertSplit guibg=#000000
-highlight markdownBold gui=bold
-highlight markdownItalic gui=italic
-highlight markdownH1 gui=bolditalic
-hi Function gui=bold
-highlight htmlH1 gui=bolditalic
-set statusline=%F%r%h%w%=\ %y\ %04l\ %04v\ %p%%\ %L
-
-" hi Comment gui=italic 
-hi Visual guibg=#008565
-hi StatusLine ctermbg=236
-hi StatusLine ctermfg=218
-hi StatusLine gui=italic
-hi StatusLineNC ctermbg=darkgrey
-hi StatusLineNC ctermfg=173
-hi StatusLineNC gui=italic
-" hi Normal ctermbg=234
-hi CursorLine guibg=#111111
-hi CursorLineNR guibg=#111111
-hi ModeMsg ctermbg=yellow
-hi ModeMsg ctermfg=red
-hi MoreMsg ctermbg=yellow
-hi MoreMsg ctermfg=red
-" set guicursor=i:block-Cursor
-hi Conceal NONE
-
-"""""""""""""""""""
-"  Main Mappings  "
-"""""""""""""""""""
-nmap <s-m> :ccl<cr>
-nmap <c-s-m> :cope<cr>
-nmap <leader>m :cfile errors.txt<cr>
-autocmd User targets#mappings#user call targets#mappings#extend({'?': {'pair': [{'o': '?', 'c': '?'}]}})
-nmap <leader><leader>= :res +10<cr>
-nmap <leader><leader>- :res -10<cr>
-inoremap <c-e> <esc>Ea
-imap <tab> <tab>
-vmap <c-i> :!pipeToInvert.sh<cr>
-imap <c-f> <esc>la
-imap <c-b> <esc>i
-" imap <c-c> <esc>la
-" imap <c-y> <c-o>diw
-nmap <c-s-j> vipJ
-vnoremap d "ad
-nmap <leader>p "ap
-nmap <leader><s-p> "aP
-nmap <leader><leader><leader> gw
-vmap <leader><leader><leader> gwzz
-nmap <c-n> A
-imap <c-n> <esc>A
-imap <c-i> <esc>I
-nmap <c-s-y> :%y *<cr>
-imap <c-s-y> <esc>:%y *<cr>
-vmap <c-s-y> :y *<cr>
-map <leader><leader>F <esc>:FZF<cr>
-" nmap <s-tab> @
-vmap <leader>y "*y
-set shiftwidth=4
-nmap gf yy:!rifle "<c-r>""<cr><cr>
-inoremap <c-l> <Esc>
-" nnoremap <PageUp> <s-m><c-u>
-" nnoremap <PageDown> <s-m><c-d>
-nmap <c-m-j> 3j
-nmap <c-m-k> 3k
-
-" TROUBLE
-nnoremap <leader><leader>t <cmd>Trouble diagnostics toggle focus=true<cr>
-nnoremap <leader>xw <cmd>Trouble diagnostics toggle filter.buf=0 focus=true<cr>
-nnoremap gR <cmd>Trouble lsp toggle focus=true<cr>
-nmap <leader><leader>z zz
-nmap <leader><tab> zz
-nnoremap <c-d> 5<c-d>
-nnoremap <c-u> 5<c-u>
-vnoremap <c-d> 2<c-d>
-vnoremap <c-u> 2<c-u>
-nmap <space> 5<c-e>
-nnoremap <c-space> 5<c-y>
-nmap <c-j> o<Esc>k
-nmap <c-k> O<Esc>j
-nmap <c-l> <c-j><c-k>
-" nmap  i<cr>
-nmap <leader>e :e!<cr>
-imap <leader><cr> <esc><leader><cr>
-imap <leader><leader><cr> <esc><leader><leader><cr>
-imap <c-h> %
-nmap <c-h> %
-vmap <c-h> %
-nmap <c-F> $
-nmap <c-B> 0
-vmap <c-F> $
-vmap <c-B> 0
-inoremap <c-space> <space><space>
-nmap <c-s> :w<cr>
-nnoremap <c-o> <c-o>zz
-nnoremap <c-i> <c-i>zz
-nmap <PageDown> :cnext<cr>zz
-nmap <PageUp> :cprev<cr>zz
-nnoremap n nzz
-nnoremap N Nzz
-nmap <leader><leader>s :browse old<cr>
-nmap <c-'> i<space><Esc>la<space><Esc>h
-nmap <c-,> A,<esc>
-imap <c-,> <esc><c-,>
-vnoremap <c-j> :m '>+1<CR>gv=gv
-vnoremap <c-k> :m '<-2<CR>gv=gv
-imap <C-S-Space> <c-o>x
-nnoremap S ciw
-nnoremap X diw
-nmap <leader><leader>c Onewcomment <esc>:call UltiSnips#ListSnippets()<cr>1<cr>
-imap <leader><leader>c <esc><leader><leader>c
-autocmd FileType text nnoremap <leader><leader>c Onewtextcomment <esc>:call UltiSnips#ListSnippets()<cr>1<cr>
-autocmd FileType text imap <leader><leader>c <esc><leader><leader>c
-autocmd FileType markdown lua require('pandocomatic')
-autocmd FileType markdown imap <leader><leader>p :lua Pandocomatic()<cr>
-autocmd FileType markdown nmap <leader><leader>p :lua Pandocomatic()<cr>
-autocmd FileType markdown nmap <leader><leader><leader>p :lua Pandocomatic{justopensioyek=true}<cr>
-autocmd FileType markdown imap <leader><leader>P :lua Pandocomatic{push=true}<cr>
-autocmd FileType markdown nmap <leader><leader>P :lua Pandocomatic{push=true}<cr>
-autocmd FileType tex lua require('pandocomatic')
-autocmd FileType tex imap <C-S-k> <esc>:lua Pandocomatic{latex=true}<cr>
-autocmd FileType tex nmap <C-S-k> :lua Pandocomatic{latex=true}<cr>
-autocmd FileType tex nmap <leader><leader><leader>p :lua Pandocomatic{latex=true, justopensioyek=true}<cr>
-autocmd FileType tex let b:surround_45 = "\\[ \r \\]"
-autocmd FileType cpp nmap <C-S-k> :!make<cr>
-lua require('quickgit')
-lua require('lightmode')
-lua require('darkmode')
-lua require('fixOutlineTrigger')
-command LightMode lua Lightmode()
-command DarkMode lua Darkmode()
-command ToggleOutlineHotkey lua ToggleOutlineHotkey()
+vim.keymap.set("n", "<leader><leader>F", "<esc>:FZF<cr>")
+vim.keymap.set("n", "ga", "<Plug>(EasyAlign)")
+vim.keymap.set("i", "<c-b>", "<esc>i")
+vim.keymap.set("i", "<c-,>", "<esc><c-,>")
+vim.keymap.set("i", "<c-f>", "<esc>la")
+vim.keymap.set("i", "<c-h>", "%")
+vim.keymap.set("i", "<c-i>", "<esc>I")
+vim.keymap.set("i", "<c-n>", "<esc>A")
+vim.keymap.set("i", "<C-S-Space>", "<c-o>x")
+vim.keymap.set("i", "<c-s-y>", "<esc>:%y *<cr>")
+vim.keymap.set("i", "<F11>", "<esc>:bp<cr>")
+vim.keymap.set("i", "<F12>", "<esc>:bn<cr>")
+vim.keymap.set("i", "<leader><cr>", "<esc><leader><cr>")
+vim.keymap.set("i", "<leader>`", "<esc>:bn<cr>")
+vim.keymap.set("i", "<leader><leader>c", "<esc><leader><leader>c")
+vim.keymap.set("i", "<leader><leader><cr>", "<esc><leader><leader><cr>")
+vim.keymap.set("i", "<tab>", "<tab>")
+vim.keymap.set("n", "<c-,>", "A,<esc>")
+vim.keymap.set("n", "<c-B>", "0")
+vim.keymap.set("n", "<c-F>", "$")
+vim.keymap.set("n", "<c-h>", "%")
+vim.keymap.set("n", "<c-'>", "i<space><Esc>la<space><Esc>h")
+vim.keymap.set("n", "<c-j>", "o<Esc>k")
+vim.keymap.set("n", "<c-k>", "O<Esc>j")
+vim.keymap.set("n", "<c-l>", "<c-j><c-k>", {remap = true})
+vim.keymap.set("n", "<c-m-j>", "3j")
+vim.keymap.set("n", "<c-m-k>", "3k")
+vim.keymap.set("n", "<c-n>", "A")
+vim.keymap.set("n", "<c-s-j>", "vipJ")
+vim.keymap.set("n", "<c-s-m>", ":cope<cr>")
+vim.keymap.set("n", "<c-s>", ":w<cr>")
+vim.keymap.set("n", "<c-s-y>", ":%y *<cr>")
+vim.keymap.set("n", "<F10>", "<Plug>(Marks-next)")
+vim.keymap.set("n", "<F11>", ":bp<cr>")
+vim.keymap.set("n", "<F12>", ":bn<cr>")
+vim.keymap.set("n", "<F1>", ":UndotreeToggle<cr>")
+vim.keymap.set("n", "<F9>", "<Plug>(Marks-prev)")
+vim.keymap.set("n", "ga", "<Plug> (EasyAlign)")
+vim.keymap.set("n", "gf", "yy:!rifle <c-r><cr><cr>")
+vim.keymap.set("n", "H", "<Plug>Sneak_S")
+vim.keymap.set("n", "<leader>1", ':lua require("harpoon.ui").nav_file(1)<cr>')
+vim.keymap.set("n", "<leader>2", ':lua require("harpoon.ui").nav_file(2)<cr>')
+vim.keymap.set("n", "<leader>3", ':lua require("harpoon.ui").nav_file(3)<cr>')
+vim.keymap.set("n", "<leader>4", ':lua require("harpoon.ui").nav_file(4)<cr>')
+vim.keymap.set("n", "<leader>5", ':lua require("harpoon.ui").nav_file(5)<cr>')
+vim.keymap.set("n", "<leader>6", ':lua require("harpoon.ui").nav_file(6)<cr>')
+vim.keymap.set("n", "<leader>7", ':lua require("harpoon.ui").nav_file(7)<cr>')
+vim.keymap.set("n", "<leader>a", ':lua require("harpoon.mark").add_file()<cr>')
+vim.keymap.set("n", "<leader>`", ':bn<cr>')
+vim.keymap.set("n", "<leader>e", ':e!<cr>')
+vim.keymap.set("n", "<leader><leader>a", ':lua require("harpoon.ui").toggle_quick_menu()<cr>')
+vim.keymap.set("n", "<leader><leader>c", "Onewcomment <esc>:call UltiSnips#ListSnippets()<cr>1<cr>")
+vim.keymap.set("n", "<leader><leader><leader>", "gw")
+vim.keymap.set("n", "<leader><leader>-", ":res -10<cr>")
+vim.keymap.set("n", "<leader><leader>=", ":res +10<cr>")
+vim.keymap.set("n", "<leader><leader>s", ":browse old<cr>")
+vim.keymap.set("n", "<leader><leader>z", "zz")
+vim.keymap.set("n", "<leader>m", ":cfile errors.txt<cr>")
+vim.keymap.set("n", "<leader>p", "ap")
+vim.keymap.set("n", "<leader><s-p>", "aP")
+vim.keymap.set("n", "<leader><tab>", "zz")
+vim.keymap.set("n", "L", "<Plug>Sneak_s")
+vim.keymap.set("n", "<PageDown>", ":cnext<cr>zz")
+vim.keymap.set("n", "<PageUp>", ":cprev<cr>zz")
+vim.keymap.set("n", "<s-m>", ":ccl<cr>")
+vim.keymap.set("n", "<space>", "5<c-e>")
+vim.keymap.set("v", "<leader>y", "*y")
+vim.keymap.set("v", "<leader><leader><leader>", "gwzz")
+vim.keymap.set("v", "<c-s-y>", ":y *<cr>")
+vim.keymap.set("v", "<c-i>", ":!pipeToInvert.sh<cr>")
+vim.keymap.set("v", "<c-h>", "%")
+vim.keymap.set("v", "<c-F>", "$")
+vim.keymap.set("v", "<c-B>", "0")
 
 
+vim.cmd([[au TextYankPost * silent! lua vim.highlight.on_yank { timeout=50 }]])
+vim.cmd([[filetype plugin indent on]])
+vim.cmd([[colorscheme torte]])
+vim.cmd([[set nohlsearch]])
+vim.cmd([[hi Conceal NONE]])
+vim.cmd([[hi CursorLine guibg=#111111]])
+vim.cmd([[hi CursorLineNR guibg=#111111]])
+vim.cmd([[hi Function gui=bold]])
+vim.cmd([[highlight htmlH1 gui=bolditalic]])
+vim.cmd([[highlight markdownBold gui=bold]])
+vim.cmd([[highlight markdownH1 gui=bolditalic]])
+vim.cmd([[highlight markdownItalic gui=italic]])
+vim.cmd([[hi ModeMsg ctermbg=yellow]])
+vim.cmd([[hi ModeMsg ctermfg=red]])
+vim.cmd([[hi MoreMsg ctermbg=yellow]])
+vim.cmd([[hi MoreMsg ctermfg=red]])
+vim.cmd([[hi StatusLine ctermbg=236]])
+vim.cmd([[hi StatusLine ctermfg=218]])
+vim.cmd([[hi StatusLine gui=italic]])
+vim.cmd([[hi StatusLineNC ctermbg=darkgrey]])
+vim.cmd([[hi StatusLineNC ctermfg=173]])
+vim.cmd([[hi StatusLineNC gui=italic]])
+vim.cmd([[hi VertSplit guibg=#000000]])
+vim.cmd([[hi Visual guibg=#008565]])
+
+vim.api.nvim_create_autocmd({"FileType"}, {pattern = {"*.cpp", "*.hpp", "*.h", "*.pl"}, callback = function() vim.keymap.set("i", "<C-S-;>", "::") end})
+vim.api.nvim_create_autocmd({"FileType"}, {pattern = {"*.cpp", "*.hpp", "*.h", "*.pl"}, callback = function() vim.keymap.set("n", "<C-0>", ':!geeks.py "<cword> c++ cpp"<cr><cr>') end})
+vim.api.nvim_create_autocmd({"FileType"}, {pattern = {"*.cpp", "*.hpp", "*.h", "*.pl"}, callback = function() vim.keymap.set("n", "<C-9>", ':!FL.py "<cword> site:cppreference.com"<cr><cr>') end})
+vim.api.nvim_create_autocmd({"FileType"}, {pattern = {"*.cpp", "*.hpp", "*.h", "*.pl"}, callback = function() vim.keymap.set("n", "<C-S-k>", ":!make<cr>") end})
+vim.api.nvim_create_autocmd({"FileType"}, {pattern = {"*.py"}, callback = function() vim.keymap.set('n', '<c-;>', '<c-n>:<esc>') end})
+vim.api.nvim_create_autocmd({"FileType"}, {pattern = {"*.js", "*.ts", "*.pl", "*.php", "*.cpp", "*.hpp", "*.c", "*.lua", "*.h"}, callback = function() vim.keymap.set('n', '<c-;>', '<c-n>;<esc>') end})
+vim.api.nvim_create_autocmd({"FileType"}, {pattern = {"*.js", "*.ts", "*.pl", "*.php", "*.cpp", "*.hpp", "*.c", "*.py", "*.lua", "*.h"}, callback = function() vim.keymap.set('i', '<c-;>', '<esc><c-;>') end})
+vim.api.nvim_create_autocmd({"FileType"}, {pattern = {"*.md"}, callback = function() vim.keymap.set("n", "<leader><leader><leader>p", function() Pandocomatic{justopensioyek=true} end) end})
+vim.api.nvim_create_autocmd({"FileType"}, {pattern = {"*.tex"}, callback = function() vim.keymap.set("n", "<leader><leader><leader>p", function() Pandocomatic{latex=true, justopensioyek=true} end) end})
+
+vim.api.nvim_create_autocmd({"FileType"}, {pattern = {"*.tex"}, callback = function() vim.keymap.set("n", "<C-S-k>", [[:lua Pandocomatic{latex=true}<cr>]]) end})
+vim.api.nvim_create_autocmd({"FileType"}, {pattern = {"*.tex"}, callback = function() vim.keymap.set("i", "<C-S-k>", [[<esc>:lua Pandocomatic{latex=true}<cr>]]) end})
+vim.api.nvim_create_autocmd({"FileType"}, {pattern = {"*.tex"}, callback = function() vim.b.surround_45 = "\\[ \r \\]" end})
+vim.api.nvim_create_autocmd({"FileType"}, {pattern = {"*.tex"}, callback = function() vim.keymap.set("i", "<c-,>", [[<esc><c-,>]]) end})
+vim.api.nvim_create_autocmd({"FileType"}, {pattern = {"*.tex"}, callback = function() vim.keymap.set("i", "<c-.>", [[<esc><c-.>]]) end})
+vim.api.nvim_create_autocmd({"FileType"}, {pattern = {"*.tex"}, callback = function() vim.keymap.set("n", "<c-,>", [[<c-n>,<esc>]]) end})
+vim.api.nvim_create_autocmd({"FileType"}, {pattern = {"*.tex"}, callback = function() vim.keymap.set("n", "<c-.>", [[<c-n>.<esc>]]) end})
+vim.api.nvim_create_autocmd({"FileType"}, {pattern = {"*.tex"}, callback = function() vim.keymap.set("n", "<leader><leader><leader>d", [[:!openInDictionary.sh "<cword>"<cr><cr>]]) end})
+vim.api.nvim_create_autocmd({"FileType"}, {pattern = {"*.tex"}, callback = function() vim.keymap.set("n", "<leader><leader><leader>s", [[:!openInSEP.sh "<cword>"<cr><cr>]]) end})
+vim.api.nvim_create_autocmd({"FileType"}, {pattern = {"*.tex"}, callback = function() vim.keymap.set("n", "<leader><leader><leader>t", [[:!openInThesaurus.sh "<cword>"<cr><cr>]]) end})
+vim.api.nvim_create_autocmd({"FileType"}, {pattern = {"*.tex"}, callback = function() vim.keymap.set("v", "<leader>gc", [[c%<c-r>"<cr><esc>]]) end})
 
 
-""""""""""""""""""""""""""""""""
-"  Filetype-Specific Mappings  "
-""""""""""""""""""""""""""""""""
-autocmd FileType c nmap <c-;> <c-n>;<esc>
-autocmd FileType c imap <c-;> <esc><c-;>
-autocmd FileType lua nmap <c-;> <c-n>;<esc>
-autocmd FileType lua imap <c-;> <esc><c-;>
-autocmd FileType html nmap <c-;> <c-n>;<esc>
-autocmd FileType javascript nmap <c-;> <c-n>;<esc>
-autocmd FileType typescript nmap <c-;> <c-n>;<esc>
-autocmd FileType php nmap <c-;> <c-n>;<esc>
-autocmd FileType php imap <c-;> <esc><c-;>
-autocmd FileType html imap <c-;> <esc><c-;>
-autocmd FileType typescript imap <c-;> <esc><c-;>
-autocmd FileType javascript imap <c-;> <esc><c-;>
-autocmd FileType c nmap <c-h> %
-autocmd FileType cpp nmap <c-;> <c-n>;<esc>
-autocmd FileType php nmap <c-;> <c-n>;<esc>
-autocmd FileType cpp imap <c-;> <esc><c-;>
-autocmd FileType cpp imap <C-S-;> ::
+vim.api.nvim_create_autocmd({"FileType"}, {pattern = {"*.js","*.ts"}, callback = function() vim.keymap.set("n", "<s-k>", [[:!FL.py "<cword> site:api.jquery.com"<cr><cr>]]) end})
+vim.api.nvim_create_autocmd({"FileType"}, {pattern = {"*.js","*.ts"}, callback = function() vim.keymap.set("v", "<s-k>", [[:!FL.py "<cword> site:api.jquery.com"<cr><cr>]]) end})
+vim.api.nvim_create_autocmd({"FileType"}, {pattern = {"*.js","*.ts"}, callback = function() vim.keymap.set("n", "<s-k><s-k>", [[:!searchMDNjavascript "<cword>"<cr><cr>]]) end})
+vim.api.nvim_create_autocmd({"FileType"}, {pattern = {"*.js","*.ts"}, callback = function() vim.keymap.set("v", "<s-k><s-k>", [[:!searchMDNjavascript "<cword>"<cr><cr>]]) end})
+vim.api.nvim_create_autocmd({"FileType"}, {pattern = {"*.js","*.ts"}, callback = function() vim.keymap.set("v", "<s-k><s-k><s-k>", [[:!FL.py "<cword> site:https://nodejs.org/en/docs"<cr><cr>]]) end})
+vim.api.nvim_create_autocmd({"FileType"}, {pattern = {"*.js","*.ts"}, callback = function() vim.keymap.set("n", "<s-k><s-k><s-k>", [[:!FL.py "<cword> site:https://nodejs.org/en/docs"<cr><cr>]]) end})
 
-autocmd FileType cpp nmap <C-0> :!geeks.py "<cword> c++ cpp"<cr><cr>
-autocmd FileType cpp nmap <C-9> :!FL.py "<cword> site:cppreference.com"<cr><cr>
-autocmd FileType c imap <c-z> '\0'
-autocmd FileType python nmap <c-;> <c-n>:<esc>
-autocmd FileType python nmap <s-k> :!searchPythonDocs.sh "<cword>"<cr><cr>
-autocmd FileType javascript nmap <s-k><s-k> :!searchMDNjavascript "<cword>"<cr><cr>
-autocmd FileType javascript vmap <s-k><s-k> :!searchMDNjavascript "<cword>"<cr><cr>
-autocmd FileType javascript vmap <s-k> :!FL.py "<cword> site:api.jquery.com"<cr><cr>
-autocmd FileType javascript nmap <s-k> :!FL.py "<cword> site:api.jquery.com"<cr><cr>
-autocmd FileType javascript nmap <s-k><s-k><s-k> :!FL.py "<cword> site:https://nodejs.org/en/docs"<cr><cr>
-autocmd FileType javascript vmap <s-k><s-k><s-k> :!FL.py "<cword> site:https://nodejs.org/en/docs"<cr><cr>
-autocmd FileType javascript nmap <s-k><s-k><s-k><s-k> :!FL.py "<cword> https://expressjs.com/en/4x/api.html"<cr><cr>
-autocmd FileType javascript vmap <s-k><s-k><s-k><s-k> :!FL.py "<cword> https://expressjs.com/en/4x/api.html"<cr><cr>
-autocmd FileType php nmap <s-k> :!searchPHPdocs "<cword>"<cr><cr>
-autocmd FileType php vmap <s-k> :!searchPHPdocs "<cword>"<cr><cr>
-autocmd FileType python imap <c-;> <esc><c-;>
-autocmd FileType php imap <c-;> <esc><c-;>
-" autocmd FileType python nmap <leader><leader>c O# 
-" autocmd FileType php nmap <leader><leader>c O//    
-" " autocmd FileType python nmap <leader>td O# TODO<esc>:put =strftime('%D %T')<cr>kJA => 
-" autocmd FileType cpp nmap <leader><leader>c O/*  */<Esc>hhi
-" autocmd FileType c nmap <leader><leader>c O/*  */<Esc>hhi
-autocmd FileType c nmap <leader><leader>p Oprintf("At position %i", debugPos++);<Esc>ml
-autocmd FileType c nmap <leader>p Oint debugPos = 0;
-autocmd FileType markdown nmap <leader><cr> }<c-j>k/^\s*$<cr>i<cr>- 
-autocmd FileType markdown nmap <leader><leader><cr> }<c-j>k/^\s*$<cr>i<c-space>> 
-" autocmd FileType tex nmap <leader><cr> oitm
-" autocmd FileType tex nmap <leader><leader><cr> o<tab>sitm
-" autocmd FileType tex nmap <leader>s o<tab>ssitm
-autocmd FileType tex vmap <leader>gc c%<c-r>"<cr><esc>
-autocmd FileType tex nmap <leader><leader><leader>d :!openInDictionary.sh "<cword>"<cr><cr>
-autocmd FileType tex nmap <leader><leader><leader>s :!openInSEP.sh "<cword>"<cr><cr>
-autocmd FileType tex nmap <leader><leader><leader>t :!openInThesaurus.sh "<cword>"<cr><cr>
-autocmd FileType tex nmap <c-.> <c-n>.<esc>
-autocmd FileType tex imap <c-.> <esc><c-.>
-autocmd FileType tex nmap <c-,> <c-n>,<esc>
-autocmd FileType tex imap <c-,> <esc><c-,>
-" autocmd FileType tex vmap <leader>c di<cr>% <esc>pa<cr><esc>k
-autocmd FileType c nmap <leader>co :copen<cr>zz
-autocmd FileType c nmap <leader>cc :cclose<cr>zz
-autocmd FileType c nmap <leader>cn :cnext<cr>zz
-autocmd FileType c nmap <leader>cp :cprev<cr>zz
-autocmd FileType markdown nmap <F3> /^## <cr>
-autocmd FileType markdown nmap <F4> :MarkdownPreview<cr>
-" autocmd FileType tex nmap <F4> :VimtexTocToggle<cr>
-autocmd FileType c nmap <F2> :Goyo<cr>:hi CursorLine ctermbg=235<cr>:hi CursorLineNR ctermbg=235<cr>:hi Normal ctermbg=234<cr>
-autocmd FileType markdown nmap <F5> :!pandoc -f markdown -t pdf -i % -o %.pdf<cr>
+vim.api.nvim_create_autocmd({"FileType"}, {pattern = {"*.md"}, callback = function() vim.keymap.set("n", "<F3>", [[/^## <cr>]]) end})
+vim.api.nvim_create_autocmd({"FileType"}, {pattern = {"*.md"}, callback = function() vim.keymap.set("n", "<F4>", [[:MarkdownPreview<cr>]]) end})
+-- vim.api.nvim_create_autocmd({"FileType"}, {pattern = {"*.md"}, callback = function() vim.keymap.set("n", "<leader><cr>", [[}<c-j>k/^\s*$<cr>i<cr>-]]) end})
+-- vim.api.nvim_create_autocmd({"FileType"}, {pattern = {"*.md"}, callback = function() vim.keymap.set("n", "<leader><leader><cr>", [[}<c-j>k/^\s*$<cr>i<c-space>>]]) end})
 
+vim.api.nvim_create_autocmd({"FileType"}, {pattern = {"*.php"}, callback = function() vim.keymap.set({"n", "v"}, "<s-k>", [[:!searchPHPdocs "<cword>"<cr><cr>]]) end})
+vim.api.nvim_create_autocmd({"FileType"}, {pattern = {"*.py"}, callback = function() vim.keymap.set("n", "<s-k>", [[:!searchPythonDocs.sh "<cword>"<cr><cr>]]) end})
 
-function! PMarkdown()
-    if &filetype ==# 'markdown'
-	!pandoc -f markdown -t pdf -i "%" -o "%.pdf"
-    endif 
-endfunction
+vim.keymap.set("i", "<c-e>", [[<esc>Ea]])
+vim.keymap.set("i", "<c-l>", [[<Esc>]])
+vim.keymap.set("i", "<c-space>", [[<space><space>]])
+vim.keymap.set("n", "<c-d>", [[5<c-d>]])
+vim.keymap.set("n", "<c-i>", [[<c-i>zz]])
+vim.keymap.set("n", "<c-o>", [[<c-o>zz]])
+vim.keymap.set("n", "<c-space>", [[5<c-y>]])
+vim.keymap.set("n", "<c-u>", [[5<c-u>]])
+vim.keymap.set("n", "<F7>", [[:set hlsearch!<cr>]])
+vim.keymap.set("n", "gR", [[<cmd>Trouble lsp toggle focus=true<cr>]])
+vim.keymap.set("n", "<leader><leader>t", [[<cmd>Trouble diagnostics toggle focus=true<cr>]])
+vim.keymap.set("n", "<leader>xw", [[<cmd>Trouble diagnostics toggle filter.buf=0 focus=true<cr>]])
+vim.keymap.set("n", "n", [[nzz]])
+vim.keymap.set("n", "N", [[Nzz]])
+vim.keymap.set("n", "X", [[diw]])
+vim.keymap.set("v", "<c-d>", [[2<c-d>]])
+vim.keymap.set("v", "<c-j>", ":m '>+1<CR>gv=gv")
+vim.keymap.set("v", "<c-k>", ":m '<-2<CR>gv=gv")
+vim.keymap.set("v", "<c-u>", [[2<c-u>]])
 
+vim.g.rnvimr_action = { ["<C-B>"] = "NvimEdit tabedit",  ["<C-x>"] = "NvimEdit split",  ["<C-v>"] = "NvimEdit vsplit",  ["<C-o>"] = "NvimEdit drop",  ["<CR>"] = "NvimEdit drop",  ["gw"] = "JumpNvimCwd",  ["yw"] = "EmitRangerCwd" }
+vim.g.rnvimr_layout = {  relative= 'editor',  width= math.floor(0.8 * vim.o.columns),  height= math.floor(0.8 * vim.o.lines),  col= math.floor(0.15 * vim.o.columns),  row= math.floor(0.15 * vim.o.lines), style= 'minimal'  }
 
-"""""""""""""""""""""""""""""
-"  Function Keys Mappings   "
-"""""""""""""""""""""""""""""
-nmap <F1> :UndotreeToggle<cr>
-" nmap <F2> :vimgrep /#\{1,}\s/ %<cr>:cope<cr>
-" nmap <F3> :cclo<cr>
-nnoremap <F7> :set hlsearch!<cr>
-" highlight category checker VVV
-" nnoremap <F10> :echo "hi<" . synIDattr(synID(line("."),col("."),1),"name") . '> trans<'
-" \ . synIDattr(synID(line("."),col("."),0),"name") . "> lo<"
-" \ . synIDattr(synIDtrans(synID(line("."),col("."),1)),"name") . ">"<CR>
-imap <F11> <esc>:bp<cr>
-imap <F12> <esc>:bn<cr>
-imap <leader>` <esc>:bn<cr>
-nmap <F11> :bp<cr>
-nmap <F12> :bn<cr>
-nmap <leader>` :bn<cr>
-nmap <F9> <Plug>(Marks-prev)
-nmap <F10> <Plug>(Marks-next)
+vim.g.FZF_DEFAULT_COMMAND = 'ag --hidden --ignore .git -g "" /home/justin/'
+vim.g.auto_save=1
+vim.g.ctrlp_cmd = 'CtrlPBuffer'
+vim.g.surround_108 = "\\begin{\1environment: \1}\r\\end{\1\1}"
+vim.g.surround_99 = "\\\1command: \1{\r}"
+vim.g.UltiSnipsEditSplit="vertical"
+vim.g.UltiSnipsExpandTrigger = "<C-CR>"
+vim.g.UltiSnipsJumpForwardTrigger = '<C-S-Space>'
+vim.g.vimtex_indent_enabled = 0
+vim.g.vimtex_quickfix_enabled = 0
+vim.g.vimtex_syntax_conceal_disable = 1
+vim.g.vimtex_toc_todo_labels = {TODO = 'TODO'}
+vim.g.maplocalleader = "\\" 
 
-""""""""""""""""""""""""""""
-"  Needs to be Organized  "
-"""""""""""""""""""""""""""
-" nmap - @
-
-" let g:highlightedyank_highlight_duration = 50
-
-
-
-" harpoon keybinds
-nmap <leader>a :lua require("harpoon.mark").add_file()<cr>
-nmap <leader><leader>a :lua require("harpoon.ui").toggle_quick_menu()<cr>
-
-nmap <leader>1 :lua require("harpoon.ui").nav_file(1)<cr>
-nmap <leader>2 :lua require("harpoon.ui").nav_file(2)<cr>
-nmap <leader>3 :lua require("harpoon.ui").nav_file(3)<cr>
-nmap <leader>4 :lua require("harpoon.ui").nav_file(4)<cr>
-nmap <leader>5 :lua require("harpoon.ui").nav_file(5)<cr>
-nmap <leader>6 :lua require("harpoon.ui").nav_file(6)<cr>
-nmap <leader>7 :lua require("harpoon.ui").nav_file(7)<cr>
-
-" imap <leader>a <esc>:lua require("harpoon.mark").add_file()<cr>
-" imap <leader><leader>a <esc>:lua require("harpoon.ui").toggle_quick_menu()<cr>
-" imap <leader>1 <esc>:lua require("harpoon.ui").nav_file(1)<cr>
-" map <leader>2 <esc>:lua require("harpoon.ui").nav_file(2)<cr>
-" imap <leader>3 <esc>:lua require("harpoon.ui").nav_file(3)<cr>
-" imap <leader>4 <esc>:lua require("harpoon.ui").nav_file(4)<cr>
-" imap <leader>5 <esc>:lua require("harpoon.ui").nav_file(5)<cr>
-" imap <leader>6 <esc>:lua require("harpoon.ui").nav_file(6)<cr>
-" imap <leader>7 <esc>:lua require("harpoon.ui").nav_file(7)<cr>
-
-" 
-" """"""""""""""""""""
-" "  Marks Mappings  "
-" """"""""""""""""""""
-" 
-" nmap <leader><leader>1 <Plug>(Marks-next-bookmark1)zz
-" nmap <leader><leader>2 <Plug>(Marks-next-bookmark2)zz
-" nmap <leader><leader>3 <Plug>(Marks-next-bookmark3)zz
-" nmap <leader><leader>4 <Plug>(Marks-next-bookmark4)zz
-" nmap <leader><leader>5 <Plug>(Marks-next-bookmark5)zz
-" nmap <leader><leader>6 <Plug>(Marks-next-bookmark6)zz
-" nmap <leader><leader>7 <Plug>(Marks-next-bookmark7)zz
-" nmap <leader><leader>8 <Plug>(Marks-next-bookmark8)zz
-" nmap <leader><leader>9 <Plug>(Marks-next-bookmark9)zz
-" nmap <leader><leader>0 <Plug>(Marks-next-bookmark0)zz
-" 
-" nmap <leader>]1 <Plug>(Marks-prev-bookmark1)zz
-" nmap <leader>]2 <Plug>(Marks-prev-bookmark2)zz
-" nmap <leader>]3 <Plug>(Marks-prev-bookmark3)zz
-" nmap <leader>]4 <Plug>(Marks-prev-bookmark4)zz
-" nmap <leader>]5 <Plug>(Marks-prev-bookmark5)zz
-" nmap <leader>]6 <Plug>(Marks-prev-bookmark6)zz
-" nmap <leader>]7 <Plug>(Marks-prev-bookmark7)zz
-" nmap <leader>]8 <Plug>(Marks-prev-bookmark8)zz
-" nmap <leader>]9 <Plug>(Marks-prev-bookmark9)zz
-" nmap <leader>]0 <Plug>(Marks-prev-bookmark0)zz
-" 
-" nmap <leader><leader>e <Plug>(Marks-next)zz
-" nmap <leader><leader>w <Plug>(Marks-prev)zz
-" 
-" nmap ml <Plug>(Marks-setnext)
-" nmap mm :MarksQFListBuf<cr>
-" nmap dmm <Plug>(Marks-deleteline):wshada!<cr>
-" nmap dm- <Plug>(Marks-deletebuf):wshada!<cr>
-
-au TextYankPost * silent! lua vim.highlight.on_yank { timeout=50 }
-set formatoptions-=cro
-
-" Map Rnvimr action
-let g:rnvimr_action = {
-            \ '<C-B>': 'NvimEdit tabedit',
-            \ '<C-x>': 'NvimEdit split',
-            \ '<C-v>': 'NvimEdit vsplit',
-            \ '<C-o>': 'NvimEdit drop',
-            \ '<CR>': 'NvimEdit drop',
-            \ 'gw': 'JumpNvimCwd',
-            \ 'yw': 'EmitRangerCwd'
-            \ }
-
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-"                                    LUA                                     "
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-
-set runtimepath^=/home/justin/.config/nvim/nvim-treesitter-parsers
-
-lua <<EOF
+vim.opt.cursorline = true
+vim.opt.ignorecase = true
+vim.opt.incsearch = true
+vim.opt.nu = true
+vim.opt.relativenumber = true
+vim.opt.smartcase = true
+vim.opt.shiftwidth = 4
+vim.opt.signcolumn = "yes"
+vim.opt.fillchars = "stlnc:―"
+vim.opt.updatetime = 3000
+vim.opt.virtualedit = "onemore"
+vim.opt.nrformats:append("alpha")
+vim.opt.formatoptions:remove("cro")
+vim.opt.runtimepath:prepend("/home/justin/.config/nvim/nvim-treesitter-parsers")
 
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not vim.loop.fs_stat(lazypath) then
@@ -484,6 +231,7 @@ require("lazy").setup({
 	    }
 	  end,
 	},
+	{ "justinmk/vim-sneak" },
 	{ "folke/neodev.nvim", opts = {} },
 	{'junegunn/fzf'},
 	-- {"glepnir/lspsaga.nvim",
@@ -556,7 +304,7 @@ require("lazy").setup({
 	{'neovim/nvim-lspconfig'},
 })
 
-
+require("globals")
 
 vim.g.mapleader = '\\'
 
@@ -601,109 +349,6 @@ require'nvim-treesitter.configs'.setup {
   },
 }
  
--- require'marks'.setup {
---    -- whether to map keybinds or not. default true
---    default_mappings = true,
---    -- which builtin marks to show. default {}
---    builtin_marks = { ".", "<", ">", "^" },
---    -- whether movements cycle back to the beginning/end of buffer. default true
--- 
---    cyclic = true,
---    -- whether the shada file is updated after modifying uppercase marks. default false
---    force_write_shada = false,
---    -- how often (in ms) to redraw signs/recompute mark positions. 
---    -- higher values will have better performance but may cause visual lag, 
---    -- while lower values may cause performance penalties. default 150.
---    refresh_interval = 250,
---    -- sign priorities for each type of mark - builtin marks, uppercase marks, lowercase
---    -- marks, and bookmarks.
---    -- can be either a table with all/none of the keys, or a single number, in which case
---    -- the priority applies to all marks.
---    -- default 10.
---    sign_priority = { lower=10, upper=15, builtin=8, bookmark=20 },
---    -- disables mark tracking for specific filetypes. default {}
---    excluded_filetypes = {},
---    -- marks.nvim allows you to configure up to 10 bookmark groups, each with its own
---    -- sign/virttext. Bookmarks can be used to group together positions and quickly move
---    -- across multiple buffers. default sign is '!@#$%^&*()' (from 0 to 9), and
---    -- default virt_text is "".
---    bookmark_0 = {
---      -- sign = "⚑",
---      -- virt_text = "TODO",
---      -- explicitly prompt for a virtual line annotation when setting a bookmark from this group.
---      -- defaults to false.
---      annotate = true,
---    },
---    bookmark_1 = {
---        sign = "⚑",
---        virt_text = "TODO",
---        -- explicitly prompt for a virtual line annotation when setting a bookmark from this group.
---        -- defaults to false.
---        annotate = false,
---    },
---    bookmark_2 = {
---      -- sign = "⚑",
---      -- virt_text = "TODO",
---      -- explicitly prompt for a virtual line annotation when setting a bookmark from this group.
---      -- defaults to false.
---      annotate = true,
---    },
---    bookmark_3 = {
---      -- sign = "⚑",
---      -- virt_text = "TODO",
---      -- explicitly prompt for a virtual line annotation when setting a bookmark from this group.
---      -- defaults to false.
---      annotate = true,
---      },
---    bookmark_4 = {
---      -- sign = "⚑",
---      -- virt_text = "TODO",
---      -- explicitly prompt for a virtual line annotation when setting a bookmark from this group.
---      -- defaults to false.
---      annotate = true,
---    },
---    bookmark_5 = {
---      -- sign = "⚑",
---      -- virt_text = "TODO",
---      -- explicitly prompt for a virtual line annotation when setting a bookmark from this group.
---      -- defaults to false.
---      annotate = true,
---    },
---    bookmark_6 = {
---      -- sign = "⚑",
---      -- virt_text = "TODO",
---      -- explicitly prompt for a virtual line annotation when setting a bookmark from this group.
---      -- defaults to false.
---      annotate = true,
---    },
---    bookmark_7 = {
---      -- sign = "⚑",
---      -- virt_text = "TODO",
---      -- explicitly prompt for a virtual line annotation when setting a bookmark from this group.
---      -- defaults to false.
---      annotate = true,
---    },
---    bookmark_8 = {
---      -- sign = "⚑",
---      -- virt_text = "TODO",
---      -- explicitly prompt for a virtual line annotation when setting a bookmark from this group.
---      -- defaults to false.
---      annotate = true,
---    },
---    bookmark_9 = {
---      -- sign = "⚑",
---      -- virt_text = "TODO",
---      -- explicitly prompt for a virtual line annotation when setting a bookmark from this group.
---      -- defaults to false.
---      annotate = true,
---    },
---    mappings = {
---        annotate = "\\z",
---        delete_line = false,
---        delete_buf = false
---    }
---  }
-
 -- Mappings.
 -- See `:help vim.diagnostic.*` for documentation on any of the below functions
 local opts = { noremap=true, silent=true }
@@ -720,7 +365,6 @@ vim.keymap.set("n", "<C-S-;>", "<cmd>Outline<CR>")
 local on_attach = function(client, bufnr)
   -- Enable completion triggered by <c-x><c-o>
   vim.api.nvim_buf_set_option(bufnr, 'omnifunc', 'v:lua.vim.lsp.omnifunc')
-
   -- -- Mappings.
   -- -- See `:help vim.lsp.*` for documentation on any of the below functions
   local bufopts = { noremap=true, silent=true, buffer=bufnr }
@@ -746,6 +390,7 @@ local lsp_flags = {
   -- This is the default in Nvim 0.7+
   debounce_text_changes = 150,
 }
+require'lspconfig'.ruff.setup{}
 require'lspconfig'.pyright.setup{}
 require('lspconfig')['clangd'].setup{
     on_attach = on_attach,
@@ -761,6 +406,23 @@ require('lspconfig')['intelephense'].setup{
     cmd = { "intelephense", '--stdio' },
     filetypes = { "php" }
 }
+
+local servers = { 'perlpls' }
+for _, lsp in pairs(servers) do
+  require('lspconfig')[lsp].setup {
+    settings = {
+      perl = {
+        perlcritic = { enabled = true },
+        syntax = { enabled = true },
+      },
+    },
+    single_file_support = true,
+    on_attach = function(client, bufnr)
+      -- Your custom mappings and settings here
+    end,
+    capabilities = require('cmp_nvim_lsp').default_capabilities(),
+  }
+end
 
 require'lspconfig'.texlab.setup{}
 
@@ -789,8 +451,6 @@ require'lspconfig'.html.setup {
     filetypes = { 'html', 'php', 'hb' },
 }
 
-
-
 require('lspconfig')['rust_analyzer'].setup{
     on_attach = on_attach,
     flags = lsp_flags,
@@ -800,29 +460,6 @@ require('lspconfig')['rust_analyzer'].setup{
     }
 }
 local configs = require('lspconfig.configs')
-local lspconfig = require('lspconfig')
-if not configs.awklsp then
-  configs.awklsp = {
-    default_config = {
-      cmd = { 'awk-language-server' },
-      filetypes = { 'awk' },
-      single_file_support = true,
-      handlers = {
-        ['workspace/workspaceFolders'] = function()
-          return {{
-            uri = 'file://' .. vim.fn.getcwd(),
-            name = 'current_dir',
-          }}
-        end
-      }
-    },
-  }
-end
-lspconfig.awklsp.setup{}
-
-require'lspconfig'.bashls.setup{
-    filetypes = { 'bash', 'zsh', 'sh' },
-}
 
 ---@class trouble.Mode: trouble.Config,trouble.Section.spec
 ---@field desc? string
@@ -1098,41 +735,72 @@ require('lualine').setup {
 local telesc = require('telescope.builtin')
 -- local pando = require('pandocomatic')
 require('telescope').setup{
-defaults = {
-    border = true,
-    -- layout_strategy = "vertical",
-    layout_config = { width = 130, preview_width = 80 },
-    mappings = {
-	i = { ["<C-l>"] = { "<esc>", type="command" }, }
-    }
-    },
---    extensions = {
---	file_browser = {
---	    theme = "ivy",
---	    -- disables netrw and use telescope-file-browser in its place
---	    hijack_netrw = true,
---	    initial_mode = "normal",
---	    mappings = {
---		["i"] = {
---		    -- your custom insert mode mappings
---		    },
---		    ["n"] = {
---			-- your custom normal mode mappings
---			},
---		    },
---	    },
---	},
-    pickers ={
-	jumplist = {
-	    initial_mode = "normal"
+    defaults = {
+	layout_strategy = 'vertical',
+	layout_config = { 
+	    -- top_pane = {
+		    -- height = 25,
+		    -- prompt_position = "top"
+		-- },
+	    -- bottom_pane = {
+		    -- height = 25,
+		    -- preview_cutoff = 10,
+		    -- prompt_position = "top"
+		-- },
+		-- center = {
+		    -- height = 0.4,
+		    -- preview_cutoff = 40,
+		    -- prompt_position = "top",
+		    -- width = 0.5
+		    -- },
+		-- cursor = {
+		    -- height = 0.9,
+		    -- preview_cutoff = 40,
+		    -- width = 0.8
+		    -- },
+		-- horizontal = {
+		    -- height = 0.9,
+		    -- preview_cutoff = 120,
+		    -- prompt_position = "bottom",
+		    -- width = 0.8
+		    -- },
+		 vertical = {
+		     prompt_position = "top",
+		     height = .95,
+		     preview_cutoff = 1,
+		     width = 0.95
+		 }
+	    },
+	mappings = {
+	    i = { ["<C-l>"] = { "<esc>", type="command" }, }
 	}
 	},
+	--    extensions = {
+	    --	file_browser = {
+		--	    theme = "ivy",
+		--	    -- disables netrw and use telescope-file-browser in its place
+		--	    hijack_netrw = true,
+		--	    initial_mode = "normal",
+		--	    mappings = {
+		    --		["i"] = {
+			--		    -- your custom insert mode mappings
+			--		    },
+			--		    ["n"] = {
+			    --			-- your custom normal mode mappings
+			    --			},
+			    --		    },
+			    --	    },
+			    --	},
+			    pickers ={
+			    jumplist = {
+				initial_mode = "normal"
+			    }
+			    },
 }
 local colors = require("catppuccin.palettes").get_palette()
 local TelescopeColor = {
 	TelescopeMatching = { fg = colors.flamingo },
 	TelescopeSelection = { fg = colors.text, bg = colors.surface0, bold = true },
-
 	TelescopePromptPrefix = { bg = colors.surface0 },
 	TelescopePromptNormal = { bg = colors.surface0 },
 	TelescopeResultsNormal = { bg = colors.mantle },
@@ -1160,6 +828,7 @@ vim.opt.termguicolors = true
 -- you need to call load_extension, somewhere after setup function:
 -- require("telescope").load_extension "file_browser"
 
+vim.keymap.set('n', '<leader><leader>r', ':source ~/.config/nvim/init.vim<cr>', {desc = "telescope file finder"})
 vim.keymap.set('n', '<leader><leader>T', telesc.find_files, {desc = "telescope file finder"})
 vim.keymap.set('n', '<leader><leader>g', telesc.live_grep, {desc = "telescope live grep the current directory"})
 vim.keymap.set('n', '<leader>td', 'Otodo <esc>:call UltiSnips#ListSnippets()<cr>1<cr>', {desc = "create new todo with ultisnips"})
@@ -1432,16 +1101,4 @@ vim.api.nvim_command("hi Function guifg=#FFAAFF")
 vim.api.nvim_command("hi Type guifg=#CCFFAA")
 vim.api.nvim_command("hi Normal guifg=#A0F0FF")
 vim.api.nvim_command("hi DiagnosticError guifg=red")
-
-
-EOF
-" Customize the initial layout
-let g:rnvimr_layout = {
-            \ 'relative': 'editor',
-            \ 'width': float2nr(round(0.8 * &columns)),
-            \ 'height': float2nr(round(0.8 * &lines)),
-            \ 'col': float2nr(round(0.15 * &columns)),
-            \ 'row': float2nr(round(0.15 * &lines)),
-            \ 'style': 'minimal'
-            \ }
-hi lualine_c_inactive guibg=#000000 guifg=#EE6C05 gui=italic
+vim.cmd[[hi lualine_c_inactive guibg=#000000 guifg=#EE6C05 gui=italic]]

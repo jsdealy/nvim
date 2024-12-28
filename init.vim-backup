@@ -349,44 +349,44 @@ nnoremap X diw
 "  Filetype-Specific Mappings  "
 """"""""""""""""""""""""""""""""
 
-autocmd FileType c nmap <c-;> <c-n>;<esc>
-autocmd FileType c imap <c-;> <esc><c-;>
-autocmd FileType c nmap <c-h> %
-autocmd FileType cpp nmap <c-;> <c-n>;<esc>
-autocmd FileType cpp imap <c-;> <esc><c-;>
-autocmd FileType cpp imap <C-S-;> ::
 
-autocmd FileType cpp nmap <C-0> :!geeks.py "<cword> c++ cpp"<cr><cr>
-autocmd FileType cpp nmap <C-9> :!FL.py "<cword> site:cppreference.com"<cr><cr>
+autocmd FileType c imap <c-;> <esc><c-;>
 autocmd FileType c imap <c-z> '\0'
-autocmd FileType python nmap <c-;> <c-n>:<esc>
-autocmd FileType python nmap <s-k> :!searchPythonDocs.sh "<cword>"<cr><cr>
-autocmd FileType python imap <c-;> <esc><c-;>
-autocmd FileType python nmap <leader><leader>c O# 
-autocmd FileType cpp nmap <leader><leader>c O/*  */<Esc>hhi
+autocmd FileType c nmap <c-;> <c-n>;<esc>
+autocmd FileType c nmap <c-h> %
+autocmd FileType c nmap <F2> :Goyo<cr>:hi CursorLine ctermbg=235<cr>:hi CursorLineNR ctermbg=235<cr>:hi Normal ctermbg=234<cr>
+autocmd FileType c nmap <leader>cc :cclose<cr>zz
+autocmd FileType c nmap <leader>cn :cnext<cr>zz
+autocmd FileType c nmap <leader>co :copen<cr>zz
+autocmd FileType c nmap <leader>cp :cprev<cr>zz
 autocmd FileType c nmap <leader><leader>c O/*  */<Esc>hhi
 autocmd FileType c nmap <leader><leader>p Oprintf("At position %i", debugPos++);<Esc>ml
 autocmd FileType c nmap <leader>p Oint debugPos = 0;
-autocmd FileType markdown nmap <leader><cr> }<c-j>k/^\s*$<cr>i<cr>- 
-autocmd FileType markdown nmap <leader><leader><cr> }<c-j>k/^\s*$<cr>i<c-space>> 
-autocmd FileType tex nmap <leader><cr> oitm
-autocmd FileType tex nmap <leader><leader><cr> o<tab>sitm
-autocmd FileType tex nmap <leader>s o<tab>ssitm
-autocmd FileType tex vmap <leader>gc c%<c-r>"<cr><esc>
-autocmd FileType tex nmap <leader><leader>d :!openInDictionary.sh "<cword>"<cr><cr>
-autocmd FileType tex nmap <leader><leader>s :!openInSEP.sh "<cword>"<cr><cr>
-autocmd FileType tex nmap <leader><leader>t :!openInThesaurus.sh "<cword>"<cr><cr>
-autocmd FileType tex vmap <leader>c di<cr>% <esc>pa<cr><esc>k
-autocmd FileType c nmap <leader>co :copen<cr>zz
-autocmd FileType c nmap <leader>cc :cclose<cr>zz
-autocmd FileType c nmap <leader>cn :cnext<cr>zz
-autocmd FileType c nmap <leader>cp :cprev<cr>zz
+autocmd FileType cpp imap <c-;> <esc><c-;>
+autocmd FileType cpp imap <C-S-;> ::
+autocmd FileType cpp nmap <C-0> :!geeks.py "<cword> c++ cpp"<cr><cr>
+autocmd FileType cpp nmap <C-9> :!FL.py "<cword> site:cppreference.com"<cr><cr>
+autocmd FileType cpp nmap <c-;> <c-n>;<esc>
+autocmd FileType cpp nmap <leader><leader>c O/*  */<Esc>hhi
 autocmd FileType markdown nmap <F2> :MarkDrawer<cr>:vert res 50<cr>
 autocmd FileType markdown nmap <F3> /^## <cr>
 autocmd FileType markdown nmap <F4> :MarkdownPreview<cr>
-autocmd FileType c nmap <F2> :Goyo<cr>:hi CursorLine ctermbg=235<cr>:hi CursorLineNR ctermbg=235<cr>:hi Normal ctermbg=234<cr>
 autocmd FileType markdown nmap <F5> :!pandoc -f markdown -t pdf -i % -o %.pdf<cr>
+autocmd FileType markdown nmap <leader><cr> }<c-j>k/^\s*$<cr>i<cr>- 
+autocmd FileType markdown nmap <leader><leader><cr> }<c-j>k/^\s*$<cr>i<c-space>> 
 autocmd FileType markdown nmap <leader><leader>p :call PMarkdown()<cr>
+autocmd FileType python imap <c-;> <esc><c-;>
+autocmd FileType python nmap <c-;> <c-n>:<esc>
+autocmd FileType python nmap <leader><leader>c O# 
+autocmd FileType python nmap <s-k> :!searchPythonDocs.sh "<cword>"<cr><cr>
+autocmd FileType tex nmap <leader><cr> oitm
+autocmd FileType tex nmap <leader><leader><cr> o<tab>sitm
+autocmd FileType tex nmap <leader><leader>d :!openInDictionary.sh "<cword>"<cr><cr>
+autocmd FileType tex nmap <leader><leader>s :!openInSEP.sh "<cword>"<cr><cr>
+autocmd FileType tex nmap <leader><leader>t :!openInThesaurus.sh "<cword>"<cr><cr>
+autocmd FileType tex nmap <leader>s o<tab>ssitm
+autocmd FileType tex vmap <leader>c di<cr>% <esc>pa<cr><esc>k
+autocmd FileType tex vmap <leader>gc c%<c-r>"<cr><esc>
 
 
 function! PMarkdown()

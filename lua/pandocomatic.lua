@@ -1,6 +1,6 @@
 local M = {}
 
-function Capture_command_output(command)
+M.capture_command_output = function(command)
     local file = io.popen(command)  -- Run command and capture output
     if file == nil then return "error" end
     local output = file:read("*all") -- Read all of the file's content
@@ -8,7 +8,7 @@ function Capture_command_output(command)
     return output
 end
 
-function ReadDotEnvFile(filePath)
+M.read_dot_env_file = function(filePath)
     local env = {}
     local file = io.open(filePath, "r") -- Open the file for reading
 
@@ -28,8 +28,8 @@ function ReadDotEnvFile(filePath)
     return env
 end
 
-function sioyekOpen(filename, forcesioyek, usezathura)
-    if forcesioyek or string.find(Capture_command_output("ps -e | grep zath"), "zath") == nil then
+M.sioyekOpen = function(filename, forcesioyek, usezathura)
+    if forcesioyek or string.find(("ps -e | grep zath"), "zath") == nil then
 	local subsmade = 0
 	local pdffilename = ""
 	print("filename: <", filename, ">\n")
@@ -46,11 +46,11 @@ function sioyekOpen(filename, forcesioyek, usezathura)
     end
 end
 
-function Pandocomatic(args)
+M.run = function(args)
     local message = ""
     -- getting .env variables and storing them in a "table" dict thing <= 01/09/24 18:28:24 -- 
     local this_buffer_path = (string.gsub(vim.api.nvim_buf_get_name(0), "/[^/]+$", ""))
-    local env_variables = ReadDotEnvFile(this_buffer_path .. "/.env")
+    local env_variables = M.read_dot_env_file(this_buffer_path .. "/.env")
 
     -- function can take two args, 'push' and 'latex' which should be booleans
     -- there's no point using them unless you assign true to them; false is the default <= 12/24/23 14:33:40 -- 
@@ -80,7 +80,7 @@ function Pandocomatic(args)
     else filename = vim.api.nvim_buf_get_name(0) end
 
     if justopensioyek == true then
-        sioyekOpen(filename, true)
+        M.sioyekOpen(filename, true)
 	return 0
     end
 
@@ -91,8 +91,8 @@ function Pandocomatic(args)
 
 
     -- using the unix command mktemp to create two temporary files <= 12/24/23 14:34:52 -- 
-    local temp = Capture_command_output("mktemp")
-    local temp2 = Capture_command_output("mktemp")
+    local temp = M.capture_command_output("mktemp")
+    local temp2 = M.capture_command_output("mktemp")
 
     -- Execute the shell command
 
@@ -110,8 +110,8 @@ function Pandocomatic(args)
 
     -- backup stuff 
     local exitCode1 = 0
-    local gitstatus = Capture_command_output("git status")
-    local branch = Capture_command_output("git branch --show-current"):gsub("\n", "")
+    local gitstatus = M.capture_command_output("git status")
+    local branch = M.capture_command_output("git branch --show-current"):gsub("\n", "")
     local backingup = false
     local bbcommand = ""
     if gitstatus:find("nothing to commit") == nil then
@@ -130,7 +130,7 @@ function Pandocomatic(args)
 	message = message .. "Commands executed successfully :)"
 	print(message)
 	-- opening sioyek if it isn't already open <= 10/07/23 12:13:49 -- 
-	sioyekOpen(filename, forcesioyek)
+	M.sioyekOpen(filename, forcesioyek)
     elseif exitCode1 ~= 0 then
 	if backingup then
 	    print(message .. "\nbb failed with exit code:", exitCode1)
@@ -141,11 +141,11 @@ function Pandocomatic(args)
 	if latex then print(message .. "\nlatexmk exited with code:", exitCode2)
 	else print(message .. "\nmdcomment or pandocomatic failed with exit code:", exitCode2) end
 	if latex then
-	    local grepsuccess = Capture_command_output("grep 'Output written on' " .. filename:gsub("tex", "log")):find("Output written on")
+	    local grepsuccess = M.capture_command_output("grep 'Output written on' " .. filename:gsub("tex", "log")):find("Output written on")
 	    if grepsuccess == nil then vim.api.nvim_command("edit " .. filename:gsub("tex", "log"))
 	    else
 		print(message .. "\nlatexmk had warnings, but produced a pdf...")
-		sioyekOpen(filename)
+		M.sioyekOpen(filename)
 	    end
 	    vim.api.nvim_command("edit " .. temp)
 	else vim.api.nvim_command("edit " .. temp)
