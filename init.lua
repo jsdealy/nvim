@@ -1,11 +1,8 @@
-require('fixOutlineTrigger')
-require('quickgit')
 require("globals")
-
 
 vim.api.nvim_create_user_command('DarkMode', function() require('darkmode').dark() end, {})
 vim.api.nvim_create_user_command('LightMode', function() require('darkmode').light() end, {})
-vim.api.nvim_create_user_command('ToggleOutlineHotkey', function() ToggleOutlineHotkey() end, {})
+vim.api.nvim_create_user_command('ToggleOutlineHotkey', function() require('fixOutlineTrigger').toggle() end, {})
 
 vim.keymap.set("n", "<leader><leader>F", "<esc>:FZF<cr>")
 vim.keymap.set("n", "ga", "<Plug>(EasyAlign)")
@@ -45,16 +42,16 @@ vim.keymap.set("n", "<F12>", ":bn<cr>")
 vim.keymap.set("n", "<F1>", ":UndotreeToggle<cr>")
 vim.keymap.set("n", "<F9>", "<Plug>(Marks-prev)")
 vim.keymap.set("n", "ga", "<Plug> (EasyAlign)")
-vim.keymap.set("n", "gf", "yy:!rifle <c-r><cr><cr>")
+-- vim.keymap.set("n", "gf", "yy:!rifle <c-r><cr><cr>")
 vim.keymap.set("n", "H", "<Plug>Sneak_S")
-vim.keymap.set("n", "<leader>1", ':lua require("harpoon.ui").nav_file(1)<cr>')
+vim.keymap.set("n", "<leader>1", function() require("harpoon.ui").nav_file(1) end, {desc = "Nav to harpoon file 1"})
 vim.keymap.set("n", "<leader>2", ':lua require("harpoon.ui").nav_file(2)<cr>')
 vim.keymap.set("n", "<leader>3", ':lua require("harpoon.ui").nav_file(3)<cr>')
 vim.keymap.set("n", "<leader>4", ':lua require("harpoon.ui").nav_file(4)<cr>')
 vim.keymap.set("n", "<leader>5", ':lua require("harpoon.ui").nav_file(5)<cr>')
 vim.keymap.set("n", "<leader>6", ':lua require("harpoon.ui").nav_file(6)<cr>')
 vim.keymap.set("n", "<leader>7", ':lua require("harpoon.ui").nav_file(7)<cr>')
-vim.keymap.set("n", "<leader>a", ':lua require("harpoon.mark").add_file()<cr>')
+vim.keymap.set("n", "<leader>a", function() require("harpoon.mark").add_file() end)
 vim.keymap.set("n", "<leader>`", ':bn<cr>')
 vim.keymap.set("n", "<leader>e", ':e!<cr>')
 vim.keymap.set("n", "<leader><leader>a", ':lua require("harpoon.ui").toggle_quick_menu()<cr>')
@@ -89,6 +86,7 @@ vim.cmd[[hi CursorLine guibg=#111111]]
 vim.cmd[[hi CursorLineNR guibg=#111111]]
 vim.cmd[[hi Function gui=bold]]
 vim.cmd[[highlight htmlH1 gui=bolditalic]]
+vim.cmd[[highlight Macro guifg=magenta]]
 vim.cmd[[highlight markdownBold gui=bold]]
 vim.cmd[[highlight markdownH1 gui=bolditalic]]
 vim.cmd[[highlight markdownItalic gui=italic]]
@@ -105,25 +103,28 @@ vim.cmd[[hi StatusLineNC gui=italic]]
 vim.cmd[[hi VertSplit guibg=#000000]]
 vim.cmd[[hi Visual guibg=#008565]]
 
-vim.api.nvim_create_autocmd({"FileType"}, {pattern = {"cpp", "hpp", "h", "pl"}, callback = function() vim.keymap.set("i", "<C-S-;>", "::") end})
-vim.api.nvim_create_autocmd({"FileType"}, {pattern = {"cpp", "hpp", "h", "pl"}, callback = function() vim.keymap.set("n", "<C-0>", ':!geeks.py "<cword> c++ cpp"<cr><cr>') end})
-vim.api.nvim_create_autocmd({"FileType"}, {pattern = {"cpp", "hpp", "h", "pl"}, callback = function() vim.keymap.set("n", "<C-9>", ':!FL.py "<cword> site:cppreference.com"<cr><cr>') end})
-vim.api.nvim_create_autocmd({"FileType"}, {pattern = {"cpp", "hpp", "h", "pl"}, callback = function() vim.keymap.set("n", "<C-S-k>", ":!make<cr>") end})
+vim.api.nvim_create_autocmd({"FileType"}, {pattern = {"cpp", "hpp", "h", "perl"}, callback = function() vim.keymap.set("i", "<C-S-;>", "::") end})
+vim.api.nvim_create_autocmd({"FileType"}, {pattern = {"cpp", "hpp", "h", "perl"}, callback = function() vim.keymap.set("n", "<C-0>", ':!geeks.py "<cword> c++ cpp"<cr><cr>') end})
+vim.api.nvim_create_autocmd({"FileType"}, {pattern = {"cpp", "hpp", "h", "perl"}, callback = function() vim.keymap.set("n", "<C-9>", ':!FL.py "<cword> site:cppreference.com"<cr><cr>') end})
+vim.api.nvim_create_autocmd({"FileType"}, {pattern = {"cpp", "hpp", "h", "perl"}, callback = function() vim.keymap.set("n", "<C-S-k>", ":!make<cr>") end})
 vim.api.nvim_create_autocmd({"FileType"}, {pattern = {"py"}, callback = function() vim.keymap.set('n', '<c-;>', '<c-n>:<esc>') end})
-vim.api.nvim_create_autocmd({"FileType"}, {pattern = {"js", "ts", "pl", "php", "cpp", "hpp", "c", "lua", "h"},
+vim.api.nvim_create_autocmd({"FileType"}, {pattern = {"js", "markdown", "ts", "perl", "php", "cpp", "hpp", "c", "lua", "h"},
     callback = function() vim.keymap.set('n', '<c-;>', '<c-n>;<esc>', {remap = true}) end})
-vim.api.nvim_create_autocmd({"FileType"}, {pattern = {"js", "ts", "pl", "php", "cpp", "hpp", "c", "py", "lua", "h"},
+vim.api.nvim_create_autocmd({"FileType"}, {pattern = {"markdown", "py", "js", "ts", "perl", "php", "cpp", "hpp", "c", "lua", "h"},
     callback = function() vim.keymap.set('i', '<c-;>', '<esc><c-;>', {remap = true}) end})
 
-vim.api.nvim_create_autocmd({"FileType"}, {pattern = {"md"},
+vim.api.nvim_create_autocmd({"FileType"}, {pattern = {"md", "markdown"},
     callback = function() vim.keymap.set("n", "<leader><leader><leader>p",
-	function() require('pandocomatic').run{justopensioyek=true} end) end})
+	function() require('docbuild').run{only_pdf_view=true, use_zathura=true} end) end})
 vim.api.nvim_create_autocmd({"FileType"}, {pattern = {"tex"},
     callback = function() vim.keymap.set("n", "<leader><leader><leader>p",
-	function() require('pandocomatic').run{latex=true, justopensioyek=true} end) end})
+	function() require('docbuild').run{latex=true, only_pdf_view=true, use_zathura=true} end) end})
+
 
 vim.api.nvim_create_autocmd({"FileType"}, {pattern = {"tex"}, callback = function()
-    vim.keymap.set({"i", "n"}, "<C-S-k>", function() require('pandocomatic').run{latex=true} end) end})
+    vim.keymap.set({"i", "n"}, "<C-S-k>", ":lua require('docbuild').run{latex=true, use_zathura=true}<cr>") end})
+vim.api.nvim_create_autocmd({"FileType"}, {pattern = {"markdown", "md"}, callback = function()
+    vim.keymap.set({"i", "n"}, "<C-S-k>", ":lua require('docbuild').run{use_zathura=true}<cr>") end})
 vim.api.nvim_create_autocmd({"FileType"}, {pattern = {"tex"}, callback = function() vim.b.surround_45 = "\\[ \r \\]" end})
 vim.api.nvim_create_autocmd({"FileType"}, {pattern = {"tex"}, callback = function() vim.keymap.set("i", "<c-.>", [[<esc><c-.>]], {remap = true}) end})
 vim.api.nvim_create_autocmd({"FileType"}, {pattern = {"tex"}, callback = function() vim.keymap.set("n", "<c-.>", [[<c-n>.<esc>]], {remap = true}) end})
@@ -139,7 +140,7 @@ vim.api.nvim_create_autocmd({"FileType"}, {pattern = {"js","ts"}, callback = fun
 vim.api.nvim_create_autocmd({"FileType"}, {pattern = {"js","ts"}, callback = function() vim.keymap.set("v", "<s-k><s-k>", [[:!searchMDNjavascript "<cword>"<cr><cr>]]) end})
 vim.api.nvim_create_autocmd({"FileType"}, {pattern = {"js","ts"}, callback = function() vim.keymap.set("v", "<s-k><s-k><s-k>", [[:!FL.py "<cword> site:https://nodejs.org/en/docs"<cr><cr>]]) end})
 vim.api.nvim_create_autocmd({"FileType"}, {
-    pattern = {"*.js","*.ts"},
+    pattern = {"js", "ts"},
     callback = function()
 	vim.keymap.set("n", "<s-k><s-k><s-k>", [[:!FL.py "<cword> site:https://nodejs.org/en/docs"<cr><cr>]])
     end,
@@ -208,12 +209,14 @@ vim.g.surround_108 = "\\begin{\1environment: \1}\r\\end{\1\1}"
 vim.g.surround_99 = "\\\1command: \1{\r}"
 vim.g.UltiSnipsEditSplit="vertical"
 vim.g.UltiSnipsExpandTrigger = "<C-CR>"
-vim.g.UltiSnipsJumpForwardTrigger = '<C-S-Space>'
+vim.g.UltiSnipsJumpForwardTrigger = '<C-S-L>'
 vim.g.vimtex_indent_enabled = 0
 vim.g.vimtex_quickfix_enabled = 0
 vim.g.vimtex_syntax_conceal_disable = 1
 vim.g.vimtex_toc_todo_labels = {TODO = 'TODO'}
 vim.g.maplocalleader = "\\"
+vim.g.outline_keyword = "y"
+vim.g.perl_host_prog = '/bin/perl'
 
 vim.opt.cursorline = true
 vim.opt.ignorecase = true
@@ -262,17 +265,21 @@ require("lazy").setup({
 	{ "justinmk/vim-sneak" },
 	{ "folke/neodev.nvim", opts = {} },
 	{'junegunn/fzf'},
-	-- {"glepnir/lspsaga.nvim",
-	    -- event = "LspAttach",
-	    -- config = function()
-	    -- require("lspsaga").setup({})
-	    -- end,
-	    -- dependencies = {
-		-- {"nvim-tree/nvim-web-devicons"},
-		-- --Please make sure you install markdown and markdown_inline parser
-		-- {"nvim-treesitter/nvim-treesitter"}
-	    -- }
-	    -- },
+	{"glepnir/lspsaga.nvim",
+	    event = "LspAttach",
+	    config = function()
+	    require("lspsaga").setup({
+		lightbulb = {
+		    enable = false
+		}
+	    })
+	    end,
+	    dependencies = {
+		{"nvim-tree/nvim-web-devicons"},
+		--Please make sure you install markdown and markdown_inline parser
+		{"nvim-treesitter/nvim-treesitter"}
+	    }
+	    },
 	{ "folke/which-key.nvim" },
 	-- {"folke/neoconf.nvim", cmd = "Neoconf" },
 	{'kevinhwang91/rnvimr'},
@@ -333,12 +340,13 @@ require("lazy").setup({
 })
 
 vim.opt.runtimepath:append("/home/justin/.config/nvim/nvim-treesitter-parsers")
+vim.opt.runtimepath:append("/home/justin/.config/nvim/lua")
 
 vim.g.mapleader = '\\'
 
 require('nvim-treesitter.configs').setup {
   parser_install_dir = "/home/justin/.config/nvim/nvim-treesitter-parsers", -- Remember to run vim.opt.runtimepath:append("/some/path/to/store/parsers")!
-  ensure_installed = { "php", "http", "python", "c", "cpp", "vimdoc", "vim", "lua", "css", "html", "rust", "javascript", "java" },
+  ensure_installed = { "go", "php", "http", "python", "c", "cpp", "vimdoc", "vim", "lua", "css", "html", "rust", "javascript", "java" },
   vim.treesitter.language.register('html', 'hb'),
   -- Install parsers synchronously (only applied to `ensure_installed`)
   sync_install = true,
@@ -359,7 +367,7 @@ require('nvim-treesitter.configs').setup {
     -- disable highlighting for the `tex` filetype, you need to include `latex` in this list as this is
     -- the name of the parser)
     -- list of language that will be disabled
-    disable = { "markdown", "vimdoc", "markdown-inline", "latex", "tex" },
+    disable = { "markdown", "vimdoc", "markdown-inline", },
     -- Or use a function for more flexibility, e.g. to disable slow treesitter highlight for large files
     -- disable = function(lang, buf)
         -- local max_filesize = 100 * 1024 -- 100 KB
@@ -396,7 +404,7 @@ local on_attach = function(client, bufnr)
   -- -- See `:help vim.lsp.*` for documentation on any of the below functions
   local bufopts = { noremap=true, silent=true, buffer=bufnr }
   vim.keymap.set('n', 'gD', vim.lsp.buf.declaration, bufopts)
-  vim.keymap.set('n', 'gd', vim.lsp.buf.definition, bufopts)
+  -- vim.keymap.set('n', 'gd', vim.lsp.buf.definition, bufopts)
   -- vim.keymap.set('n', 'K', vim.lsp.buf.hover, bufopts)
   vim.keymap.set('n', 'gi', vim.lsp.buf.implementation, bufopts)
   -- vim.keymap.set('n', '<C-k>', vim.lsp.buf.signature_help, bufopts)
@@ -407,7 +415,7 @@ local on_attach = function(client, bufnr)
   end, bufopts)
   vim.keymap.set('n', '<leader>D', vim.lsp.buf.type_definition, bufopts)
   vim.keymap.set('n', '<leader>rn', vim.lsp.buf.rename, bufopts)
-  vim.keymap.set('n', '<leader>ca', vim.lsp.buf.code_action, bufopts)
+  -- vim.keymap.set('n', '<leader>ca', vim.lsp.buf.code_action, bufopts)
   vim.keymap.set('n', 'gr', vim.lsp.buf.references, bufopts)
   vim.keymap.set('n', '<leader>f', function() vim.lsp.buf.format { async = true } end, bufopts)
 end
@@ -422,6 +430,23 @@ local capabilities = vim.lsp.protocol.make_client_capabilities()
 capabilities.textDocument.completion.completionItem.snippetSupport = true
 require'lspconfig'.ruff.setup{}
 require'lspconfig'.pyright.setup{}
+require('lspconfig').jsonls.setup {}
+require('lspconfig').gopls.setup({
+        on_attach = on_attach,
+        capabilities = capabilities,
+        cmd = {'gopls'},
+        filetypes = {'go', 'gomod', 'gowork', 'gotmpl'},
+        root_dir = require('lspconfig.util').root_pattern('go.work', 'go.mod', '.git'),
+        settings = {
+          gopls = {
+            completeUnimported = true,
+            usePlaceholders = true,
+            analyses = {
+              unusedparams = true,
+            },
+          },
+        }
+})
 require('lspconfig')['clangd'].setup{
     on_attach = on_attach,
     flags = lsp_flags,
@@ -436,6 +461,26 @@ require('lspconfig')['intelephense'].setup{
     cmd = { "intelephense", '--stdio' },
     filetypes = { "php" }
 }
+
+local lspconfig = require'lspconfig'
+local configs = require 'lspconfig.configs'
+
+-- Check if the config is already defined (useful when reloading this file)
+if not configs.tomlls then
+ configs.tomlls = {
+   default_config = {
+     cmd = {'/usr/bin/taplo', 'lsp', 'stdio'},
+     filetypes = {'toml'},
+     root_dir = function(fname)
+       return lspconfig.util.find_git_ancestor(fname) or lspconfig.util.path.dirname(fname)
+     end,
+     settings = {},
+   },
+ }
+end
+
+lspconfig.tomlls.setup{}
+
 
 local servers = { 'perlpls' }
 for _, lsp in pairs(servers) do
@@ -508,8 +553,8 @@ require'lspconfig'.html.setup {
     on_attach = on_attach,
     flags = lsp_flags,
     capabilities = capabilities,
-    cmd = { "html-languageserver", '--stdio' },
-    filetypes = { 'html', 'php', 'hb' },
+    cmd = { "vscode-html-languageserver", '--stdio' },
+    filetypes = { 'html', 'htm', 'php', 'hb' },
 }
 
 require('lspconfig')['rust_analyzer'].setup{
@@ -533,6 +578,7 @@ local configs = require('lspconfig.configs')
 ---@field formatters? table<string,trouble.Formatter> custom formatters
 ---@field filters? table<string, trouble.FilterFn> custom filters
 ---@field sorters? table<string, trouble.SorterFn> custom sorters
+
 local defaults = {
   auto_close = false, -- auto close when there are no items
   auto_open = false, -- auto open when there are items
@@ -795,7 +841,7 @@ require('lualine').setup {
 }
 
 local telesc = require('telescope.builtin')
--- local pando = require('pandocomatic')
+
 require('telescope').setup{
     defaults = {
 	layout_strategy = 'vertical',
@@ -834,7 +880,7 @@ require('telescope').setup{
 		 }
 	    },
 	mappings = {
-	    i = { ["<C-l>"] = { "<esc>", type="command" }, }
+	    i = { ["<C-l>"] = { "<esc>", type="command" }, },
 	}
 	},
 	--    extensions = {
@@ -859,24 +905,6 @@ require('telescope').setup{
 			    }
 			    },
 }
-local colors = require("catppuccin.palettes").get_palette()
-local TelescopeColor = {
-	TelescopeMatching = { fg = colors.flamingo },
-	TelescopeSelection = { fg = colors.text, bg = colors.surface0, bold = true },
-	TelescopePromptPrefix = { bg = colors.surface0 },
-	TelescopePromptNormal = { bg = colors.surface0 },
-	TelescopeResultsNormal = { bg = colors.mantle },
-	TelescopePreviewNormal = { bg = colors.mantle },
-	TelescopePromptBorder = { bg = colors.surface0, fg = colors.surface0 },
-	TelescopeResultsBorder = { bg = colors.mantle, fg = colors.mantle },
-	TelescopePreviewBorder = { bg = colors.mantle, fg = colors.mantle },
-	TelescopePromptTitle = { bg = colors.pink, fg = colors.mantle },
-	TelescopeResultsTitle = { fg = colors.mantle },
-	TelescopePreviewTitle = { bg = colors.green, fg = colors.mantle },
-}
-for hl, col in pairs(TelescopeColor) do
-	vim.api.nvim_set_hl(0, hl, col)
-end
 
 -- disable netrw at the very start of your init.lua
 -- vim.g.loaded_netrw = 1
@@ -892,11 +920,10 @@ vim.opt.termguicolors = true
 
 vim.keymap.set('n', '<leader><leader>r', ':source ~/.config/nvim/init.vim<cr>', {desc = "telescope file finder"})
 vim.keymap.set('n', '<leader><leader>T', telesc.find_files, {desc = "telescope file finder"})
-vim.keymap.set('n', '<leader><leader>g', telesc.live_grep, {desc = "telescope live grep the current directory"})
 vim.keymap.set('n', '<leader>td', 'Otodo <esc>:call UltiSnips#ListSnippets()<cr>1<cr>', {desc = "create new todo with ultisnips"})
-vim.keymap.set('n', '<leader><leader>G',
-    ':lua require("telescope.builtin").live_grep({search_dirs={vim.fn.expand("%:p")}})<cr>',
-    {desc = "telescope grep the current file"})
+vim.keymap.set('n', '<C-S-H>',
+    function() local path = vim.fn.expand("%:p"):gsub("/[^/]+$", ""); require("telescope.builtin").live_grep({search_dirs={path}}) end,
+    {desc = "telescope grep the current directory"})
 vim.keymap.set('n', '<leader><leader>f', ':FZF<cr>', {desc = "FZF"})
 vim.keymap.set('n', '<C-S-j>', ':lua require("telescope.builtin").jumplist({})<cr>', {desc = "telescope jumplist"})
 vim.keymap.set('n', '<leader><leader>S', ':lua require("telescope.builtin").tags({})<cr>', {desc = "telescope tags"})
@@ -905,12 +932,9 @@ vim.keymap.set('n', '<leader><leader>S', ':lua require("telescope.builtin").tags
 vim.keymap.set('n', '<leader><leader>b', ':RnvimrToggle<cr>')
 -- vim.keymap.set('n', '<leader><leader>b', ':Telescope file_browser path=%:p:h select_buffer=true<cr>')
 vim.keymap.set('n', '<leader><leader>k', telesc.keymaps, {desc = "search vim help"})
--- vim.keymap.set('n', '<C-S-k>', ':lua Pandocomatic{latex=true}<cr>', {desc = "run pandocomatic"})
 vim.keymap.set('n', '<C-0>', telesc.live_grep, {desc = "telescope live grep the current directory"})
 vim.keymap.set('n', '<leader><leader>h', telesc.help_tags, {desc = "search vim help"})
 vim.keymap.set('n', '<leader><leader>H', ':lua if origfiletype == nil then origfiletype = vim.bo.filetype end; if vim.bo.filetype ~= "html" then vim.bo.filetype = "html"; else vim.bo.filetype = origfiletype; end<cr>')
-vim.keymap.set('n', '<leader><leader>v', ':lua require("telescope.builtin").live_grep({search_dirs={"/home/justin/Insync/dealyjustins@gmail.com/Google Drive/prog/learning/notes"}})<cr>')
-vim.keymap.set('n', '<leader><leader>V', ':lua require("telescope.builtin").live_grep({search_dirs={"/home/justin/Insync/dealyjustins@gmail.com/Google Drive/prog"}})<cr>')
 vim.keymap.set('n', '<C-Left>', ':res +1<cr>')
 vim.keymap.set('n', '<C-Right>', ':res -1<cr>')
 vim.keymap.set('n', '<C-Down>', ':vert res +1<cr>')
@@ -939,64 +963,64 @@ local keymap = vim.keymap.set
 -- If there is no definition, it will instead be hidden
 -- When you use an action in finder like "open vsplit",
 -- you can use <C-t> to jump back
--- keymap("n", "gh", "<cmd>Lspsaga lsp_finder<CR>")
+keymap("n", "gh", "<cmd>Lspsaga lsp_finder<CR>")
 
 -- Code action
--- keymap({"n","v"}, "<leader>ca", "<cmd>Lspsaga code_action<CR>")
+keymap({"n","v"}, "<leader>ca", "<cmd>Lspsaga code_action<CR>")
 
 -- Rename all occurrences of the hovered word for the entire file
--- keymap("n", "gr", "<cmd>Lspsaga rename<CR>")
+keymap("n", "gr", "<cmd>Lspsaga rename<CR>")
 
 -- Rename all occurrences of the hovered word for the selected files
--- keymap("n", "gr", "<cmd>Lspsaga rename ++project<CR>")
+keymap("n", "gr", "<cmd>Lspsaga rename ++project<CR>")
 
 -- Peek definition
 -- You can edit the file containing the definition in the floating window
 -- It also supports open/vsplit/etc operations, do refer to "definition_action_keys"
 -- It also supports tagstack
 -- Use <C-t> to jump back
--- keymap("n", "gp", "<cmd>Lspsaga peek_definition<CR>")
+keymap("n", "gp", "<cmd>Lspsaga peek_definition<CR>")
 --
 -- -- Go to definition
--- keymap("n","gd", "<cmd>Lspsaga goto_definition<CR>")
+keymap("n","gd", "<cmd>Lspsaga goto_definition<CR>")
 --
 -- -- Peek type definition
 -- -- You can edit the file containing the type definition in the floating window
 -- -- It also supports open/vsplit/etc operations, do refer to "definition_action_keys"
 -- -- It also supports tagstack
 -- -- Use <C-t> to jump back
--- keymap("n", "gt", "<cmd>Lspsaga peek_type_definition<CR>")
+keymap("n", "gt", "<cmd>Lspsaga peek_type_definition<CR>")
 --
 -- -- Go to type definition
--- keymap("n","gt", "<cmd>Lspsaga goto_type_definition<CR>")
+keymap("n","gt", "<cmd>Lspsaga goto_type_definition<CR>")
 --
 --
 -- -- Show line diagnostics
 -- -- You can pass argument ++unfocus to
 -- -- unfocus the show_line_diagnostics floating window
--- keymap("n", "<leader><leader>sl", "<cmd>Lspsaga show_line_diagnostics<CR>")
+keymap("n", "<leader><leader>sl", "<cmd>Lspsaga show_line_diagnostics<CR>")
 --
 -- -- Show buffer diagnostics
--- keymap("n", "<leader><leader>sb", "<cmd>Lspsaga show_buf_diagnostics<CR>")
+keymap("n", "<leader><leader>sb", "<cmd>Lspsaga show_buf_diagnostics<CR>")
 --
 -- -- Show workspace diagnostics
--- keymap("n", "<leader><leader>sw", "<cmd>Lspsaga show_workspace_diagnostics<CR>")
+keymap("n", "<leader><leader>sw", "<cmd>Lspsaga show_workspace_diagnostics<CR>")
 --
 -- -- Show cursor diagnostics
--- keymap("n", "<leader><leader>sc", "<cmd>Lspsaga show_cursor_diagnostics<CR>")
+keymap("n", "<leader><leader>sc", "<cmd>Lspsaga show_cursor_diagnostics<CR>")
 --
 -- -- Diagnostic jump
 -- -- You can use <C-o> to jump back to your previous location
--- keymap("n", "[e", "<cmd>Lspsaga diagnostic_jump_prev<CR>")
--- keymap("n", "]e", "<cmd>Lspsaga diagnostic_jump_next<CR>")
---
+keymap("n", "[e", "<cmd>Lspsaga diagnostic_jump_prev<CR>")
+keymap("n", "]e", "<cmd>Lspsaga diagnostic_jump_next<CR>")
+
 -- Diagnostic jump with filters such as only jumping to an error
--- keymap("n", "[E", function()
-  -- require("lspsaga.diagnostic"):goto_prev({ severity = vim.diagnostic.severity.ERROR })
--- end)
--- keymap("n", "]E", function()
-  -- require("lspsaga.diagnostic"):goto_next({ severity = vim.diagnostic.severity.ERROR })
--- end)
+keymap("n", "[E", function()
+  require("lspsaga.diagnostic"):goto_prev({ severity = vim.diagnostic.severity.ERROR })
+end)
+keymap("n", "]E", function()
+  require("lspsaga.diagnostic"):goto_next({ severity = vim.diagnostic.severity.ERROR })
+end)
 
 -- Toggle outline
 -- keymap("n","<leader>o", "<cmd>Lspsaga outline<CR>")
@@ -1022,6 +1046,7 @@ local keymap = vim.keymap.set
 
 -- Floating terminal
 -- keymap({"n", "t"}, "<A-d>", "<cmd>Lspsaga term_toggle<CR>")
+
 keymap("n","<leader>kc", "inewkeyclaim <esc>:call UltiSnips#ListSnippets()<cr>1<cr>")
 
 require('nvim-autopairs').setup({
@@ -1034,15 +1059,6 @@ require('nvim-autopairs').setup({
 
 local orig_util_open_floating_preview = vim.lsp.util.open_floating_preview
 
-function vim.lsp.util.open_floating_preview(contents, syntax, opts, ...)
-  opts = opts or {}
-  opts.border = 'single'
-  opts.max_width= opts.max_width or 200
-  opts.height = 10
-  return orig_util_open_floating_preview(contents, syntax, opts, ...)
-end
-
--- If you want insert `(` after select function or method item
 local cmp_autopairs = require('nvim-autopairs.completion.cmp')
 local cmp = require'cmp'
 cmp.setup({
