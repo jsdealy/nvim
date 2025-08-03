@@ -2,7 +2,9 @@ require("globals")
 
 vim.api.nvim_create_user_command('DarkMode', function() require('darkmode').dark() end, {})
 vim.api.nvim_create_user_command('LightMode', function() require('darkmode').light() end, {})
+vim.api.nvim_create_user_command('Latin', function() require('toolbox').get_latin_def() end, {})
 vim.api.nvim_create_user_command('ToggleOutlineHotkey', function() require('fixOutlineTrigger').toggle() end, {})
+vim.g.UltiSnipsSnippetDirectories={"ultisnips"}
 
 vim.keymap.set("n", "<leader><leader>F", "<esc>:FZF<cr>")
 vim.keymap.set("n", "ga", "<Plug>(EasyAlign)")
@@ -13,7 +15,6 @@ vim.keymap.set("i", "<c-h>", "%")
 vim.keymap.set("i", "<c-i>", "<esc>I")
 vim.keymap.set("i", "<c-n>", "<esc>A")
 vim.keymap.set("i", "<C-S-Space>", "<c-o>x")
-vim.keymap.set("i", "<c-s-y>", "<esc>:%y *<cr>")
 vim.keymap.set("i", "<F11>", "<esc>:bp<cr>")
 vim.keymap.set("i", "<F12>", "<esc>:bn<cr>")
 vim.keymap.set("i", "<leader><cr>", "<esc><leader><cr>")
@@ -35,7 +36,8 @@ vim.keymap.set("n", "<c-n>", "A")
 vim.keymap.set("n", "<c-s-j>", "vipJ")
 vim.keymap.set("n", "<c-s-m>", ":cope<cr>")
 vim.keymap.set("n", "<c-s>", ":w<cr>")
-vim.keymap.set("n", "<c-s-y>", ":%y *<cr>")
+vim.keymap.set("n", "<c-s-y>", 'vap"+y<cr>')
+vim.keymap.set("v", "<c-s-y>", '"+y<cr>')
 vim.keymap.set("n", "<F10>", "<Plug>(Marks-next)")
 vim.keymap.set("n", "<F11>", ":bp<cr>")
 vim.keymap.set("n", "<F12>", ":bn<cr>")
@@ -60,7 +62,6 @@ vim.keymap.set("n", "<leader><leader><leader>", "gw")
 vim.keymap.set("n", "<leader><leader>-", ":res -10<cr>")
 vim.keymap.set("n", "<leader><leader>=", ":res +10<cr>")
 vim.keymap.set("n", "<leader><leader>s", ":browse old<cr>")
-vim.keymap.set("n", "<leader><leader>z", "zz")
 vim.keymap.set("n", "<leader>m", ":cfile errors.txt<cr>")
 vim.keymap.set("n", "<leader>p", "ap")
 vim.keymap.set("n", "<leader><s-p>", "aP")
@@ -72,7 +73,6 @@ vim.keymap.set("n", "<s-m>", ":ccl<cr>")
 vim.keymap.set("n", "<space>", "5<c-e>")
 vim.keymap.set("v", "<leader>y", "*y")
 vim.keymap.set("v", "<leader><leader><leader>", "gwzz")
-vim.keymap.set("v", "<c-s-y>", ":y *<cr>")
 vim.keymap.set("v", "<c-i>", ":!pipeToInvert.sh<cr>")
 vim.keymap.set("v", "<c-h>", "%")
 vim.keymap.set("v", "<c-B>", "0")
@@ -82,7 +82,7 @@ vim.cmd[[filetype plugin indent on]]
 vim.cmd[[colorscheme torte]]
 vim.cmd[[set nohlsearch]]
 vim.cmd[[hi Conceal NONE]]
-vim.cmd[[hi CursorLine guibg=#111111]]
+vim.cmd[[hi CursorLine guibg=#3A112A]]
 vim.cmd[[hi CursorLineNR guibg=#111111]]
 vim.cmd[[hi Function gui=bold]]
 vim.cmd[[highlight htmlH1 gui=bolditalic]]
@@ -104,6 +104,12 @@ vim.cmd[[hi VertSplit guibg=#000000]]
 vim.cmd[[hi Visual guibg=#008565]]
 
 vim.api.nvim_create_autocmd({"FileType"}, {pattern = {"cpp", "hpp", "h", "perl"}, callback = function() vim.keymap.set("i", "<C-S-;>", "::") end})
+vim.api.nvim_create_autocmd({"FileType"}, {pattern = {"text", "md", "html", "xml"},
+    callback = function() vim.keymap.set("n", "gl", "<cmd>Latin<CR>") end})
+vim.api.nvim_create_autocmd({"FileType"}, {pattern = {"text", "md", "html", "xml"},
+    callback = function() vim.keymap.set("v", "gl", "<cmd>Latin<CR>") end})
+vim.api.nvim_create_autocmd({"FileType"}, {pattern = {"text", "md", "html", "xml"},
+    callback = function() vim.keymap.set("n", "zm", "<cmd>ZenMode<CR>") end})
 vim.api.nvim_create_autocmd({"FileType"}, {pattern = {"cpp", "hpp", "h", "perl"}, callback = function() vim.keymap.set("n", "<C-0>", ':!geeks.py "<cword> c++ cpp"<cr><cr>') end})
 vim.api.nvim_create_autocmd({"FileType"}, {pattern = {"cpp", "hpp", "h", "perl"}, callback = function() vim.keymap.set("n", "<C-9>", ':!FL.py "<cword> site:cppreference.com"<cr><cr>') end})
 vim.api.nvim_create_autocmd({"FileType"}, {pattern = {"cpp", "hpp", "h", "perl"}, callback = function() vim.keymap.set("n", "<C-S-k>", ":!make<cr>") end})
@@ -184,6 +190,8 @@ vim.keymap.set("v", "<c-j>", ":m '>+1<CR>gv=gv")
 vim.keymap.set("v", "<c-k>", ":m '<-2<CR>gv=gv")
 vim.keymap.set("v", "<c-u>", [[2<c-u>]])
 
+vim.g.rnvimr_edit_cmd = 'drop'
+vim.g.rnvimr_enable_picker = 1
 vim.g.rnvimr_action = {
     ["<C-B>"] = "NvimEdit tabedit",
     ["<C-x>"] = "NvimEdit split",
@@ -202,7 +210,7 @@ vim.g.rnvimr_layout = {
     style= 'minimal',
 }
 
-vim.g.FZF_DEFAULT_COMMAND = 'ag --hidden --ignore .git -g "" /home/justin/'
+vim.g.FZF_DEFAULT_COMMAND = 'ag --hidden --ignore .git -g "" /Users/justindealy/'
 vim.g.auto_save=1
 vim.g.ctrlp_cmd = 'CtrlPBuffer'
 vim.g.surround_108 = "\\begin{\1environment: \1}\r\\end{\1\1}"
@@ -283,9 +291,100 @@ require("lazy").setup({
 	{ "folke/which-key.nvim" },
 	-- {"folke/neoconf.nvim", cmd = "Neoconf" },
 	{'kevinhwang91/rnvimr'},
+	{
+	    "iamcco/markdown-preview.nvim",
+	    cmd = { "MarkdownPreviewToggle", "MarkdownPreview", "MarkdownPreviewStop" },
+	    build = "cd app && yarn install",
+	    init = function()
+		vim.g.mkdp_filetypes = { "markdown" }
+	    end,
+	    ft = { "markdown" },
+	},
 	{'jc-doyle/cmp-pandoc-references'},
 	{'hrsh7th/cmp-nvim-lsp'},
 	{'pocco81/true-zen.nvim'},
+    {'folke/zen-mode.nvim', opts = {
+	window = {
+	    backdrop = 0.95, -- shade the backdrop of the Zen window. Set to 1 to keep the same as Normal
+	    -- height and width can be:
+	    -- * an absolute number of cells when > 1
+	    -- * a percentage of the width / height of the editor when <= 1
+	    -- * a function that returns the width or the height
+	    width = 77, -- width of the Zen window
+	    height = 50, -- height of the Zen window
+	    -- by default, no options are changed for the Zen window
+	    -- uncomment any of the options below, or add other vim.wo options you want to apply
+	    options = {
+		-- signcolumn = "no", -- disable signcolumn
+		number = false, -- disable number column
+		relativenumber = false, -- disable relative numbers
+		-- cursorline = false, -- disable cursorline
+		-- cursorcolumn = false, -- disable cursor column
+		-- foldcolumn = "0", -- disable fold column
+		-- list = false, -- disable whitespace characters
+	    },
+	},
+	plugins = {
+	    -- disable some global vim options (vim.o...)
+	    -- comment the lines to not apply the options
+	    options = {
+		enabled = true,
+		ruler = false, -- disables the ruler text in the cmd line area
+		showcmd = false, -- disables the command in the last line of the screen
+		-- you may turn on/off statusline in zen mode by setting 'laststatus' 
+		-- statusline will be shown only if 'laststatus' == 3
+		laststatus = 0, -- turn off the statusline in zen mode
+	    },
+	    twilight = { enabled = true }, -- enable to start Twilight when zen mode opens
+	    gitsigns = { enabled = false }, -- disables git signs
+	    tmux = { enabled = false }, -- disables the tmux statusline
+	    todo = { enabled = false }, -- if set to "true", todo-comments.nvim highlights will be disabled
+	    -- this will change the font size on kitty when in zen mode
+	    -- to make this work, you need to set the following kitty options:
+	    -- - allow_remote_control socket-only
+	    -- - listen_on unix:/tmp/kitty
+	    kitty = {
+		enabled = false,
+		font = "+4", -- font size increment
+	    },
+	    -- this will change the font size on alacritty when in zen mode
+	    -- requires  Alacritty Version 0.10.0 or higher
+	    -- uses `alacritty msg` subcommand to change font size
+	    alacritty = {
+		enabled = false,
+		font = "14", -- font size
+	    },
+	    -- this will change the font size on wezterm when in zen mode
+	    -- See alse also the Plugins/Wezterm section in this projects README
+	    wezterm = {
+		enabled = false,
+		-- can be either an absolute font size or the number of incremental steps
+		font = "+4", -- (10% increase per step)
+	    },
+	    -- this will change the scale factor in Neovide when in zen mode
+	    -- See alse also the Plugins/Wezterm section in this projects README
+	    neovide = {
+		enabled = false,
+		-- Will multiply the current scale factor by this number
+		scale = 1.2,
+		-- disable the Neovide animations while in Zen mode
+		disable_animations = {
+		    neovide_animation_length = 0,
+		    neovide_cursor_animate_command_line = false,
+		    neovide_scroll_animation_length = 0,
+		    neovide_position_animation_length = 0,
+		    neovide_cursor_animation_length = 0,
+		    neovide_cursor_vfx_mode = "",
+		}
+	    },
+	},
+	-- callback where you can add custom code when the Zen window opens
+	on_open = function(win)
+	end,
+	-- callback where you can add custom code when the Zen window closes
+	on_close = function()
+	end,
+    }},
 	{'hrsh7th/cmp-buffer'},
 	{'hrsh7th/cmp-omni'},
 	{'hrsh7th/cmp-path'},
@@ -324,7 +423,6 @@ require("lazy").setup({
 	{'ajorgensen/vim-markdown-toc'},
 	{'907th/vim-auto-save'},
 	{'jacoborus/tender.vim'},
-	{'iamcco/markdown-preview.nvim'},
 	{'tpope/vim-repeat'},
 	{'wellle/targets.vim'},
 	{'ctrlpvim/ctrlp.vim'},
@@ -339,13 +437,14 @@ require("lazy").setup({
 	{'neovim/nvim-lspconfig'},
 })
 
-vim.opt.runtimepath:append("/home/justin/.config/nvim/nvim-treesitter-parsers")
-vim.opt.runtimepath:append("/home/justin/.config/nvim/lua")
+vim.opt.runtimepath:append("/Users/justindealy/.config/nvim/nvim-treesitter-parsers")
+vim.opt.runtimepath:append("/Users/justindealy/.config/nvim/lua")
+vim.opt.runtimepath:append("/Users/justindealy/.config/nvim")
 
 vim.g.mapleader = '\\'
 
 require('nvim-treesitter.configs').setup {
-  parser_install_dir = "/home/justin/.config/nvim/nvim-treesitter-parsers", -- Remember to run vim.opt.runtimepath:append("/some/path/to/store/parsers")!
+  parser_install_dir = "/Users/justindealy/.config/nvim/nvim-treesitter-parsers", -- Remember to run vim.opt.runtimepath:append("/some/path/to/store/parsers")!
   ensure_installed = { "go", "php", "http", "python", "c", "cpp", "vimdoc", "vim", "lua", "css", "html", "rust", "javascript", "java" },
   vim.treesitter.language.register('html', 'hb'),
   -- Install parsers synchronously (only applied to `ensure_installed`)
@@ -929,7 +1028,7 @@ vim.keymap.set('n', '<C-S-j>', ':lua require("telescope.builtin").jumplist({})<c
 vim.keymap.set('n', '<leader><leader>S', ':lua require("telescope.builtin").tags({})<cr>', {desc = "telescope tags"})
 -- vim.keymap.set('n', '<leader><leader>B', ':Telescope file_browser path=/home/justin/Insync/dealyjustins@gmail.com/Google\\ Drive/prog<cr>')
 -- vim.keymap.set('n', '<leader><leader>b', ':Telescope file_browser path=%:p:h select_buffer=true<cr>')
-vim.keymap.set('n', '<leader><leader>b', ':RnvimrToggle<cr>')
+vim.keymap.set('n', '<leader><leader>b', ':Ex<cr>')
 -- vim.keymap.set('n', '<leader><leader>b', ':Telescope file_browser path=%:p:h select_buffer=true<cr>')
 vim.keymap.set('n', '<leader><leader>k', telesc.keymaps, {desc = "search vim help"})
 vim.keymap.set('n', '<C-0>', telesc.live_grep, {desc = "telescope live grep the current directory"})
@@ -946,6 +1045,7 @@ vim.keymap.set('n', '<C-S-Up>', ':vert res -15<cr>')
 vim.keymap.set('n', '<leader>v', 'gv')
 vim.keymap.set('v', '<c-l>', '<esc>')
 vim.keymap.set('n', '<C-BS>', function() require('quickgit').run{push = true} end)
+vim.keymap.set('n', '<C-S-BS>', function() vim.cmd[[Git pull]] end)
 --vim.keymap.set('n', '<S-Down>', '<esc>')
 --vim.keymap.set('n', '<S-Up>',   '<esc>')
 --vim.keymap.set('i', '<S-Down>', '.<bs>')
@@ -1133,6 +1233,7 @@ local npairs = require('nvim-autopairs')
 -- add option map_cr
 npairs.add_rules {
   Rule('\\{', '\\}', {"tex", "latex"}),
+  Rule('\\[', '\\]', {"tex", "latex"}),
   Rule(' ', ' ')
     :with_pair(function (opts)
       local pair = opts.line:sub(opts.col - 1, opts.col)
@@ -1179,4 +1280,4 @@ vim.api.nvim_command("hi Function guifg=#FFAAFF")
 vim.api.nvim_command("hi Type guifg=#CCFFAA")
 vim.api.nvim_command("hi Normal guifg=#A0F0FF")
 vim.api.nvim_command("hi DiagnosticError guifg=red")
-vim.cmd[[hi lualine_c_inactive guibg=#000000 guifg=#EE6C05 gui=italic]]
+vim.cmd[[hi lualine_c_inactive guibg=#000000 ctermfg=black guifg=#000000]]

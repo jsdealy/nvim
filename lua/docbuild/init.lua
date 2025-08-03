@@ -10,10 +10,12 @@ M.run = function(args)
     -- there's no point using them unless you assign true to them; false is the default <= 12/24/23 14:33:40 -- 
     local only_pdf_view = false
     local use_zathura = false
+    local usebb = false
     local push = false
     local latex = false
     local verbose = false
     if args ~= nil then
+	usebb = args.usebb or false
 	only_pdf_view = args.only_pdf_view or false
 	use_zathura = args.use_zathura or false
 	push = args.push or false
@@ -75,9 +77,11 @@ M.run = function(args)
 	vim.api.nvim_command("Git commit -m '" .. commit_description .. "'")
 	-- pushing to github if 'push' was set to true <= 12/30/23 13:48:29 -- 
 	if push then vim.api.nvim_command("Git push origin " .. branch) end
-	bbcommand = "bbcxx -v -i '" .. this_buffer_path .. "' -o '" .. this_buffer_path .. "' &>" .. temp2
-	---@diagnostic disable-next-line: cast-local-type
-	exitCode1 = os.execute(bbcommand)
+	if usebb then
+	    bbcommand = "bbcxx -v -i '" .. this_buffer_path .. "' -o '" .. this_buffer_path .. "' &>" .. temp2
+	    ---@diagnostic disable-next-line: cast-local-type
+	    exitCode1 = os.execute(bbcommand)
+	end
     end
 
     -- Check the exit code to determine if the command was successful
