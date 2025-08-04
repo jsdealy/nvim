@@ -3,6 +3,9 @@ require("globals")
 vim.api.nvim_create_user_command('DarkMode', function() require('darkmode').dark() end, {})
 vim.api.nvim_create_user_command('LightMode', function() require('darkmode').light() end, {})
 vim.api.nvim_create_user_command('Latin', function() require('toolbox').get_latin_def() end, {})
+vim.api.nvim_create_user_command('LewisShort', function() require('toolbox').git_lewis_short() end, {})
+vim.api.nvim_create_user_command('ShowNonPrinting', function() if (vim.opt.list:get() == true)
+then vim.opt.list = false else vim.opt.list = true end end, {})
 vim.api.nvim_create_user_command('ToggleOutlineHotkey', function() require('fixOutlineTrigger').toggle() end, {})
 vim.g.UltiSnipsSnippetDirectories={"ultisnips"}
 
@@ -105,7 +108,11 @@ vim.cmd[[hi VertSplit guibg=#000000]]
 vim.cmd[[hi Visual guibg=#008565]]
 
 vim.api.nvim_create_autocmd({"FileType"}, {pattern = {"cpp", "hpp", "h", "perl"}, callback = function() vim.keymap.set("i", "<C-S-;>", "::") end})
-vim.api.nvim_create_autocmd({"FileType"}, {pattern = {"text", "md", "html", "xml"},
+vim.api.nvim_create_autocmd({"FileType"}, {pattern = {"text", "markdown", "html", "xml"},
+    callback = function() vim.keymap.set("v", "gL", "<cmd>LewisShort<CR>") end})
+vim.api.nvim_create_autocmd({"FileType"}, {pattern = {"text", "markdown", "html", "xml"},
+    callback = function() vim.keymap.set("n", "gL", "<cmd>LewisShort<CR>") end})
+vim.api.nvim_create_autocmd({"FileType"}, {pattern = {"text", "markdown", "html", "xml"},
     callback = function() vim.keymap.set("n", "gl", "<cmd>Latin<CR>") end})
 vim.api.nvim_create_autocmd({"FileType"}, {pattern = {"text", "md", "html", "xml"},
     callback = function() vim.keymap.set("v", "gl", "<cmd>Latin<CR>") end})
@@ -228,6 +235,7 @@ vim.g.outline_keyword = "y"
 vim.g.perl_host_prog = '/bin/perl'
 
 vim.opt.cursorline = true
+vim.opt.numberwidth = 20
 vim.opt.ignorecase = true
 vim.opt.incsearch = true
 vim.opt.nu = true
@@ -240,6 +248,16 @@ vim.opt.updatetime = 3000
 vim.opt.virtualedit = "onemore"
 vim.opt.nrformats:append("alpha")
 vim.opt.formatoptions:remove("cro")
+vim.opt.listchars = {
+  eol = '¶',
+  tab = '»-',
+  trail = '·',
+  space = '␣',
+  extends = '>',
+  precedes = '<',
+  nbsp = '·',
+}
+
 
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not vim.loop.fs_stat(lazypath) then

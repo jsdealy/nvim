@@ -37,6 +37,12 @@ M.get_latin_def = function()
     print(output)
 end
 
+M.git_lewis_short = function()
+    local word = vim.fn.expand("<cword>")
+    local output = M.capture_command_output('alatius ' .. string.lower(word))
+    print(output)
+end
+
 
 M.pdf_open = function(filename, force, use_zathura)
     -- TODO: this is kind of cludgy, there can be pdfs open other than the file, which would trigger the condition <== 12/30/24 12:17:01 -- 
