@@ -36,7 +36,7 @@ end
 
 M.get_latin_def = function()
     local word = vim.fn.expand("<cword>")
-    local output = M.capture_command_output('cd words ' .. string.lower(word))
+    local output = M.capture_command_output('words ' .. string.lower(word))
     print(output)
 end
 
