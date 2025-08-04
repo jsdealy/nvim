@@ -3,6 +3,7 @@ vim.opt.termguicolors = true
 vim.api.nvim_create_user_command('DarkMode', function() require('darkmode').dark() end, {})
 vim.api.nvim_create_user_command('LightMode', function() require('darkmode').light() end, {})
 vim.api.nvim_create_user_command('Latin', function() require('toolbox').get_latin_def() end, {})
+vim.api.nvim_create_user_command('ShowNonPrintChars', function() if (vim.opt.list:get()) then vim.opt.list = false else vim.opt.list = true end end, {})
 vim.api.nvim_create_user_command('ToggleOutlineHotkey', function() require('fixOutlineTrigger').toggle() end, {})
 vim.api.nvim_create_user_command('SetDotEnvKeyValue', function() require('toolbox').set_env_kv() end, {desc="Set a .env key-value pair in cwd."})
 vim.api.nvim_create_user_command('Slingshot', function() require('slingshot').open() end, {desc="Run slingshot."})
@@ -96,8 +97,9 @@ vim.cmd[[filetype plugin indent on]]
 vim.cmd[[colorscheme torte]]
 vim.cmd[[set nohlsearch]]
 vim.cmd[[hi Conceal NONE]]
-vim.cmd[[hi CursorLine guibg=#111111]]
+vim.cmd[[hi CursorLine guibg=#3A112A]]
 vim.cmd[[hi CursorLineNR guibg=#111111]]
+vim.cmd[[hi CursorLineSign guibg=#111111]]
 vim.cmd[[hi Function gui=bold]]
 vim.cmd[[highlight htmlH1 gui=bolditalic]]
 vim.cmd[[highlight Macro guifg=magenta]]
@@ -251,6 +253,16 @@ vim.opt.updatetime = 3000
 vim.opt.virtualedit = "onemore"
 vim.opt.nrformats:append("alpha")
 vim.opt.formatoptions:remove("cro")
+vim.opt.listchars = {
+  eol = '¶',
+  tab = '»-',
+  trail = '·',
+  space = '␣',
+  extends = '>',
+  precedes = '<',
+  nbsp = '·',
+}
+
 
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not vim.loop.fs_stat(lazypath) then
