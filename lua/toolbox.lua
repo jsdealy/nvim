@@ -11,6 +11,9 @@ M.capture_command_output = function(command)
     return output
 end
 
+---Read .env file and return values as a table.
+---@param filePath string "Path to the .env file (including .env)."
+---@return table "The values as a table."
 M.read_dot_env = function(filePath)
     local env = {}
     local file = io.open(filePath, "r") -- Open the file for reading
@@ -18,14 +21,14 @@ M.read_dot_env = function(filePath)
     if file then
         for line in file:lines() do
             -- Matches lines with the pattern KEY=value
-            local key, value = line:match("^(.+)=(.+)$")
+            local key, value = line:match("^(.+)%s*[=:]%s*(.+)$")
             if key and value then
                 env[key] = value
             end
         end
         file:close()
     else
-        print("No .env file, or else unable to open it...")
+        print("No .env file, or else unable to open it...\n")
     end
 
     return env
@@ -55,6 +58,23 @@ M.pdf_open = function(filename, force, use_zathura)
 	    os.execute("zathura '" .. pdffilename:gsub("'", ""):gsub('"', "") .. "' &> /dev/null &")
 	else print("filename '" .. filename .. "' does not appear to end in md or tex") end
     end
+end
+
+---Set a key-value pair in a .env file in the cwd.
+M.set_env_kv = function()
+    local key = vim.fn.input{prompt = "Key to set: ", default = "k"}
+    local value = vim.fn.input{prompt = "Value: ", default = "v"}
+    print("\n")
+    local cwd = (vim.loop.cwd())
+    local env_variables = M.read_dot_env(cwd .. "/.env")
+    env_variables[key] = value
+    local content = ""
+    for k,v in pairs(env_variables) do
+	content = content .. k .. "=" .. v .. "\n"
+    end
+    local command = "echo '" .. content .. "' > '" .. cwd .. "/.env'"
+    os.execute(command)
+    print("Updated .env here: " .. cwd)
 end
 
 return M

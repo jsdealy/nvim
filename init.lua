@@ -1,9 +1,22 @@
 require("globals")
-
+vim.opt.termguicolors = true
 vim.api.nvim_create_user_command('DarkMode', function() require('darkmode').dark() end, {})
 vim.api.nvim_create_user_command('LightMode', function() require('darkmode').light() end, {})
 vim.api.nvim_create_user_command('ToggleOutlineHotkey', function() require('fixOutlineTrigger').toggle() end, {})
+vim.api.nvim_create_user_command('SetDotEnvKeyValue', function() require('toolbox').set_env_kv() end, {desc="Set a .env key-value pair in cwd."})
+vim.api.nvim_create_user_command('Slingshot', function() require('slingshot').open() end, {desc="Run slingshot."})
+vim.api.nvim_create_user_command('SetSlingshotCommandAndExtension',
+    function()
+	local command = vim.fn.input("Slingshot command: ");
+	if command == '' then command = nil end
+	local extension = vim.fn.input("File extension: ");
+	if extension == '' then extension = nil end
+	require('slingshot').reset_command_and_extension(command,extension)
+    end, {desc="Set slingshot command and file extension."})
 
+vim.keymap.set("n", "S", function() require('slingshot').open() end, {})
+vim.keymap.set("n", "<leader>s", function() local command = vim.fn.input("shell command: ");
+    local extension = vim.fn.input("file extension: "); require('slingshot').reset_command_and_extension(command,extension) end, {})
 vim.keymap.set("n", "<leader><leader>F", "<esc>:FZF<cr>")
 vim.keymap.set("n", "ga", "<Plug>(EasyAlign)")
 vim.keymap.set("i", "<c-b>", "<esc>i")
@@ -367,7 +380,7 @@ require('nvim-treesitter.configs').setup {
     -- disable highlighting for the `tex` filetype, you need to include `latex` in this list as this is
     -- the name of the parser)
     -- list of language that will be disabled
-    disable = { "markdown", "vimdoc", "markdown-inline", },
+    disable = { "vimdoc" },
     -- Or use a function for more flexibility, e.g. to disable slow treesitter highlight for large files
     -- disable = function(lang, buf)
         -- local max_filesize = 100 * 1024 -- 100 KB
@@ -918,7 +931,9 @@ vim.opt.termguicolors = true
 -- you need to call load_extension, somewhere after setup function:
 -- require("telescope").load_extension "file_browser"
 
-vim.keymap.set('n', '<leader><leader>r', ':source ~/.config/nvim/init.vim<cr>', {desc = "telescope file finder"})
+
+
+
 vim.keymap.set('n', '<leader><leader>T', telesc.find_files, {desc = "telescope file finder"})
 vim.keymap.set('n', '<leader>td', 'Otodo <esc>:call UltiSnips#ListSnippets()<cr>1<cr>', {desc = "create new todo with ultisnips"})
 vim.keymap.set('n', '<C-S-H>',
@@ -946,6 +961,7 @@ vim.keymap.set('n', '<C-S-Up>', ':vert res -15<cr>')
 vim.keymap.set('n', '<leader>v', 'gv')
 vim.keymap.set('v', '<c-l>', '<esc>')
 vim.keymap.set('n', '<C-BS>', function() require('quickgit').run{push = true} end)
+vim.keymap.set('n', '<C-S-BS>', function() vim.cmd[[Git pull]] end)
 --vim.keymap.set('n', '<S-Down>', '<esc>')
 --vim.keymap.set('n', '<S-Up>',   '<esc>')
 --vim.keymap.set('i', '<S-Down>', '.<bs>')
@@ -1133,6 +1149,7 @@ local npairs = require('nvim-autopairs')
 -- add option map_cr
 npairs.add_rules {
   Rule('\\{', '\\}', {"tex", "latex"}),
+    Rule('\\[', '\\]', {"tex", "latex"}),
   Rule(' ', ' ')
     :with_pair(function (opts)
       local pair = opts.line:sub(opts.col - 1, opts.col)
