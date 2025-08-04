@@ -133,6 +133,12 @@ vim.api.nvim_create_autocmd({"FileType"}, {pattern = {"md", "markdown"},
 vim.api.nvim_create_autocmd({"FileType"}, {pattern = {"tex"},
     callback = function() vim.keymap.set("n", "<leader><leader><leader>p",
 	function() require('docbuild').run{latex=true, only_pdf_view=true, use_zathura=true} end) end})
+vim.api.nvim_create_autocmd({"FileType"}, {pattern = {"text", "md", "html", "xml"},
+    callback = function() vim.keymap.set("n", "gl", "<cmd>Latin<CR>") end})
+vim.api.nvim_create_autocmd({"FileType"}, {pattern = {"text", "md", "html", "xml"},
+    callback = function() vim.keymap.set("v", "gl", "<cmd>Latin<CR>") end})
+vim.api.nvim_create_autocmd({"FileType"}, {pattern = {"text", "md", "html", "xml"},
+    callback = function() vim.keymap.set("n", "zm", "<cmd>ZenMode<CR>") end})
 
 
 vim.api.nvim_create_autocmd({"FileType"}, {pattern = {"tex"}, callback = function()
