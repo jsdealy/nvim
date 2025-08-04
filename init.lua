@@ -4,7 +4,7 @@ vim.api.nvim_create_user_command('DarkMode', function() require('darkmode').dark
 vim.api.nvim_create_user_command('LightMode', function() require('darkmode').light() end, {})
 vim.api.nvim_create_user_command('Latin', function() require('toolbox').get_latin_def() end, {})
 vim.api.nvim_create_user_command('LewisShort', function() require('toolbox').git_lewis_short() end, {})
-vim.api.nvim_create_user_command('ShowNonPrinting', function() if (vim.opt.list:get() == true)
+vim.api.nvim_create_user_command('ToggleNonPrinting', function() if (vim.opt.list:get() == true)
 then vim.opt.list = false else vim.opt.list = true end end, {})
 vim.api.nvim_create_user_command('ToggleOutlineHotkey', function() require('fixOutlineTrigger').toggle() end, {})
 vim.g.UltiSnipsSnippetDirectories={"ultisnips"}
