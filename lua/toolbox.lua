@@ -34,6 +34,12 @@ M.read_dot_env = function(filePath)
     return env
 end
 
+M.get_latin_def = function()
+    local word = vim.fn.expand("<cword>")
+    local output = M.capture_command_output('cd words ' .. string.lower(word))
+    print(output)
+end
+
 M.pdf_open = function(filename, force, use_zathura)
     -- TODO: this is kind of cludgy, there can be pdfs open other than the file, which would trigger the condition <== 12/30/24 12:17:01 -- 
     local psPerlHack = "ps -e | perl -ne 'BEGIN{$ret = 0} $ret = 1 if (m/zathura|sioyek/); END{print $ret}'"
