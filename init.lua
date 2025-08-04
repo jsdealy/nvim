@@ -2,6 +2,7 @@ require("globals")
 vim.opt.termguicolors = true
 vim.api.nvim_create_user_command('DarkMode', function() require('darkmode').dark() end, {})
 vim.api.nvim_create_user_command('LightMode', function() require('darkmode').light() end, {})
+vim.api.nvim_create_user_command('Latin', function() require('toolbox').get_latin_def() end, {})
 vim.api.nvim_create_user_command('ToggleOutlineHotkey', function() require('fixOutlineTrigger').toggle() end, {})
 vim.api.nvim_create_user_command('SetDotEnvKeyValue', function() require('toolbox').set_env_kv() end, {desc="Set a .env key-value pair in cwd."})
 vim.api.nvim_create_user_command('Slingshot', function() require('slingshot').open() end, {desc="Run slingshot."})
