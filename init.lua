@@ -113,6 +113,10 @@ vim.cmd[[hi Visual guibg=#008565]]
 
 vim.api.nvim_create_autocmd({"FileType"}, {pattern = {"cpp", "hpp", "h", "perl"}, callback = function() vim.keymap.set("i", "<C-S-;>", "::") end})
 vim.api.nvim_create_autocmd({"FileType"}, {pattern = {"text", "markdown", "html", "xml"},
+    callback = function() vim.keymap.set("n", "gw", "<cmd>Whitaker<CR>") end})
+vim.api.nvim_create_autocmd({"FileType"}, {pattern = {"text", "markdown", "html", "xml"},
+    callback = function() vim.keymap.set("n", "ge", "<cmd>WhitakerEng<CR>") end})
+vim.api.nvim_create_autocmd({"FileType"}, {pattern = {"text", "markdown", "html", "xml"},
     callback = function() vim.keymap.set("v", "gL", "<cmd>LewisShort<CR>") end})
 vim.api.nvim_create_autocmd({"FileType"}, {pattern = {"text", "markdown", "html", "xml"},
     callback = function() vim.keymap.set("n", "gL", "<cmd>LewisShort<CR>") end})
