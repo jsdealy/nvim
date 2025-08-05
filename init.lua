@@ -3,6 +3,11 @@ vim.opt.termguicolors = true
 vim.api.nvim_create_user_command('DarkMode', function() require('darkmode').dark() end, {})
 vim.api.nvim_create_user_command('LightMode', function() require('darkmode').light() end, {})
 vim.api.nvim_create_user_command('Latin', function() require('toolbox').get_latin_def() end, {})
+vim.api.nvim_create_user_command('LewisShort', function() require('toolbox').get_lewis_short() end, {})
+vim.api.nvim_create_user_command('Whitaker', function() require('toolbox').words() end, {})
+vim.api.nvim_create_user_command('WhitakerEng', function() require('toolbox').words_english() end, {})
+vim.api.nvim_create_user_command('Alatius', function() require('toolbox').alatius() end, {})
+vim.api.nvim_create_user_command('AlatiusWholeEntry', function() require('toolbox').alatius_whole_entry() end, {})
 vim.api.nvim_create_user_command('ShowNonPrintChars', function() if (vim.opt.list:get()) then vim.opt.list = false else vim.opt.list = true end end, {})
 vim.api.nvim_create_user_command('ToggleOutlineHotkey', function() require('fixOutlineTrigger').toggle() end, {})
 vim.api.nvim_create_user_command('SetDotEnvKeyValue', function() require('toolbox').set_env_kv() end, {desc="Set a .env key-value pair in cwd."})
@@ -135,12 +140,18 @@ vim.api.nvim_create_autocmd({"FileType"}, {pattern = {"md", "markdown"},
 vim.api.nvim_create_autocmd({"FileType"}, {pattern = {"tex"},
     callback = function() vim.keymap.set("n", "<leader><leader><leader>p",
 	function() require('docbuild').run{latex=true, only_pdf_view=true, use_zathura=true} end) end})
-vim.api.nvim_create_autocmd({"FileType"}, {pattern = {"text", "md", "html", "xml"},
+vim.api.nvim_create_autocmd({"FileType"}, {pattern = {"text", "markdown", "html", "xml"},
+    callback = function() vim.keymap.set("n", "gw", "<cmd>Whitaker<CR>") end})
+vim.api.nvim_create_autocmd({"FileType"}, {pattern = {"text", "markdown", "html", "xml"},
+    callback = function() vim.keymap.set("n", "ge", "<cmd>WhitakerEng<CR>") end})
+vim.api.nvim_create_autocmd({"FileType"}, {pattern = {"text", "markdown", "html", "xml"},
     callback = function() vim.keymap.set("n", "gl", "<cmd>Latin<CR>") end})
-vim.api.nvim_create_autocmd({"FileType"}, {pattern = {"text", "md", "html", "xml"},
+vim.api.nvim_create_autocmd({"FileType"}, {pattern = {"text", "markdown", "html", "xml"},
     callback = function() vim.keymap.set("v", "gl", "<cmd>Latin<CR>") end})
-vim.api.nvim_create_autocmd({"FileType"}, {pattern = {"text", "md", "html", "xml"},
-    callback = function() vim.keymap.set("n", "zm", "<cmd>ZenMode<CR>") end})
+vim.api.nvim_create_autocmd({"FileType"}, {pattern = {"text", "markdown", "html", "xml"},
+    callback = function() vim.keymap.set("n", "gL", "<cmd>LewisShort<CR>") end})
+vim.api.nvim_create_autocmd({"FileType"}, {pattern = {"text", "markdown", "html", "xml"},
+    callback = function() vim.keymap.set("v", "gL", "<cmd>LewisShort<CR>") end})
 
 
 vim.api.nvim_create_autocmd({"FileType"}, {pattern = {"tex"}, callback = function()
@@ -186,6 +197,7 @@ vim.api.nvim_create_autocmd({"FileType"}, {
     end,
 })
 
+vim.keymap.set("n", "zm", "<cmd>ZenMode<CR>")
 vim.keymap.set("i", "<c-e>", [[<esc>Ea]])
 vim.keymap.set("i", "<c-l>", [[<Esc>]])
 vim.keymap.set("i", "<c-space>", [[<space><space>]])
@@ -339,7 +351,7 @@ require("lazy").setup({
 	    -- * an absolute number of cells when > 1
 	    -- * a percentage of the width / height of the editor when <= 1
 	    -- * a function that returns the width or the height
-	    width = 77, -- width of the Zen window
+	    width = 82, -- width of the Zen window
 	    height = 50, -- height of the Zen window
 	    -- by default, no options are changed for the Zen window
 	    -- uncomment any of the options below, or add other vim.wo options you want to apply
@@ -763,7 +775,7 @@ local defaults = {
     za = "fold_toggle",
     zA = "fold_toggle_recursive",
     -- zm = "fold_more",
-    zM = "fold_close_all",
+    -- zM = "fold_close_all",
     zr = "fold_reduce",
     zR = "fold_open_all",
     zx = "fold_update",
