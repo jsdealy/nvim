@@ -31,6 +31,69 @@ M.read_dot_env = function(filePath)
     return env
 end
 
+M.open_buf_with_var = function(content)
+	-- Create a new scratch buffer
+    local wrap_line = function(line, width)
+      local wrapped = {}
+      while #line > width do
+	local wrap_at = line:sub(1, width):match(".*()%s+") or width
+	table.insert(wrapped, line:sub(1, wrap_at))
+	line = line:sub(wrap_at + 1):match("^%s*(.*)")
+      end
+      table.insert(wrapped, line)
+      return wrapped
+    end
+
+    local wrap_lines = function(lines, width)
+      local out = {}
+      for _, line in ipairs(lines) do
+	vim.list_extend(out, wrap_line(line, width))
+      end
+      return out
+    end
+
+    local lines = vim.split(content, "\n")
+    local wrapped = wrap_lines(lines, 80)
+    local buf = vim.api.nvim_create_buf(false, true) -- not listed, scratch buffer
+
+    if (lines ~= nil) then
+	-- Set the buffer lines
+	vim.api.nvim_buf_set_lines(buf, 0, -1, false, wrapped)
+	-- Open the buffer in a new window
+	vim.api.nvim_set_current_buf(buf)
+    else
+	print("no output to show!")
+    end
+end
+
+M.alatius = function(args)
+    local query = vim.fn.input("alatius query: ")
+    print("\n")
+    local output = M.capture_command_output('alatius ' .. string.lower(query) .. ' glow')
+    M.open_buf_with_var(output)
+end
+
+M.words = function(args)
+    local query = vim.fn.input("whitaker's words query: ")
+    print("\n")
+    local output = M.capture_command_output('cd ~/bin; words ' .. string.lower(query))
+    print(output)
+end
+
+M.words_english = function(args)
+    local query = vim.fn.input("whitaker's words (english) query: ")
+    print("\n")
+    local output = M.capture_command_output('cd ~/bin; words "~e" ' .. string.lower(query))
+    print(output)
+end
+
+M.alatius_whole_entry = function(args)
+    local query = vim.fn.input("alatius (whole entry) query: ")
+    print("\n")
+    local output = M.capture_command_output('alatius -w ' .. string.lower(query) .. ' glow')
+    M.open_buf_with_var(output)
+end
+
 M.get_latin_def = function()
     local word = vim.fn.expand("<cword>")
     local output = M.capture_command_output('cd ~/bin; words ' .. string.lower(word))
