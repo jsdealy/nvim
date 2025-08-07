@@ -141,7 +141,7 @@ vim.api.nvim_create_autocmd({"FileType"}, {pattern = {"tex"},
     callback = function() vim.keymap.set("n", "<leader><leader><leader>p",
 	function() require('docbuild').run{latex=true, only_pdf_view=true, use_zathura=true} end) end})
 vim.api.nvim_create_autocmd({"FileType"}, {pattern = {"text", "markdown", "html", "xml"},
-    callback = function() vim.keymap.set("n", "gw", "<cmd>Whitaker<CR>") end})
+    callback = function() vim.keymap.set("n", "ga", "<cmd>Whitaker<CR>") end})
 vim.api.nvim_create_autocmd({"FileType"}, {pattern = {"text", "markdown", "html", "xml"},
     callback = function() vim.keymap.set("n", "ge", "<cmd>WhitakerEng<CR>") end})
 vim.api.nvim_create_autocmd({"FileType"}, {pattern = {"text", "markdown", "html", "xml"},
