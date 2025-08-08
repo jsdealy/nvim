@@ -113,17 +113,19 @@ vim.cmd[[hi Visual guibg=#008565]]
 
 vim.api.nvim_create_autocmd({"FileType"}, {pattern = {"cpp", "hpp", "h", "perl"}, callback = function() vim.keymap.set("i", "<C-S-;>", "::") end})
 vim.api.nvim_create_autocmd({"FileType"}, {pattern = {"text", "markdown", "html", "xml"},
-    callback = function() vim.keymap.set("n", "gw", "<cmd>Whitaker<CR>") end})
+    callback = function() vim.keymap.set("n", "gla", "<cmd>Whitaker<CR>") end})
 vim.api.nvim_create_autocmd({"FileType"}, {pattern = {"text", "markdown", "html", "xml"},
-    callback = function() vim.keymap.set("n", "ge", "<cmd>WhitakerEng<CR>") end})
+    callback = function() vim.keymap.set("n", "glg", "<cmd>Alatius<CR>") end})
 vim.api.nvim_create_autocmd({"FileType"}, {pattern = {"text", "markdown", "html", "xml"},
-    callback = function() vim.keymap.set("v", "gL", "<cmd>LewisShort<CR>") end})
+    callback = function() vim.keymap.set("n", "gle", "<cmd>WhitakerEng<CR>") end})
 vim.api.nvim_create_autocmd({"FileType"}, {pattern = {"text", "markdown", "html", "xml"},
-    callback = function() vim.keymap.set("n", "gL", "<cmd>LewisShort<CR>") end})
+    callback = function() vim.keymap.set("v", "glL", "<cmd>LewisShort<CR>") end})
 vim.api.nvim_create_autocmd({"FileType"}, {pattern = {"text", "markdown", "html", "xml"},
-    callback = function() vim.keymap.set("n", "gl", "<cmd>Latin<CR>") end})
+    callback = function() vim.keymap.set("n", "glL", "<cmd>LewisShort<CR>") end})
+vim.api.nvim_create_autocmd({"FileType"}, {pattern = {"text", "markdown", "html", "xml"},
+    callback = function() vim.keymap.set("n", "gll", "<cmd>Latin<CR>") end})
 vim.api.nvim_create_autocmd({"FileType"}, {pattern = {"text", "md", "html", "xml"},
-    callback = function() vim.keymap.set("v", "gl", "<cmd>Latin<CR>") end})
+    callback = function() vim.keymap.set("v", "gll", "<cmd>Latin<CR>") end})
 vim.api.nvim_create_autocmd({"FileType"}, {pattern = {"text", "md", "html", "xml"},
     callback = function() vim.keymap.set("n", "zm", "<cmd>ZenMode<CR>") end})
 vim.api.nvim_create_autocmd({"FileType"}, {pattern = {"cpp", "hpp", "h", "perl"}, callback = function() vim.keymap.set("n", "<C-0>", ':!geeks.py "<cword> c++ cpp"<cr><cr>') end})
@@ -337,7 +339,7 @@ require("lazy").setup({
 	    -- * an absolute number of cells when > 1
 	    -- * a percentage of the width / height of the editor when <= 1
 	    -- * a function that returns the width or the height
-	    width = 77, -- width of the Zen window
+	    width = 82, -- width of the Zen window
 	    height = 50, -- height of the Zen window
 	    -- by default, no options are changed for the Zen window
 	    -- uncomment any of the options below, or add other vim.wo options you want to apply
@@ -493,7 +495,7 @@ require('nvim-treesitter.configs').setup {
     -- disable highlighting for the `tex` filetype, you need to include `latex` in this list as this is
     -- the name of the parser)
     -- list of language that will be disabled
-    disable = { "markdown", "vimdoc", "markdown-inline", },
+    disable = { "tex", "latex", "markdown", "vimdoc", "markdown-inline", },
     -- Or use a function for more flexibility, e.g. to disable slow treesitter highlight for large files
     -- disable = function(lang, buf)
         -- local max_filesize = 100 * 1024 -- 100 KB

@@ -6,7 +6,8 @@ M.run = function(args)
 	push = args.push or false
     end
 
-    local commit_description = vim.fn.input("describe this update: ")
+    local datetime = os.date("%b%d%Y---%H:%M:%S")
+    local commit_description = vim.fn.input("describe this update: ", datetime)
     print("\n")
 
     -- using the unix command mktemp to create two temporary files <= 12/24/23 14:34:52 -- 
