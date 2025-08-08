@@ -141,17 +141,21 @@ vim.api.nvim_create_autocmd({"FileType"}, {pattern = {"tex"},
     callback = function() vim.keymap.set("n", "<leader><leader><leader>p",
 	function() require('docbuild').run{latex=true, only_pdf_view=true, use_zathura=true} end) end})
 vim.api.nvim_create_autocmd({"FileType"}, {pattern = {"text", "markdown", "html", "xml"},
-    callback = function() vim.keymap.set("n", "ga", "<cmd>Whitaker<CR>") end})
+    callback = function() vim.keymap.set("n", "glA", "<cmd>AlatiusWholeEntry<CR>") end})
 vim.api.nvim_create_autocmd({"FileType"}, {pattern = {"text", "markdown", "html", "xml"},
-    callback = function() vim.keymap.set("n", "ge", "<cmd>WhitakerEng<CR>") end})
+    callback = function() vim.keymap.set("n", "gla", "<cmd>Alatius<CR>") end})
 vim.api.nvim_create_autocmd({"FileType"}, {pattern = {"text", "markdown", "html", "xml"},
-    callback = function() vim.keymap.set("n", "gl", "<cmd>Latin<CR>") end})
+    callback = function() vim.keymap.set("n", "glg", "<cmd>Whitaker<CR>") end})
 vim.api.nvim_create_autocmd({"FileType"}, {pattern = {"text", "markdown", "html", "xml"},
-    callback = function() vim.keymap.set("v", "gl", "<cmd>Latin<CR>") end})
+    callback = function() vim.keymap.set("n", "gle", "<cmd>WhitakerEng<CR>") end})
 vim.api.nvim_create_autocmd({"FileType"}, {pattern = {"text", "markdown", "html", "xml"},
-    callback = function() vim.keymap.set("n", "gL", "<cmd>LewisShort<CR>") end})
+    callback = function() vim.keymap.set("n", "gll", "<cmd>Latin<CR>") end})
 vim.api.nvim_create_autocmd({"FileType"}, {pattern = {"text", "markdown", "html", "xml"},
-    callback = function() vim.keymap.set("v", "gL", "<cmd>LewisShort<CR>") end})
+    callback = function() vim.keymap.set("v", "gll", "<cmd>Latin<CR>") end})
+vim.api.nvim_create_autocmd({"FileType"}, {pattern = {"text", "markdown", "html", "xml"},
+    callback = function() vim.keymap.set("n", "glL", "<cmd>LewisShort<CR>") end})
+vim.api.nvim_create_autocmd({"FileType"}, {pattern = {"text", "markdown", "html", "xml"},
+    callback = function() vim.keymap.set("v", "glL", "<cmd>LewisShort<CR>") end})
 
 
 vim.api.nvim_create_autocmd({"FileType"}, {pattern = {"tex"}, callback = function()
