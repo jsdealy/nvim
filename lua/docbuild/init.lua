@@ -39,7 +39,8 @@ M.run = function(args)
     end
 
     -- getting user description of the update <= 12/30/23 14:03:28 -- 
-    local commit_description = vim.fn.input("describe this update: ")
+    local datetime = os.date("%b%d%Y---%H:%M:%S")
+    local commit_description = vim.fn.input("describe this update: ", datetime)
     -- clearing the nvim command line <= 12/30/23 14:04:36 -- 
     print("\n")
 
@@ -75,7 +76,7 @@ M.run = function(args)
 	vim.api.nvim_command("Git commit -m '" .. commit_description .. "'")
 	-- pushing to github if 'push' was set to true <= 12/30/23 13:48:29 -- 
 	if push then vim.api.nvim_command("Git push origin " .. branch) end
-	bbcommand = "bbcxx -v -i '" .. this_buffer_path .. "' -o '" .. this_buffer_path .. "' &>" .. temp2
+	bbcommand = "bbcxx -v -i '" .. this_buffer_path .. "' -o '" .. this_buffer_path .. "' &> " .. temp2
 	---@diagnostic disable-next-line: cast-local-type
 	exitCode1 = os.execute(bbcommand)
     end

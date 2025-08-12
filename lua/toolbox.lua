@@ -57,13 +57,18 @@ M.open_buf_with_var = function(content)
 
     local lines = vim.split(content, "\n")
     local wrapped = wrap_lines(lines, 80)
-    local buf = vim.api.nvim_create_buf(false, true) -- not listed, scratch buffer
+    -- local buf = vim.api.nvim_create_buf(false, true) -- not listed, scratch buffer
+    local temp = require('toolbox').capture_command_output("mktemp")
+    for i = 1, #wrapped do
+        os.execute("echo '" .. wrapped[i] .. "' >> " .. temp .. " &> /dev/null")
+    end
 
     if (lines ~= nil) then
+	vim.api.nvim_command("edit " .. temp)
 	-- Set the buffer lines
-	vim.api.nvim_buf_set_lines(buf, 0, -1, false, wrapped)
-	-- Open the buffer in a new window
-	vim.api.nvim_set_current_buf(buf)
+	-- vim.api.nvim_buf_set_lines(buf, 0, -1, false, wrapped)
+	-- -- Open the buffer in a new window
+	-- vim.api.nvim_set_current_buf(buf)
     else
 	print("no output to show!")
     end

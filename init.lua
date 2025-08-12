@@ -355,7 +355,7 @@ require("lazy").setup({
 	    -- * an absolute number of cells when > 1
 	    -- * a percentage of the width / height of the editor when <= 1
 	    -- * a function that returns the width or the height
-	    width = 82, -- width of the Zen window
+	    width = 85, -- width of the Zen window
 	    height = 50, -- height of the Zen window
 	    -- by default, no options are changed for the Zen window
 	    -- uncomment any of the options below, or add other vim.wo options you want to apply
@@ -497,7 +497,7 @@ require('nvim-treesitter.configs').setup {
     -- disable highlighting for the `tex` filetype, you need to include `latex` in this list as this is
     -- the name of the parser)
     -- list of language that will be disabled
-    disable = { "vimdoc" },
+    disable = { "markdown", "latex", "tex", "vimdoc" },
     -- Or use a function for more flexibility, e.g. to disable slow treesitter highlight for large files
     -- disable = function(lang, buf)
         -- local max_filesize = 100 * 1024 -- 100 KB
