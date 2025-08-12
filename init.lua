@@ -113,21 +113,21 @@ vim.cmd[[hi Visual guibg=#008565]]
 
 vim.api.nvim_create_autocmd({"FileType"}, {pattern = {"cpp", "hpp", "h", "perl"}, callback = function() vim.keymap.set("i", "<C-S-;>", "::") end})
 vim.api.nvim_create_autocmd({"FileType"}, {pattern = {"text", "markdown", "html", "xml"},
-    callback = function() vim.keymap.set("n", "gla", "<cmd>Whitaker<CR>") end})
+    callback = function() vim.keymap.set("n", "glA", "<cmd>AlatiusWholeEntry<CR>") end})
 vim.api.nvim_create_autocmd({"FileType"}, {pattern = {"text", "markdown", "html", "xml"},
-    callback = function() vim.keymap.set("n", "glg", "<cmd>Alatius<CR>") end})
+    callback = function() vim.keymap.set("n", "gla", "<cmd>Alatius<CR>") end})
+vim.api.nvim_create_autocmd({"FileType"}, {pattern = {"text", "markdown", "html", "xml"},
+    callback = function() vim.keymap.set("n", "glg", "<cmd>Whitaker<CR>") end})
 vim.api.nvim_create_autocmd({"FileType"}, {pattern = {"text", "markdown", "html", "xml"},
     callback = function() vim.keymap.set("n", "gle", "<cmd>WhitakerEng<CR>") end})
 vim.api.nvim_create_autocmd({"FileType"}, {pattern = {"text", "markdown", "html", "xml"},
-    callback = function() vim.keymap.set("v", "glL", "<cmd>LewisShort<CR>") end})
+    callback = function() vim.keymap.set("n", "gll", "<cmd>Latin<CR>") end})
+vim.api.nvim_create_autocmd({"FileType"}, {pattern = {"text", "markdown", "html", "xml"},
+    callback = function() vim.keymap.set("v", "gll", "<cmd>Latin<CR>") end})
 vim.api.nvim_create_autocmd({"FileType"}, {pattern = {"text", "markdown", "html", "xml"},
     callback = function() vim.keymap.set("n", "glL", "<cmd>LewisShort<CR>") end})
 vim.api.nvim_create_autocmd({"FileType"}, {pattern = {"text", "markdown", "html", "xml"},
-    callback = function() vim.keymap.set("n", "gll", "<cmd>Latin<CR>") end})
-vim.api.nvim_create_autocmd({"FileType"}, {pattern = {"text", "md", "html", "xml"},
-    callback = function() vim.keymap.set("v", "gll", "<cmd>Latin<CR>") end})
-vim.api.nvim_create_autocmd({"FileType"}, {pattern = {"text", "md", "html", "xml"},
-    callback = function() vim.keymap.set("n", "zm", "<cmd>ZenMode<CR>") end})
+    callback = function() vim.keymap.set("v", "glL", "<cmd>LewisShort<CR>") end})
 vim.api.nvim_create_autocmd({"FileType"}, {pattern = {"cpp", "hpp", "h", "perl"}, callback = function() vim.keymap.set("n", "<C-0>", ':!geeks.py "<cword> c++ cpp"<cr><cr>') end})
 vim.api.nvim_create_autocmd({"FileType"}, {pattern = {"cpp", "hpp", "h", "perl"}, callback = function() vim.keymap.set("n", "<C-9>", ':!FL.py "<cword> site:cppreference.com"<cr><cr>') end})
 vim.api.nvim_create_autocmd({"FileType"}, {pattern = {"cpp", "hpp", "h", "perl"}, callback = function() vim.keymap.set("n", "<C-S-k>", ":!make<cr>") end})
@@ -188,6 +188,7 @@ vim.api.nvim_create_autocmd({"FileType"}, {
     end,
 })
 
+vim.keymap.set("n", "zm", "<cmd>ZenMode<CR>")
 vim.keymap.set("i", "<c-e>", [[<esc>Ea]])
 vim.keymap.set("i", "<c-l>", [[<Esc>]])
 vim.keymap.set("i", "<c-space>", [[<space><space>]])
