@@ -340,7 +340,7 @@ require("lazy").setup({
 	    -- * an absolute number of cells when > 1
 	    -- * a percentage of the width / height of the editor when <= 1
 	    -- * a function that returns the width or the height
-	    width = 82, -- width of the Zen window
+	    width = 84, -- width of the Zen window
 	    height = 50, -- height of the Zen window
 	    -- by default, no options are changed for the Zen window
 	    -- uncomment any of the options below, or add other vim.wo options you want to apply
@@ -1074,7 +1074,7 @@ vim.keymap.set('n', '<C-S-Down>', ':vert res +15<cr>')
 vim.keymap.set('n', '<C-S-Up>', ':vert res -15<cr>')
 vim.keymap.set('n', '<leader>v', 'gv')
 vim.keymap.set('v', '<c-l>', '<esc>')
-vim.keymap.set('n', '<C-BS>', function() require('quickgit').run{push = true} end)
+vim.keymap.set('n', '', function() require('quickgit').run{push = true} end)
 vim.keymap.set('n', '<C-S-BS>', function() vim.cmd[[Git pull]] end)
 --vim.keymap.set('n', '<S-Down>', '<esc>')
 --vim.keymap.set('n', '<S-Up>',   '<esc>')
