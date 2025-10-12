@@ -13,12 +13,14 @@ M.run = function(args)
     local push = false
     local latex = false
     local verbose = false
+    local commit_message = false
     if args ~= nil then
 	only_pdf_view = args.only_pdf_view or false
 	use_zathura = args.use_zathura or false
 	push = args.push or false
 	latex = args.latex or false
 	verbose = args.verbose or false
+	commit_message = args.message or false
     end
 
 
@@ -38,11 +40,13 @@ M.run = function(args)
 	return 0
     end
 
+    local commit_description = os.date("%b%d%Y---%H:%M:%S")
     -- getting user description of the update <= 12/30/23 14:03:28 -- 
-    local datetime = os.date("%b%d%Y---%H:%M:%S")
-    local commit_description = vim.fn.input("describe this update: ", datetime)
-    -- clearing the nvim command line <= 12/30/23 14:04:36 -- 
-    print("\n")
+    if commit_message then
+	commit_description = vim.fn.input("describe this update: ")
+	-- clearing the nvim command line <= 12/30/23 14:04:36 -- 
+	print("\n")
+    end
 
 
     -- using the unix command mktemp to create two temporary files <= 12/24/23 14:34:52 -- 

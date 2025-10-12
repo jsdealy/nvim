@@ -79,6 +79,7 @@ M.alatius = function(args)
     print("\n")
     local output = M.capture_command_output('alatius ' .. string.lower(query) .. ' glow')
     M.open_buf_with_var(output)
+    vim.cmd("set filetype=markdown")
 end
 
 M.words = function(args)
@@ -100,12 +101,14 @@ M.alatius_whole_entry = function(args)
     print("\n")
     local output = M.capture_command_output('alatius -w ' .. string.lower(query) .. ' glow')
     M.open_buf_with_var(output)
+    vim.cmd("set filetype=markdown")
 end
 
 M.get_lewis_short = function()
     local word = vim.fn.expand("<cword>")
     local output = M.capture_command_output('alatius ' .. string.lower(word) .. ' glow')
     M.open_buf_with_var(output)
+    vim.cmd("set filetype=markdown")
 end
 
 M.get_latin_def = function()
