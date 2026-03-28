@@ -277,7 +277,7 @@ vim.opt.listchars = {
   space = '␣',
   extends = '>',
   precedes = '<',
-  nbsp = '·',
+  nbsp = '#',
 }
 
 
@@ -560,8 +560,10 @@ local lsp_flags = {
 --Enable (broadcasting) snippet capability for completion
 local capabilities = vim.lsp.protocol.make_client_capabilities()
 capabilities.textDocument.completion.completionItem.snippetSupport = true
-require'lspconfig'.ruff.setup{}
-require'lspconfig'.pyright.setup{}
+vim.lsp.enable('ruff')
+-- require'lspconfig'.ruff.setup{}
+vim.lsp.enable('pyright')
+-- require'lspconfig'.pyright.setup{}
 require('lspconfig').jsonls.setup {}
 require('lspconfig').gopls.setup({
         on_attach = on_attach,
