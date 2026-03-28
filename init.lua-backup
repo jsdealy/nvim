@@ -100,39 +100,40 @@ vim.keymap.set("v", "Y", '"+y')
 
 vim.cmd[[au TextYankPost * silent! lua vim.highlight.on_yank { timeout=50 }]]
 vim.cmd[[filetype plugin indent on]]
-vim.cmd[[colorscheme torte]]
+vim.cmd[[colorscheme habamax]]
 vim.cmd[[set nohlsearch]]
-vim.cmd[[hi Conceal NONE]]
-vim.cmd[[hi CursorLine guibg=#3A112A]]
-vim.cmd[[hi CursorLineNR guibg=#111111]]
-vim.cmd[[hi CursorLineSign guibg=#111111]]
-vim.cmd[[hi Function gui=bold]]
-vim.cmd[[highlight htmlH1 gui=bolditalic]]
-vim.cmd[[highlight Macro guifg=magenta]]
-vim.cmd[[highlight markdownBold gui=bold]]
-vim.cmd[[highlight markdownH1 gui=bolditalic]]
-vim.cmd[[highlight markdownItalic gui=italic]]
-vim.cmd[[hi ModeMsg ctermbg=yellow]]
-vim.cmd[[hi ModeMsg ctermfg=red]]
-vim.cmd[[hi MoreMsg ctermbg=yellow]]
-vim.cmd[[hi MoreMsg ctermfg=red]]
-vim.cmd[[hi StatusLine ctermbg=236]]
-vim.cmd[[hi StatusLine ctermfg=218]]
-vim.cmd[[hi StatusLine gui=italic]]
-vim.cmd[[hi StatusLineNC ctermbg=darkgrey]]
-vim.cmd[[hi StatusLineNC ctermfg=173]]
-vim.cmd[[hi StatusLineNC gui=italic]]
-vim.cmd[[hi VertSplit guibg=#000000]]
-vim.cmd[[hi Visual guibg=#008565]]
+-- vim.cmd[[hi lualine_c_inactive guibg=#000000 guifg=#EE6C05 gui=italic]]
+-- vim.cmd[[hi Conceal NONE]]
+-- vim.cmd[[hi CursorLine guibg=#3A112A]]
+-- vim.cmd[[hi CursorLineNR guibg=#111111]]
+-- vim.cmd[[hi CursorLineSign guibg=#111111]]
+-- vim.cmd[[hi Function gui=bold]]
+-- vim.cmd[[highlight htmlH1 gui=bolditalic]]
+-- vim.cmd[[highlight Macro guifg=magenta]]
+-- vim.cmd[[highlight markdownBold gui=bold]]
+-- vim.cmd[[highlight markdownH1 gui=bolditalic]]
+-- vim.cmd[[highlight markdownItalic gui=italic]]
+-- vim.cmd[[hi ModeMsg ctermbg=yellow]]
+-- vim.cmd[[hi ModeMsg ctermfg=red]]
+-- vim.cmd[[hi MoreMsg ctermbg=yellow]]
+-- vim.cmd[[hi MoreMsg ctermfg=red]]
+-- vim.cmd[[hi StatusLine ctermbg=236]]
+-- vim.cmd[[hi StatusLine ctermfg=218]]
+-- vim.cmd[[hi StatusLine gui=italic]]
+-- vim.cmd[[hi StatusLineNC ctermbg=darkgrey]]
+-- vim.cmd[[hi StatusLineNC ctermfg=173]]
+-- vim.cmd[[hi StatusLineNC gui=italic]]
+-- vim.cmd[[hi VertSplit guibg=#000000]]
+-- vim.cmd[[hi Visual guibg=#008565]]
 
 vim.api.nvim_create_autocmd({"FileType"}, {pattern = {"cpp", "hpp", "h", "perl"}, callback = function() vim.keymap.set("i", "<C-S-;>", "::") end})
 vim.api.nvim_create_autocmd({"FileType"}, {pattern = {"cpp", "hpp", "h", "perl"}, callback = function() vim.keymap.set("n", "<C-0>", ':!geeks.py "<cword> c++ cpp"<cr><cr>') end})
 vim.api.nvim_create_autocmd({"FileType"}, {pattern = {"cpp", "hpp", "h", "perl"}, callback = function() vim.keymap.set("n", "<C-9>", ':!FL.py "<cword> site:cppreference.com"<cr><cr>') end})
-vim.api.nvim_create_autocmd({"FileType"}, {pattern = {"cpp", "hpp", "h", "perl"}, callback = function() vim.keymap.set("n", "<C-S-k>", ":!make<cr>") end})
-vim.api.nvim_create_autocmd({"FileType"}, {pattern = {"python"}, callback = function() vim.keymap.set('n', '<c-;>', '<c-n>:<esc>') end})
-vim.api.nvim_create_autocmd({"FileType"}, {pattern = {"javascript", "markdown", "typescript", "perl", "php", "cpp", "hpp", "c", "lua", "h"},
+vim.api.nvim_create_autocmd({"FileType"}, {pattern = {"markdown", "cpp", "hpp", "h", "perl"}, callback = function() vim.keymap.set("n", "<C-S-k>", ":!make<cr>") end})
+vim.api.nvim_create_autocmd({"FileType"}, {pattern = {"py"}, callback = function() vim.keymap.set('n', '<c-;>', '<c-n>:<esc>') end})
+vim.api.nvim_create_autocmd({"FileType"}, {pattern = {"js", "markdown", "ts", "perl", "php", "cpp", "hpp", "c", "lua", "h"},
     callback = function() vim.keymap.set('n', '<c-;>', '<c-n>;<esc>', {remap = true}) end})
-vim.api.nvim_create_autocmd({"FileType"}, {pattern = {"markdown", "python", "javascript", "typescript", "perl", "php", "cpp", "hpp", "c", "lua", "h"},
+vim.api.nvim_create_autocmd({"FileType"}, {pattern = {"markdown", "py", "js", "ts", "perl", "php", "cpp", "hpp", "c", "lua", "h"},
     callback = function() vim.keymap.set('i', '<c-;>', '<esc><c-;>', {remap = true}) end})
 
 vim.api.nvim_create_autocmd({"FileType"}, {pattern = {"md", "markdown"},
@@ -140,29 +141,29 @@ vim.api.nvim_create_autocmd({"FileType"}, {pattern = {"md", "markdown"},
 	function() require('docbuild').run{only_pdf_view=true, use_zathura=true} end) end})
 vim.api.nvim_create_autocmd({"FileType"}, {pattern = {"tex"},
     callback = function() vim.keymap.set("n", "<leader><leader><leader>p",
-	function() require('docbuild').run{latex=true, commit_message=true, use_zathura=true} end) end})
-vim.api.nvim_create_autocmd({"FileType"}, {pattern = {"text", "latex", "tex", "markdown", "html", "xml"},
+	function() require('docbuild').run{latex=true, only_pdf_view=true, use_zathura=true} end) end})
+vim.api.nvim_create_autocmd({"FileType"}, {pattern = {"text", "tex", "markdown", "html", "xml"},
     callback = function() vim.keymap.set("n", "glA", "<cmd>AlatiusWholeEntry<CR>") end})
-vim.api.nvim_create_autocmd({"FileType"}, {pattern = {"text", "latex", "tex", "markdown", "html", "xml"},
+vim.api.nvim_create_autocmd({"FileType"}, {pattern = {"text", "tex", "markdown", "html", "xml"},
     callback = function() vim.keymap.set("n", "gla", "<cmd>Alatius<CR>") end})
-vim.api.nvim_create_autocmd({"FileType"}, {pattern = {"text", "latex", "tex", "markdown", "html", "xml"},
+vim.api.nvim_create_autocmd({"FileType"}, {pattern = {"text", "tex", "markdown", "html", "xml"},
     callback = function() vim.keymap.set("n", "glg", "<cmd>Whitaker<CR>") end})
-vim.api.nvim_create_autocmd({"FileType"}, {pattern = {"text", "latex", "tex", "markdown", "html", "xml"},
+vim.api.nvim_create_autocmd({"FileType"}, {pattern = {"text", "tex", "markdown", "html", "xml"},
     callback = function() vim.keymap.set("n", "gle", "<cmd>WhitakerEng<CR>") end})
-vim.api.nvim_create_autocmd({"FileType"}, {pattern = {"tex", "latex", "text", "markdown", "html", "xml"},
-    callback = function() vim.keymap.set("n", "8", "<cmd>Latin<CR>") end})
-vim.api.nvim_create_autocmd({"FileType"}, {pattern = {"text", "latex", "tex", "markdown", "html", "xml"},
-    callback = function() vim.keymap.set("v", "8", "<cmd>Latin<CR>") end})
-vim.api.nvim_create_autocmd({"FileType"}, {pattern = {"text", "latex", "tex", "markdown", "html", "xml"},
+vim.api.nvim_create_autocmd({"FileType"}, {pattern = {"text", "tex", "markdown", "html", "xml"},
+    callback = function() vim.keymap.set("n", "gll", "<cmd>Latin<CR>") end})
+vim.api.nvim_create_autocmd({"FileType"}, {pattern = {"text", "tex", "markdown", "html", "xml"},
+    callback = function() vim.keymap.set("v", "gll", "<cmd>Latin<CR>") end})
+vim.api.nvim_create_autocmd({"FileType"}, {pattern = {"text", "tex", "markdown", "html", "xml"},
     callback = function() vim.keymap.set("n", "glL", "<cmd>LewisShort<CR>") end})
-vim.api.nvim_create_autocmd({"FileType"}, {pattern = {"text", "latex", "tex", "markdown", "html", "xml"},
+vim.api.nvim_create_autocmd({"FileType"}, {pattern = {"text", "tex", "markdown", "html", "xml"},
     callback = function() vim.keymap.set("v", "glL", "<cmd>LewisShort<CR>") end})
 
 
 vim.api.nvim_create_autocmd({"FileType"}, {pattern = {"tex"}, callback = function()
     vim.keymap.set({"i", "n"}, "<C-S-k>", ":lua require('docbuild').run{latex=true, use_zathura=true}<cr>") end})
-vim.api.nvim_create_autocmd({"FileType"}, {pattern = {"markdown", "md"}, callback = function()
-    vim.keymap.set({"i", "n"}, "<C-S-k>", ":!make <cr>") end})
+-- vim.api.nvim_create_autocmd({"FileType"}, {pattern = {"markdown", "md"}, callback = function()
+    -- vim.keymap.set({"i", "n"}, "<C-S-k>", ":lua require('docbuild').run{use_zathura=true}<cr>") end})
 vim.api.nvim_create_autocmd({"FileType"}, {pattern = {"tex"}, callback = function() vim.b.surround_45 = "\\[ \r \\]" end})
 vim.api.nvim_create_autocmd({"FileType"}, {pattern = {"tex"}, callback = function() vim.keymap.set("i", "<c-.>", [[<esc><c-.>]], {remap = true}) end})
 vim.api.nvim_create_autocmd({"FileType"}, {pattern = {"tex"}, callback = function() vim.keymap.set("n", "<c-.>", [[<c-n>.<esc>]], {remap = true}) end})
@@ -298,57 +299,56 @@ vim.opt.rtp:prepend(lazypath)
 -- vim.g.mapleader = " " -- Make sure to set `mapleader` before lazy so your mappings are correct
 
 require("lazy").setup({
-    {'wfxr/minimap.vim'},
-    {"hrsh7th/cmp-nvim-lsp-signature-help"},
-    {"latex-lsp/texlab"},
-    {
-	"hedyhli/outline.nvim",
-	config = function()
+	{"hrsh7th/cmp-nvim-lsp-signature-help"},
+	{"latex-lsp/texlab"},
+	{
+	  "hedyhli/outline.nvim",
+	  config = function()
 	    vim.keymap.set("n", "<leader>y", "<cmd>Outline<CR>", { desc = "Toggle Outline" })
 	    require("outline").setup {
 		outline_window = {
 		    width = 50,
 		}
 	    }
-	end,
-    },
-    { "justinmk/vim-sneak" },
-    { "folke/neodev.nvim", opts = {} },
-    {'junegunn/fzf'},
-    {"glepnir/lspsaga.nvim",
-	event = "LspAttach",
-	config = function()
+	  end,
+	},
+	{ "justinmk/vim-sneak" },
+	{ "folke/neodev.nvim", opts = {} },
+	{'junegunn/fzf'},
+	{"glepnir/lspsaga.nvim",
+	    event = "LspAttach",
+	    config = function()
 	    require("lspsaga").setup({
 		lightbulb = {
 		    enable = false
 		}
 	    })
-	end,
-	dependencies = {
-	    {"nvim-tree/nvim-web-devicons"},
-	    --Please make sure you install markdown and markdown_inline parser
-	    {"nvim-treesitter/nvim-treesitter"}
-	}
-    },
-    { "folke/which-key.nvim" },
-    -- {"folke/neoconf.nvim", cmd = "Neoconf" },
-    {'kevinhwang91/rnvimr'},
-    {'jc-doyle/cmp-pandoc-references'},
-    {'hrsh7th/cmp-nvim-lsp'},
-    {'pocco81/true-zen.nvim'},
-    {'hrsh7th/cmp-buffer'},
-    {'hrsh7th/cmp-omni'},
-    {'hrsh7th/cmp-path'},
-    {'hrsh7th/cmp-cmdline'},
-    {'hrsh7th/nvim-cmp'},
-    {'hrsh7th/cmp-calc'},
-    {'hrsh7th/cmp-nvim-lua'},
-    {'windwp/nvim-autopairs'},
-    {'tom-anders/telescope-vim-bookmarks.nvim'},
-    {'AndrewRadev/splitjoin.vim'},
-    {'nvim-lualine/lualine.nvim'},
-    {'nvim-telescope/telescope.nvim'},
-    -- {'qpkorr/vim-renamer'},
+	    end,
+	    dependencies = {
+		{"nvim-tree/nvim-web-devicons"},
+		--Please make sure you install markdown and markdown_inline parser
+		{"nvim-treesitter/nvim-treesitter"}
+	    }
+	    },
+	{ "folke/which-key.nvim" },
+	-- {"folke/neoconf.nvim", cmd = "Neoconf" },
+	{'kevinhwang91/rnvimr'},
+	{'jc-doyle/cmp-pandoc-references'},
+	{'hrsh7th/cmp-nvim-lsp'},
+	{'pocco81/true-zen.nvim'},
+	{'hrsh7th/cmp-buffer'},
+	{'hrsh7th/cmp-omni'},
+	{'hrsh7th/cmp-path'},
+	{'hrsh7th/cmp-cmdline'},
+	{'hrsh7th/nvim-cmp'},
+	{'hrsh7th/cmp-calc'},
+	{'hrsh7th/cmp-nvim-lua'},
+	{'windwp/nvim-autopairs'},
+	{'tom-anders/telescope-vim-bookmarks.nvim'},
+	{'AndrewRadev/splitjoin.vim'},
+	{'nvim-lualine/lualine.nvim'},
+	{'nvim-telescope/telescope.nvim'},
+	-- {'qpkorr/vim-renamer'},
     {'nvim-tree/nvim-web-devicons'},
     {'folke/zen-mode.nvim', opts = {
 	window = {
@@ -432,43 +432,43 @@ require("lazy").setup({
 	on_close = function()
 	end,
     }},
-    {'folke/trouble.nvim',
-	opts = {}, -- for default options, refer to the configuration section for custom setup.
-	cmd = "Trouble", },
-    {'junegunn/vim-easy-align'},
-    {'mbbill/undotree'},
-    {'sainnhe/everforest'},
-    {'sainnhe/edge'},
-    {'rebelot/kanagawa.nvim'},
-    {'EdenEast/nightfox.nvim'},
-    {'catppuccin/nvim'},
-    -- {'chentoast/marks.nvim'},
-    {'bluz71/vim-moonfly-colors'},
-    'nvim-treesitter/nvim-treesitter', build = ":TSUpdate",
-    -- {'nvim-treesitter/nvim-treesitter-context'},
-    {'tpope/vim-markdown'},
-    {'rose-pine/neovim'},
-    -- to use titlecase, highlight and hit gz <= 02/17/24 14:22:34 "
-    {'christoomey/vim-titlecase'},
-    {'triglav/vim-visual-increment'},
-    {'nvim-lua/plenary.nvim'},
-    {'ThePrimeagen/harpoon'},
-    {'ajorgensen/vim-markdown-toc'},
-    {'907th/vim-auto-save'},
-    {'jacoborus/tender.vim'},
-    {'iamcco/markdown-preview.nvim'},
-    {'tpope/vim-repeat'},
-    {'wellle/targets.vim'},
-    {'ctrlpvim/ctrlp.vim'},
-    {'tpope/vim-fugitive'},
-    {'tpope/vim-commentary'},
-    -- {'gruvbox-community/gruvbox'},
-    {'junegunn/goyo.vim'},
-    {'SirVer/ultisnips'},
-    {'lervag/vimtex'},
-    {'honza/vim-snippets'},
-    {'tpope/vim-surround'},
-    {'neovim/nvim-lspconfig'},
+	{'folke/trouble.nvim',
+	    opts = {}, -- for default options, refer to the configuration section for custom setup.
+	    cmd = "Trouble", },
+	{'junegunn/vim-easy-align'},
+	{'mbbill/undotree'},
+	{'sainnhe/everforest'},
+	{'sainnhe/edge'},
+	{'rebelot/kanagawa.nvim'},
+	{'EdenEast/nightfox.nvim'},
+	{'catppuccin/nvim'},
+	-- {'chentoast/marks.nvim'},
+	{'bluz71/vim-moonfly-colors'},
+	'nvim-treesitter/nvim-treesitter', build = ":TSUpdate",
+	-- {'nvim-treesitter/nvim-treesitter-context'},
+	{'tpope/vim-markdown'},
+	{'rose-pine/neovim'},
+	-- to use titlecase, highlight and hit gz <= 02/17/24 14:22:34 "
+	{'christoomey/vim-titlecase'},
+	{'triglav/vim-visual-increment'},
+	{'nvim-lua/plenary.nvim'},
+	{'ThePrimeagen/harpoon'},
+	{'ajorgensen/vim-markdown-toc'},
+	{'907th/vim-auto-save'},
+	{'jacoborus/tender.vim'},
+	{'iamcco/markdown-preview.nvim'},
+	{'tpope/vim-repeat'},
+	{'wellle/targets.vim'},
+	{'ctrlpvim/ctrlp.vim'},
+	{'tpope/vim-fugitive'},
+	{'tpope/vim-commentary'},
+	-- {'gruvbox-community/gruvbox'},
+	{'junegunn/goyo.vim'},
+	{'SirVer/ultisnips'},
+	{'lervag/vimtex'},
+	{'honza/vim-snippets'},
+	{'tpope/vim-surround'},
+	{'neovim/nvim-lspconfig'},
 })
 
 vim.opt.runtimepath:append("/home/justin/.config/nvim/nvim-treesitter-parsers")
@@ -560,10 +560,44 @@ local lsp_flags = {
 --Enable (broadcasting) snippet capability for completion
 local capabilities = vim.lsp.protocol.make_client_capabilities()
 capabilities.textDocument.completion.completionItem.snippetSupport = true
-require'lspconfig'.ruff.setup{}
-require'lspconfig'.pyright.setup{}
-require('lspconfig').jsonls.setup {}
-require('lspconfig').gopls.setup({
+vim.lsp.config.ruff = {}
+vim.lsp.config.pyright = {}
+vim.lsp.enable('jsonls')
+vim.lsp.config.jsonls =  {
+    on_attach = on_attach,
+    flags = lsp_flags,
+    capabilities = capabilities,
+    cmd = { "vscode-json-language-server", '--stdio' },
+    filetypes = { 'json', 'jsonc' },
+    init_options = {
+	provideFormatter = true
+    }
+}
+vim.lsp.enable('html')
+vim.lsp.config.html =  {
+    on_attach = on_attach,
+    flags = lsp_flags,
+    capabilities = capabilities,
+    cmd = { "vscode-html-language-server", '--stdio' },
+    settings = {
+	css = {
+	    lint = {
+		validProperties = {},
+	    },
+	},
+    },
+    filetypes = { 'html', 'templ', 'htm', 'php', 'hb' },
+    init_options = {
+	configurationSection = { "html", "css", "javascript" },
+	embeddedLanguages = {
+	    css = true,
+	    javascript = true
+	},
+	provideFormatter = true
+    },
+    root_markers = { "package.json", ".git" }
+}
+vim.lsp.config.gopls = {
         on_attach = on_attach,
         capabilities = capabilities,
         cmd = {'gopls'},
@@ -578,23 +612,23 @@ require('lspconfig').gopls.setup({
             },
           },
         }
-})
-require('lspconfig')['clangd'].setup{
+}
+vim.lsp.config.clangd = {
     on_attach = on_attach,
     flags = lsp_flags,
-    capabilities = require('lspconfig')['clangd'].capabilities,
+    capabilities = vim.lsp.config['clangd'].capabilities,
     cmd = { "clangd", '--background-index', '--clang-tidy' }
 }
 
 vim.lsp.config.intelephense = {
     on_attach = on_attach,
     flags = lsp_flags,
-    capabilities = vim.lsp.config.intelephense.capabilities,
+    capabilities = vim.lsp.config['intelephense'].capabilities,
     cmd = { "intelephense", '--stdio' },
     filetypes = { "php" }
 }
 
-local lspconfig = require'lspconfig'
+local lspconfig = vim.lsp.config
 local configs = require 'lspconfig.configs'
 
 -- Check if the config is already defined (useful when reloading this file)
@@ -611,12 +645,11 @@ if not configs.tomlls then
  }
 end
 
-lspconfig.tomlls.setup{}
-
+lspconfig.tomlls = {}
 
 local servers = { 'perlpls' }
 for _, lsp in pairs(servers) do
-  require('lspconfig')[lsp].setup {
+  vim.lsp.config.lsp = {
     settings = {
       perl = {
         perlcritic = { enabled = true },
@@ -631,18 +664,19 @@ for _, lsp in pairs(servers) do
   }
 end
 
-require'lspconfig'.texlab.setup{}
+vim.lsp.config.texlab = {}
 
-require('lspconfig')['ts_ls'].setup{
+vim.lsp.enable('ts_ls')
+vim.lsp.config.ts_ls = {
     on_attach = on_attach,
     flags = lsp_flags,
 }
 
-require'lspconfig'.cssls.setup {
+vim.lsp.config.cssls =  {
   capabilities = capabilities,
 }
 
-require'lspconfig'.lua_ls.setup {
+vim.lsp.config.lua_ls =  {
   -- on_init = function(client)
   --   if client.workspace_folders then
   --     local path = client.workspace_folders[1].name
@@ -681,15 +715,8 @@ require'lspconfig'.lua_ls.setup {
   -- }
 }
 
-require'lspconfig'.html.setup {
-    on_attach = on_attach,
-    flags = lsp_flags,
-    capabilities = capabilities,
-    cmd = { "vscode-html-languageserver", '--stdio' },
-    filetypes = { 'html', 'htm', 'php', 'hb' },
-}
 
-require('lspconfig')['rust_analyzer'].setup{
+vim.lsp.config.rust_analyzer = {
     on_attach = on_attach,
     flags = lsp_flags,
     -- Server-specific settings...
@@ -1315,4 +1342,3 @@ vim.api.nvim_command("hi Function guifg=#FFAAFF")
 vim.api.nvim_command("hi Type guifg=#CCFFAA")
 vim.api.nvim_command("hi Normal guifg=#A0F0FF")
 vim.api.nvim_command("hi DiagnosticError guifg=red")
-vim.cmd[[hi lualine_c_inactive guibg=#000000 guifg=#EE6C05 gui=italic]]
