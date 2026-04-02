@@ -137,10 +137,10 @@ vim.api.nvim_create_autocmd({"FileType"}, {pattern = {"markdown", "python", "jav
 
 vim.api.nvim_create_autocmd({"FileType"}, {pattern = {"md", "markdown"},
     callback = function() vim.keymap.set("n", "<leader><leader><leader>p",
-	function() require('docbuild').run{only_pdf_view=true, use_zathura=true} end) end})
+	function() require('docbuild').run{only_pdf_view=true, force=true, use_zathura=true} end) end})
 vim.api.nvim_create_autocmd({"FileType"}, {pattern = {"tex"},
     callback = function() vim.keymap.set("n", "<leader><leader><leader>p",
-	function() require('docbuild').run{latex=true, commit_message=true, use_zathura=true} end) end})
+	function() require('docbuild').run{latex=true, commit_message=true, only_pdf_view=true, force=true, use_zathura=true} end) end})
 vim.api.nvim_create_autocmd({"FileType"}, {pattern = {"text", "latex", "tex", "markdown", "html", "xml"},
     callback = function() vim.keymap.set("n", "glA", "<cmd>AlatiusWholeEntry<CR>") end})
 vim.api.nvim_create_autocmd({"FileType"}, {pattern = {"text", "latex", "tex", "markdown", "html", "xml"},

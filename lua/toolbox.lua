@@ -117,29 +117,19 @@ M.get_latin_def = function()
     print(output)
 end
 
-M.pdf_open = function(filename, force, use_zathura)
+M.pdf_open = function(pdfname, force, use_zathura)
     -- TODO: this is kind of cludgy, there can be pdfs open other than the file, which would trigger the condition <== 12/30/24 12:17:01 -- 
     local psPerlHack = "ps -e | perl -ne 'BEGIN{$ret = 0} $ret = 1 if (m/zathura|sioyek/); END{print $ret}'"
     if force or tonumber(M.capture_command_output(psPerlHack) or "0") == 0 then
-	local subsmade = 0
-	local pdffilename = ""
-
 	-- logging the filename to stdout <== 12/30/24 10:23:42 -- 
-	print("filename: <", filename, ">\n")
+	print("pdfname: <", pdfname, ">\n")
 
-	-- building the pdf name with a simple gsub from the filename <== 12/30/24 12:17:24 -- 
-	if filename:find('tex[\"\']*$') then
-	    pdffilename, subsmade = filename:gsub('tex[\"\']*$', "pdf")
-	elseif filename:find("md[\"\']*$") then
-	    pdffilename = "output.pdf"
-	    subsmade = 1
+	if not use_zathura then
+	    os.execute("rifle '" .. pdfname:gsub("'", ""):gsub('"', "") .. "' &> /dev/null &")
+	else
+	    os.execute("zathura '" .. pdfname:gsub("'", ""):gsub('"', "") .. "' &> /dev/null &")
+	    print("command: " .. "zathura '" .. pdfname:gsub("'", ""):gsub('"', "") .. "' &> /dev/null &")
 	end
-
-	if subsmade == 1 and not use_zathura then
-	    os.execute("sioyek '" .. pdffilename:gsub("'", ""):gsub('"', "") .. "' &> /dev/null &")
-	elseif subsmade == 1 and use_zathura then
-	    os.execute("zathura '" .. pdffilename:gsub("'", ""):gsub('"', "") .. "' &> /dev/null &")
-	else print("filename '" .. filename .. "' does not appear to end in md or tex") end
     end
 end
 

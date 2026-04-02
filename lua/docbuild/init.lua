@@ -25,18 +25,27 @@ M.run = function(args)
 
 
     local filename = ""
+    local pdfname = ""
     local outdir = ""
     if latex and env_variables ~= nil then
 	-- storing .env variables in variables 
 	-- these should be KEY=value pairs in .env 
 	-- values in .env files should be absolute paths <= 01/09/24 18:29:48 -- 
 	filename = (env_variables["FILE_FOR_LATEXMK"]) or vim.api.nvim_buf_get_name(0)
+	filename = filename:gsub("'",""):gsub('"',"")
 	outdir = (env_variables["OUTDIR_FOR_LATEXMK"]) or this_buffer_path
+	outdir = outdir:gsub("'",""):gsub('"',"")
+	if not outdir:match('/$') then outdir = outdir .. '/' end
+	local shortpdfname = ""
+	if filename:match('tex$') then shortpdfname = filename:gsub('tex$', 'pdf')
+	elseif filename:match('md$') then shortpdfname = filename:gsub('md$', 'pdf')
+	else print("ERROR, QUITTING -> file isn't tex or md: " .. filename); return 0 end
+	pdfname = outdir .. shortpdfname
 	if env_variables["PUSH"] ~= nil and string.lower(env_variables["PUSH"]):find("^true") ~= nil then push = true else push = false end
     else filename = vim.api.nvim_buf_get_name(0) end
 
     if only_pdf_view == true then
-        require('toolbox').pdf_open(filename, true, use_zathura)
+        require('toolbox').pdf_open(pdfname, true, use_zathura)
 	return 0
     end
 
@@ -90,7 +99,7 @@ M.run = function(args)
 	message = message .. "Commands executed successfully :)"
 	print(message)
 	-- opening sioyek if it isn't already open <= 10/07/23 12:13:49 -- 
-	require('toolbox').pdf_open(filename, only_pdf_view, use_zathura)
+	require('toolbox').pdf_open(pdfname, only_pdf_view, use_zathura)
     elseif exitCode1 ~= 0 then
 	if backingup then
 	    print(message .. "\nbb failed with exit code:", exitCode1)
@@ -106,7 +115,7 @@ M.run = function(args)
 	    if grepsuccess == nil then vim.api.nvim_command("edit " .. filename:gsub("tex", "log"))
 	    else
 		print(message .. "\nlatexmk had warnings, but produced a pdf...")
-		require('toolbox').pdf_open(filename, only_pdf_view, use_zathura)
+		require('toolbox').pdf_open(pdfname, only_pdf_view, use_zathura)
 	    end
 	    vim.api.nvim_command("edit " .. temp)
 	else vim.api.nvim_command("edit " .. temp)
