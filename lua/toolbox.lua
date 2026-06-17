@@ -118,18 +118,11 @@ M.get_latin_def = function()
 end
 
 M.pdf_open = function(pdfname, force, use_zathura)
-    -- TODO: this is kind of cludgy, there can be pdfs open other than the file, which would trigger the condition <== 12/30/24 12:17:01 -- 
-    local psPerlHack = "ps -e | perl -ne 'BEGIN{$ret = 0} $ret = 1 if (m/zathura|sioyek/); END{print $ret}'"
-    if force or tonumber(M.capture_command_output(psPerlHack) or "0") == 0 then
-	-- logging the filename to stdout <== 12/30/24 10:23:42 -- 
-	print("pdfname: <", pdfname, ">\n")
-
-	if not use_zathura then
-	    os.execute("rifle '" .. pdfname:gsub("'", ""):gsub('"', "") .. "' &> /dev/null &")
-	else
-	    os.execute("zathura '" .. pdfname:gsub("'", ""):gsub('"', "") .. "' &> /dev/null &")
-	    print("command: " .. "zathura '" .. pdfname:gsub("'", ""):gsub('"', "") .. "' &> /dev/null &")
-	end
+    if not use_zathura then
+	os.execute("rifle " .. pdfname:gsub("'", ""):gsub('"', "") .. " &> /dev/null &")
+    else
+	os.execute("zathura " .. pdfname:gsub("'", ""):gsub('"', "") .. " &> /dev/null &")
+	print("command: " .. "zathura '" .. pdfname:gsub("'", ""):gsub('"', "") .. "' &> /dev/null &")
     end
 end
 

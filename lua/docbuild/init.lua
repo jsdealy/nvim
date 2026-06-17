@@ -10,11 +10,13 @@ M.run = function(args)
     -- there's no point using them unless you assign true to them; false is the default <= 12/24/23 14:33:40 -- 
     local only_pdf_view = false
     local use_zathura = false
+    local usebb = false
     local push = false
     local latex = false
     local verbose = false
     local commit_message = false
     if args ~= nil then
+	usebb = args.usebb or false
 	only_pdf_view = args.only_pdf_view or false
 	use_zathura = args.use_zathura or false
 	push = args.push or false
@@ -66,13 +68,12 @@ M.run = function(args)
 
     -- Defining the main command <= 12/30/23 13:47:17 -- 
     local command = ""
-    if latex then command = "latexmk -pdf -f -outdir='" .. outdir:gsub('"', "") .. "' '" .. filename:gsub('"', "") .. "' &> " .. temp
-    else command = "touch output.md && chmod +w output.md && mdcomment '" ..
-	filename:gsub('"', "") .. "' > output.md && chmod -w output.md && pandocomatic output.md &> " .. temp
+    if latex then command = "latexmk -bibtex -pdf -outdir=" .. outdir:gsub('"', "") .. " " .. filename:gsub('"', "") .. " &> " .. temp
+    -- else command = "touch output.md && chmod +w output.md && mdcomment '" ..
+	-- filename:gsub('"', "") .. "' > output.md && chmod -w output.md && pandocomatic output.md &> " .. temp
     end
 
-    if verbose then message = message .. '\nfilename is >' .. filename .. '<\ncommand is >' .. command .. '<\n'
-    end
+    if verbose then message = message .. '\nfilename is >' .. filename .. '<\ncommand is >' .. command .. '<\n' end
 
     -- executing the main command <= 10/07/23 16:05:30 -- 
     local exitCode2 = os.execute(command)
@@ -83,15 +84,17 @@ M.run = function(args)
     local branch = require('toolbox').capture_command_output("git branch --show-current"):gsub("\n", "")
     local backingup = false
     local bbcommand = ""
+
     if gitstatus:find("nothing to commit") == nil then
 	backingup = true
 	vim.api.nvim_command("Git add -A")
 	vim.api.nvim_command("Git commit -m '" .. commit_description .. "'")
 	-- pushing to github if 'push' was set to true <= 12/30/23 13:48:29 -- 
 	if push then vim.api.nvim_command("Git push origin " .. branch) end
-	bbcommand = "bbcxx -v -i '" .. this_buffer_path .. "' -o '" .. this_buffer_path .. "' &> " .. temp2
+	-- bbthing <= 06/16/26 13:34:08 -- 
+	if usebb then bbcommand = "bbcxx -v -i '" .. this_buffer_path .. "' -o '" .. this_buffer_path .. "' &> " .. temp2
 	---@diagnostic disable-next-line: cast-local-type
-	exitCode1 = os.execute(bbcommand)
+	exitCode1 = os.execute(bbcommand) end
     end
 
     -- Check the exit code to determine if the command was successful
@@ -99,7 +102,7 @@ M.run = function(args)
 	message = message .. "Commands executed successfully :)"
 	print(message)
 	-- opening sioyek if it isn't already open <= 10/07/23 12:13:49 -- 
-	require('toolbox').pdf_open(pdfname, only_pdf_view, use_zathura)
+	-- require('toolbox').pdf_open(pdfname, only_pdf_view, use_zathura)
     elseif exitCode1 ~= 0 then
 	if backingup then
 	    print(message .. "\nbb failed with exit code:", exitCode1)
@@ -109,17 +112,17 @@ M.run = function(args)
     elseif exitCode2 ~= 0 then
 	if latex then print(message .. "\nlatexmk exited with code:", exitCode2)
 	else print(message .. "\nmdcomment or pandocomatic failed with exit code:", exitCode2) end
-	if latex then
-	    local grepsuccess = require('toolbox').capture_command_output("grep 'Output written on' " ..
-		filename:gsub("tex", "log")):find("Output written on")
-	    if grepsuccess == nil then vim.api.nvim_command("edit " .. filename:gsub("tex", "log"))
-	    else
-		print(message .. "\nlatexmk had warnings, but produced a pdf...")
-		require('toolbox').pdf_open(pdfname, only_pdf_view, use_zathura)
-	    end
-	    vim.api.nvim_command("edit " .. temp)
-	else vim.api.nvim_command("edit " .. temp)
-	end
+	-- if latex then
+	--     local grepsuccess = require('toolbox').capture_command_output("grep 'Output written on' " ..
+	-- 	filename:gsub("tex", "log")):find("Output written on")
+	--     if grepsuccess == nil then vim.api.nvim_command("edit " .. filename:gsub("tex", "log"))
+	--     else
+	-- 	print(message .. "\nlatexmk had warnings, but produced a pdf...")
+	-- 	require('toolbox').pdf_open(pdfname, only_pdf_view, use_zathura)
+	--     end
+	--     vim.api.nvim_command("edit " .. temp)
+	-- else vim.api.nvim_command("edit " .. temp)
+	-- end
     end
 end
 

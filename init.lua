@@ -160,9 +160,11 @@ vim.api.nvim_create_autocmd({"FileType"}, {pattern = {"text", "latex", "tex", "m
 
 
 vim.api.nvim_create_autocmd({"FileType"}, {pattern = {"tex"}, callback = function()
-    vim.keymap.set({"i", "n"}, "<C-S-k>", ":lua require('docbuild').run{latex=true, use_zathura=true}<cr>") end})
+    vim.keymap.set({"i", "n"}, "<leader>k", ":lua require('docbuild').run{latex=true, use_zathura=true}<cr>") end})
+
 vim.api.nvim_create_autocmd({"FileType"}, {pattern = {"markdown", "md"}, callback = function()
-    vim.keymap.set({"i", "n"}, "<C-S-k>", ":!make <cr>") end})
+    vim.keymap.set({"i", "n"}, "<leader>k", ":!make <cr>") end})
+
 vim.api.nvim_create_autocmd({"FileType"}, {pattern = {"tex"}, callback = function() vim.b.surround_45 = "\\[ \r \\]" end})
 vim.api.nvim_create_autocmd({"FileType"}, {pattern = {"tex"}, callback = function() vim.keymap.set("i", "<c-.>", [[<esc><c-.>]], {remap = true}) end})
 vim.api.nvim_create_autocmd({"FileType"}, {pattern = {"tex"}, callback = function() vim.keymap.set("n", "<c-.>", [[<c-n>.<esc>]], {remap = true}) end})
