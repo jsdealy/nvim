@@ -7,9 +7,9 @@ vim.api.nvim_create_user_command('WhitakerEng', function() require('toolbox').wo
 vim.api.nvim_create_user_command('Alatius', function() require('toolbox').alatius() end, {})
 vim.api.nvim_create_user_command('AlatiusWholeEntry', function() require('toolbox').alatius_whole_entry() end, {})
 vim.api.nvim_create_user_command('Latin', function() require('toolbox').get_latin_def() end, {})
+vim.api.nvim_create_user_command('PhiConcordence', function() require('toolbox').open_phi_concordence() end, {})
+vim.api.nvim_create_user_command('ShowNonPrintChars', function() if (vim.opt.list:get()) then vim.opt.list = false else vim.opt.list = true end end, {})
 vim.api.nvim_create_user_command('LewisShort', function() require('toolbox').git_lewis_short() end, {})
-vim.api.nvim_create_user_command('ToggleNonPrinting', function() if (vim.opt.list:get() == true)
-then vim.opt.list = false else vim.opt.list = true end end, {})
 vim.api.nvim_create_user_command('ToggleOutlineHotkey', function() require('fixOutlineTrigger').toggle() end, {})
 vim.g.UltiSnipsSnippetDirectories={"ultisnips"}
 
@@ -64,7 +64,6 @@ vim.keymap.set("n", "<leader>a", function() require("harpoon.mark").add_file() e
 vim.keymap.set("n", "<leader>`", ':bn<cr>')
 vim.keymap.set("n", "<leader>e", ':e!<cr>')
 vim.keymap.set("n", "<leader><leader>a", ':lua require("harpoon.ui").toggle_quick_menu()<cr>')
-vim.keymap.set("n", "<leader><leader>c", "Onewcomment <esc>:call UltiSnips#ListSnippets()<cr>1<cr>")
 vim.keymap.set("n", "<leader><leader><leader>", "gw")
 vim.keymap.set("n", "<leader><leader>-", ":res -10<cr>")
 vim.keymap.set("n", "<leader><leader>=", ":res +10<cr>")
@@ -83,6 +82,9 @@ vim.keymap.set("v", "<leader><leader><leader>", "gwzz")
 vim.keymap.set("v", "<c-i>", ":!pipeToInvert.sh<cr>")
 vim.keymap.set("v", "<c-h>", "%")
 vim.keymap.set("v", "<c-B>", "0")
+vim.keymap.set("n", "<leader><leader>c", function()
+    local ft = vim.api.nvim_command_output("set filetype"):gsub(".*=","")
+	    require('toolbox').snip{filetype=ft, snip="comment"} end)
 
 vim.cmd[[au TextYankPost * silent! lua vim.highlight.on_yank { timeout=50 }]]
 vim.cmd[[filetype plugin indent on]]
@@ -121,9 +123,13 @@ vim.api.nvim_create_autocmd({"FileType"}, {pattern = {"text", "markdown", "html"
 vim.api.nvim_create_autocmd({"FileType"}, {pattern = {"text", "markdown", "html", "xml"},
     callback = function() vim.keymap.set("n", "gle", "<cmd>WhitakerEng<CR>") end})
 vim.api.nvim_create_autocmd({"FileType"}, {pattern = {"text", "markdown", "html", "xml"},
-    callback = function() vim.keymap.set("n", "gll", "<cmd>Latin<CR>") end})
+    callback = function() vim.keymap.set("n", "9", "<cmd>PhiConcordence<CR>") end})
 vim.api.nvim_create_autocmd({"FileType"}, {pattern = {"text", "markdown", "html", "xml"},
-    callback = function() vim.keymap.set("v", "gll", "<cmd>Latin<CR>") end})
+    callback = function() vim.keymap.set("v", "9", "<cmd>PhiConcordence<CR>") end})
+vim.api.nvim_create_autocmd({"FileType"}, {pattern = {"text", "markdown", "html", "xml"},
+    callback = function() vim.keymap.set("n", "8", "<cmd>Latin<CR>") end})
+vim.api.nvim_create_autocmd({"FileType"}, {pattern = {"text", "markdown", "html", "xml"},
+    callback = function() vim.keymap.set("v", "8", "<cmd>Latin<CR>") end})
 vim.api.nvim_create_autocmd({"FileType"}, {pattern = {"text", "markdown", "html", "xml"},
     callback = function() vim.keymap.set("n", "glL", "<cmd>LewisShort<CR>") end})
 vim.api.nvim_create_autocmd({"FileType"}, {pattern = {"text", "markdown", "html", "xml"},
@@ -140,21 +146,21 @@ vim.api.nvim_create_autocmd({"FileType"}, {pattern = {"markdown", "py", "js", "t
 vim.api.nvim_create_autocmd({"FileType"}, {pattern = {"md", "markdown"},
     callback = function() vim.keymap.set("n", "<leader><leader><leader>p",
 	function() require('docbuild').run{only_pdf_view=true, use_zathura=true} end) end})
-vim.api.nvim_create_autocmd({"FileType"}, {pattern = {"tex"},
-    callback = function() vim.keymap.set("n", "<leader><leader><leader>p",
-	function() require('docbuild').run{latex=true, only_pdf_view=true, use_zathura=true} end) end})
-
 
 vim.api.nvim_create_autocmd({"FileType"}, {pattern = {"tex"}, callback = function()
-    vim.keymap.set({"i", "n"}, "<C-S-k>", ":lua require('docbuild').run{latex=true, use_zathura=true}<cr>") end})
+    vim.keymap.set({"i", "n"}, "<leader><leader>k", ":lua require('docbuild').setenv{}<cr>") end})
+
+vim.api.nvim_create_autocmd({"FileType"}, {pattern = {"tex","markdown","md"}, callback = function()
+    vim.keymap.set({"i", "n"}, "<leader><leader>k", ":lua require('docbuild').setenv{}<cr>") end})
+
+vim.api.nvim_create_autocmd({"FileType"}, {pattern = {"tex"}, callback = function()
+    vim.keymap.set({"i", "n"}, "<leader>k", ":lua require('docbuild').run{latex=true, use_zathura=true}<cr>") end})
 vim.api.nvim_create_autocmd({"FileType"}, {pattern = {"markdown", "md"}, callback = function()
-    vim.keymap.set({"i", "n"}, "<C-S-k>", ":lua require('docbuild').run{use_zathura=true}<cr>") end})
+    vim.keymap.set({"i", "n"}, "<leader>k", ":lua require('docbuild').run{use_zathura=true}<cr>") end})
+
 vim.api.nvim_create_autocmd({"FileType"}, {pattern = {"tex"}, callback = function() vim.b.surround_45 = "\\[ \r \\]" end})
 vim.api.nvim_create_autocmd({"FileType"}, {pattern = {"tex"}, callback = function() vim.keymap.set("i", "<c-.>", [[<esc><c-.>]], {remap = true}) end})
 vim.api.nvim_create_autocmd({"FileType"}, {pattern = {"tex"}, callback = function() vim.keymap.set("n", "<c-.>", [[<c-n>.<esc>]], {remap = true}) end})
-vim.api.nvim_create_autocmd({"FileType"}, {pattern = {"tex"}, callback = function() vim.keymap.set("n", "<leader><leader><leader>d", [[:!openInDictionary.sh "<cword>"<cr><cr>]]) end})
-vim.api.nvim_create_autocmd({"FileType"}, {pattern = {"tex"}, callback = function() vim.keymap.set("n", "<leader><leader><leader>s", [[:!openInSEP.sh "<cword>"<cr><cr>]]) end})
-vim.api.nvim_create_autocmd({"FileType"}, {pattern = {"tex"}, callback = function() vim.keymap.set("n", "<leader><leader><leader>t", [[:!openInThesaurus.sh "<cword>"<cr><cr>]]) end})
 vim.api.nvim_create_autocmd({"FileType"}, {pattern = {"tex"}, callback = function() vim.keymap.set("v", "<leader>gc", [[c%<c-r>"<cr><esc>]]) end})
 
 
@@ -235,7 +241,7 @@ vim.g.ctrlp_cmd = 'CtrlPBuffer'
 vim.g.surround_108 = "\\begin{\1environment: \1}\r\\end{\1\1}"
 vim.g.surround_99 = "\\\1command: \1{\r}"
 vim.g.UltiSnipsEditSplit="vertical"
-vim.g.UltiSnipsExpandTrigger = "<C-CR>"
+vim.g.UltiSnipsExpandTrigger = "<S-Tab>"
 vim.g.UltiSnipsJumpForwardTrigger = '<C-S-L>'
 vim.g.vimtex_indent_enabled = 0
 vim.g.vimtex_quickfix_enabled = 0
@@ -441,7 +447,7 @@ require("lazy").setup({
 	{'catppuccin/nvim'},
 	-- {'chentoast/marks.nvim'},
 	{'bluz71/vim-moonfly-colors'},
-	'nvim-treesitter/nvim-treesitter', build = ":TSUpdate",
+	{'nvim-treesitter/nvim-treesitter', branch = 'master', build = ":TSUpdate"},
 	-- {'nvim-treesitter/nvim-treesitter-context'},
 	{'tpope/vim-markdown'},
 	{'rose-pine/neovim'},
@@ -470,6 +476,8 @@ require("lazy").setup({
 vim.opt.runtimepath:append("/Users/justindealy/.config/nvim/nvim-treesitter-parsers")
 vim.opt.runtimepath:append("/Users/justindealy/.config/nvim/lua")
 vim.opt.runtimepath:append("/Users/justindealy/.config/nvim")
+vim.opt.runtimepath:append("/Users/justindealy/.local/share/nvim/site")
+
 
 vim.g.mapleader = '\\'
 
@@ -557,9 +565,16 @@ local lsp_flags = {
 --Enable (broadcasting) snippet capability for completion
 local capabilities = vim.lsp.protocol.make_client_capabilities()
 capabilities.textDocument.completion.completionItem.snippetSupport = true
-require'lspconfig'.ruff.setup{}
-require'lspconfig'.pyright.setup{}
-require('lspconfig').jsonls.setup {}
+-- require('lspconfig').ruff.setup{}
+-- vim.lsp.config('ruff')
+vim.lsp.config('pyright', {
+    cmd = { "pyright-langserver", "--stdio" },
+    filetypes = { "python" },
+    root_markers = { ".git", "pyproject.toml", "setup.py", "requirements.txt" },
+})
+vim.lsp.enable({'ruff','pyright','jsonls','html','texlab','lua_ls'})
+-- require'lspconfig'.pyright.setup{}
+-- require('lspconfig').jsonls.setup {}
 require('lspconfig').gopls.setup({
         on_attach = on_attach,
         capabilities = capabilities,
@@ -628,61 +643,22 @@ for _, lsp in pairs(servers) do
   }
 end
 
-require'lspconfig'.texlab.setup{}
+-- require'lspconfig'.texlab.setup{}
 
-require('lspconfig')['ts_ls'].setup{
-    on_attach = on_attach,
-    flags = lsp_flags,
-}
+-- require('lspconfig')['ts_ls'].setup{
+--     on_attach = on_attach,
+--     flags = lsp_flags,
+-- }
 
 require'lspconfig'.cssls.setup {
   capabilities = capabilities,
-}
-
-require'lspconfig'.lua_ls.setup {
-  -- on_init = function(client)
-  --   if client.workspace_folders then
-  --     local path = client.workspace_folders[1].name
-  --     if vim.loop.fs_stat(path..'/.luarc.json') or vim.loop.fs_stat(path..'/.luarc.jsonc') then
-  --       return
-  --     end
-  --   end
-
-  --   client.config.settings.Lua = vim.tbl_deep_extend('force', client.config.settings.Lua, {
-  --     runtime = {
-  --       -- Tell the language server which version of Lua you're using
-  --       -- (most likely LuaJIT in the case of Neovim)
-  --       version = 'LuaJIT'
-  --     },
-  --     -- Make the server aware of Neovim runtime files
-  --     workspace = {
-  --       checkThirdParty = false,
-  --       library = {
-  --         vim.env.VIMRUNTIME
-  --         -- Depending on the usage, you might want to add additional paths here.
-  --         -- "${3rd}/luv/library"
-  --         -- "${3rd}/busted/library",
-  --       }
-  --       -- or pull in all of 'runtimepath'. NOTE: this is a lot slower
-		-- -- and will cause issues when working on your own configuration (see https://github.com/neovim/nvim-lspconfig/issues/3189)
-  --       -- library = vim.api.nvim_get_runtime_file("", true)
-  --     }
-  --   })
-  -- end,
-  -- settings = {
-	-- Lua = {
-	    -- diagnostics = {
-		-- globals = { 'vim' }
-	    -- }
-	-- }
-  -- }
 }
 
 require'lspconfig'.html.setup {
     on_attach = on_attach,
     flags = lsp_flags,
     capabilities = capabilities,
-    cmd = { "vscode-html-languageserver", '--stdio' },
+    cmd = { "vscode-html-language-server", '--stdio' },
     filetypes = { 'html', 'htm', 'php', 'hb' },
 }
 
@@ -1060,7 +1036,6 @@ vim.keymap.set('n', '<leader><leader>S', ':lua require("telescope.builtin").tags
 -- vim.keymap.set('n', '<leader><leader>b', ':Telescope file_browser path=%:p:h select_buffer=true<cr>')
 vim.keymap.set('n', '<leader><leader>b', ':Ex<cr>')
 -- vim.keymap.set('n', '<leader><leader>b', ':Telescope file_browser path=%:p:h select_buffer=true<cr>')
-vim.keymap.set('n', '<leader><leader>k', telesc.keymaps, {desc = "search vim help"})
 vim.keymap.set('n', '<C-0>', telesc.live_grep, {desc = "telescope live grep the current directory"})
 vim.keymap.set('n', '<leader><leader>h', telesc.help_tags, {desc = "search vim help"})
 vim.keymap.set('n', '<leader><leader>H', ':lua if origfiletype == nil then origfiletype = vim.bo.filetype end; if vim.bo.filetype ~= "html" then vim.bo.filetype = "html"; else vim.bo.filetype = origfiletype; end<cr>')
@@ -1074,7 +1049,6 @@ vim.keymap.set('n', '<C-S-Down>', ':vert res +15<cr>')
 vim.keymap.set('n', '<C-S-Up>', ':vert res -15<cr>')
 vim.keymap.set('n', '<leader>v', 'gv')
 vim.keymap.set('v', '<c-l>', '<esc>')
-vim.keymap.set('n', '', function() require('quickgit').run{push = true} end)
 vim.keymap.set('n', '<C-S-BS>', function() vim.cmd[[Git pull]] end)
 --vim.keymap.set('n', '<S-Down>', '<esc>')
 --vim.keymap.set('n', '<S-Up>',   '<esc>')
@@ -1171,13 +1145,11 @@ end)
 -- keymap("n", "K", "<cmd>Lspsaga hover_doc ++keep<CR>")
 
 -- Call hierarchy
--- keymap("n", "<Leader>ci", "<cmd>Lspsaga incoming_calls<CR>")
--- keymap("n", "<Leader>co", "<cmd>Lspsaga outgoing_calls<CR>")
 
 -- Floating terminal
 -- keymap({"n", "t"}, "<A-d>", "<cmd>Lspsaga term_toggle<CR>")
 
-keymap("n","<leader>kc", "inewkeyclaim <esc>:call UltiSnips#ListSnippets()<cr>1<cr>")
+-- keymap("n","<leader>kc", "inewkeyclaim <esc>:call UltiSnips#ListSnippets()<cr>1<cr>")
 
 require('nvim-autopairs').setup({
     map_cr = true,
@@ -1305,7 +1277,6 @@ cmp.event:on('confirm_done', cmp_autopairs.on_confirm_done())
 -- Associating TS emphasis groups with markdown groups
 vim.api.nvim_set_hl(0, "@text.strong", { link = "markdownBold" })
 vim.api.nvim_set_hl(0, "@text.emphasis", { link = "markdownItalic" })
-
 vim.api.nvim_command("hi Function guifg=#FFAAFF")
 vim.api.nvim_command("hi Type guifg=#CCFFAA")
 vim.api.nvim_command("hi Normal guifg=#A0F0FF")

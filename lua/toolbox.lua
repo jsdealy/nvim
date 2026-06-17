@@ -11,6 +11,19 @@ M.capture_command_output = function(command)
     return output
 end
 
+M.snip = function(args)
+    local snips = {
+	tex = {
+	    comment = function() vim.api.nvim_command("norm O% c % " .. os.date("%b%d%Y---%H:%M:%S"));
+		vim.api.nvim_command("norm 0fcx"); vim.api.nvim_command("startinsert") end,
+	},
+	lua = {
+	    comment = function() vim.api.nvim_command("norm O-- " .. os.date("%b%d%Y---%H:%M:%S") .. "\n "); vim.api.nvim_command("startinsert") end,
+	}
+    }
+    snips[args.filetype][args.snip]()
+end
+
 M.read_dot_env = function(filePath)
     local env = {}
     local file = io.open(filePath, "r") -- Open the file for reading
@@ -25,7 +38,7 @@ M.read_dot_env = function(filePath)
         end
         file:close()
     else
-        print("No .env file, or else unable to open it...")
+        print("IO.open failed with given filepath: " .. filePath .. "\n")
     end
 
     return env
@@ -103,6 +116,10 @@ M.get_latin_def = function()
     local word = vim.fn.expand("<cword>")
     local output = M.capture_command_output('cd ~/bin; words ' .. string.lower(word))
     print(output)
+end
+
+M.open_phi_concordence = function()
+   io.popen('echo "%23' .. vim.fn.expand("<cword>") .. '%23" | xargs -I@+ open https://latin.packhum.org/concordance?q=@+')
 end
 
 M.git_lewis_short = function()
